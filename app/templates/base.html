@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
+    <title>{% block title %}{{ title }}{% endblock %}</title>
+</head>
+<body>
+<div class="container-fluid">
+    <!-- Displays flashed messages on a page -->
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+{% endwith %}
+    <div class="row">
+        <div class="col-md-12">
+            <nav class="navbar navbar-dark bg-info">
+                <a href="http://127.0.0.1:5000/"><span class="navbar-brand mb-0 h1">Rain Blog</span></a>
+                <a href="http://127.0.0.1:5000/templates" class="btn btn-link">Sign Up!</a>
+            </nav>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <h1>{% block header %}{{ header }}{% endblock %}</h1>
+            <p>
+                {% block main_body %}
+                {% endblock %}
+            </p>
+        </div>
+        <div class="col-md-4">
+            {% block right_body %}
+            {% endblock %}
+        </div>
+    </div>
+</div>
+</body>
+</html>

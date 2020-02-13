@@ -1,0 +1,35 @@
+/* Scales an image up to the size of the image, the height scales proportionally with the width */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* The following set the font size as a % of the viewport width */
+h2 {
+    font-size: 6vw;
+}
+
+p.responsive {
+    font-size: 2vw;
+}
+
+/* Media queries to change the background colour based on the screen size
+screen - means primarily intended for screens
+min-width - */
+@media screen and (min-width: 20px) {
+    body {
+        background-color: white;
+    }
+}
+
+@media screen and (min-width: 600px) {
+    body {
+        background-color: lightgreen;
+    }
+}
+
+@media screen and (min-width: 800px) {
+    body {
+        background-color: lavender;
+    }
+}
