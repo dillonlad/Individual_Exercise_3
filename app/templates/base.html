@@ -3,42 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="In Wait of Tomorrow"/>
+    <meta property="og:type" content="blog"/>
+    <meta property="og:url" content="http://inwaitoftomorrow.appspot.com/"/>
+    <meta property="og:description" content="Who knows what the future might look like"/>
+    <meta property="og:image" content='http://inwaitoftomorrow.appspot.com/static/img/Picture3.png'/>
+    <meta name="twitter:title" content="In Wait of Tomorrow"/>
+    <meta name="twitter:description" content="Who knows what the future might look like"/>
+    <meta name="twitter:image" content='http://inwaitoftomorrow.appspot.com/static/img/Picture3.png'/>
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:url" content="http://inwaitoftomorrow.appspot.com/"/>
     <link rel="stylesheet" href="../static/css/bootstrap.css">
+    <meta name="description" content="The latest in tech, science and politics, In Wait of Tomorrow is a blog about what the future might look like"/>
     <title>{% block title %}{{ title }}{% endblock %}</title>
 </head>
 <body>
-<div class="container-fluid">
-    <!-- Displays flashed messages on a page -->
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <ul>
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-            </ul>
-        {% endif %}
-{% endwith %}
+<div class="container-fluid mainimage opacity-5" style="background-image: url('../static/img/Picture3.png')">
     <div class="row">
         <div class="col-md-12">
-            <nav class="navbar navbar-dark bg-info">
-                <a href="http://127.0.0.1:5000/"><span class="navbar-brand mb-0 h1">Rain Blog</span></a>
-                <a href="http://127.0.0.1:5000/templates" class="btn btn-link">Sign Up!</a>
+            <nav class="navbar navbar-dark container-fluid">
+                <a href="{{url_for('main.index')}}"><span class="navbar-brand mb-0 h1">In Wait of Tomorrow</span></a>
+                <a href="{{url_for('main.show_blog')}}" class="btn btn-dark">Articles</a>
             </nav>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-8">
-            <h1>{% block header %}{{ header }}{% endblock %}</h1>
-            <p>
-                {% block main_body %}
-                {% endblock %}
-            </p>
+    <header class="masthead" style="min-height: 100vh">
+        <div class="container h-100">
+            <div class="row h-100 align-items-center">
+                <div class="col-12 text-center" style="padding-top: 0vh">
+                    <h1 class="font-weight-light">In Wait of Tomorrow</h1>
+                        <p class="lead">Welcome to our future</p>
+                        <p class="font-weight-normal font-italic">"I know not with what weapons World War III will be fought, but World War IV will be fought with sticks and stones." ~ Albert Einstein</p>
+                </div>
+                <div class="align-items-center align-content-center" style="padding-left: 50%"><a href="#articles"><i class="arrow down"></i></a></div>
+            </div>
         </div>
-        <div class="col-md-4">
-            {% block right_body %}
-            {% endblock %}
-        </div>
-    </div>
+    </header>
+</div>
+<div id="articles" class="row p-1">
+    {% block list_of_articles %}{% endblock %}
+</div>
+<div class="row p-5">
+    {% block twitter %}{% endblock %}
 </div>
 </body>
 </html>

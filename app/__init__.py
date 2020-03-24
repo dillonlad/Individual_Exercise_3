@@ -1,18 +1,47 @@
+from os.path import abspath, join, dirname
+
 from flask import Flask, render_template
-from config import DevConfig
+
+from flask_sqlalchemy import SQLAlchemy
+from flask_sitemap import Sitemap
 
 
-def create_app(config_class=DevConfig):
-    """
-    Creates an application instance to run
-    :return: A Flask object
-    """
 
+db = SQLAlchemy()
+
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+
+def create_app():
     app = Flask(__name__)
-    app.config.from_object(config_class)
+    app.config['SECRET_KEY'] = '73WquRv_HFBhIVTmd4ARHQ'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    CWD = dirname(abspath(__file__))
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + join(CWD, 'new_tomorrow')
+    db.init_app(app)
+
+    # The following is needed if you want to map classes to an existing database
+    with app.app_context():
+        db.Model.metadata.reflect(db.engine)
+        db.metadata.clear()
+    # If you don't have a database with records that you created in ex1 then you all need to create the database tables by uncommenting the following lines
+    # from app.models import <add the names of your model classes here>
+    # with app.app_context():
+        # db.create_all()
+
+    app.register_error_handler(404, page_not_found)
+    from app.main.routes import bp_blogs
+
+    app.register_blueprint(bp_blogs)
 
     # Register Blueprints
-    from routes import bp_main
+    from app.main.routes import bp_main
     app.register_blueprint(bp_main)
+
+    from app.main.routes import ext
+    app.config['SITEMAP_MAX_URL_COUNT'] = 10000
+    app.config['SITEMAP_INCLUDE_RULES_WITHOUT_PARAMS'] = True
+    ext.init_app(app)
 
     return app

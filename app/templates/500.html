@@ -1,0 +1,6 @@
+{% extends "base_errors.html" %}
+{% block title %}Internal server error{% endblock %}
+{% block content %}
+    <h1 class="font-weight-light">Internal server error</h1>
+    <p>Oops! Something went wrong on the server, <a href="{{ url_for('main.index') }}">go back home</a>.</p>
+{% endblock %}

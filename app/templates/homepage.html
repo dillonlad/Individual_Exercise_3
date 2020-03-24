@@ -1,16 +1,29 @@
 {% extends "base.html" %}
-{% block title %}Rain Blog{% endblock %}
-{% block link_one %}homepage.html{% endblock %}
-{% block link_two %}signup.html{% endblock %}
-{% block header %}A Rainforest Blog{% endblock %}
-{% block main_body %}
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-    laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
-    esse cillum dolore eu fugiat nulla pariatur.
+{% block title %}In Wait of Tomorrow{% endblock %}
+{% block header %}Welcome to our future{% endblock %}
+{% block img_src_one %}
+ <img class="d-block" style="max-width: 300px" src="../static/img/logo%20-%20Copy.png" alt="First slide">
 {% endblock %}
-{% block right_body %}
-    <input aria-label="Search" class="form-control" placeholder="Search city" type="text">
-    <input aria-label="Search" class="form-control" placeholder="Search blog" type="text">
-    <button class="btn btn-dark" type="button">Search</button>
+{% block list_of_articles %}
+<h2 class="font-weight-bold">Latest articles</h2>
+    {% if posts|length %}
+<table>
+    <tbody>
+    {% for post in posts %}
+    <tr>
+        <td style="padding: 0.75rem">
+            <img src="{{ post.post_image }}" style="max-width: 200px">
+        </td>
+        <td><a class="h2 font-weight-light" href="{{ url_for(post.post_hyperlink) }}" >
+                {{ post.post_name }}</a><br>
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>Sorry, no posts are available at this time</p>
+{% endif %}
+{% endblock %}
+{% block twitter %}
 {% endblock %}

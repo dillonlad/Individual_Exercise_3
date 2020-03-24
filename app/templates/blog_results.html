@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
+    <title>Blog Articles</title>
+</head>
+<body style="background-color: #dddddd">
+<div class="container-fluid mainimage opacity-5">
+    <div class="row">
+        <div class="col-md-12">
+            <nav class="navbar navbar-dark bg-dark container-fluid">
+                <a href="{{url_for('main.index')}}"><span class="navbar-brand mb-0 h1">In Wait of Tomorrow</span></a>
+                <a href="{{url_for('main.show_blog')}}" class="btn btn-dark">Articles</a>
+            </nav>
+        </div>
+    </div>
+       {% if posts|length %}
+    <div class="align-self-center align-content-center justify-content-center align-items-center">
+<table class="align-content-center justify-content-center align-self-center align-items-center">
+    <tbody class="align-content-center align-self-center justify-content-center align-items-center">
+    {% for post in posts %}
+    <div class="row align-self-center">
+        <tr class="align-content-center justify-content-center align-items-center align-self-center">
+            <td style="padding: 0.75rem" class="align-content-center justify-content-center align-items-center">
+                <img src="{{ post.post_image }}" style="max-width: 50%">
+            </td>
+        </tr>
+    </div>
+    <div class="text-center col-12 row align-self-center">
+        <tr class="align-content-center align-self-center justify-content-center align-items-center">
+            <td class="align-content-center align-self-center justify-content-center align-items-center">
+                <a class="h2 font-weight-light" href="{{ url_for(post.post_hyperlink) }}" >
+                    {{ post.post_name }}</a><br>
+            </td>
+        </tr>
+    </div>
+    <tr class="col-12 align-self-center align-content-center justify-content-center align-items-center">
+        <td class="align-content-center justify-content-center align-items-center align-self-center">
+            <a class="h6 font-weight-light" href="{{ url_for(post.post_hyperlink) }}" >
+                {{ post.post_description }}
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>Sorry, no posts are available at this time</p>
+{% endif %}
+        <a class="twitter-timeline" data-width="300" data-theme="dark" href="https://twitter.com/InWaitofTomorr1?ref_src=twsrc%5Etfw">Tweets by InWaitofTomorr1</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+</div>
+</div>
+</body>
+</html>

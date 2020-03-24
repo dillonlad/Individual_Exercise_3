@@ -6,7 +6,7 @@ class Config(object):
     """Set Flask base configuration"""
     CSRF_ENABLED = True
     # Secret key was randomly created using a Python console and enter 'import secrets' and then 'secrets.token_urlsafe(16)'
-    SECRET_KEY = 'Y2qQK3cD24gK5a3IbfBpbA'
+    SECRET_KEY = 'nDtnCD6Etupxal5vkis-vg'
 
     # General Config
     DEBUG = False
@@ -18,7 +18,7 @@ class Config(object):
 
     # Database config
     CWD = dirname(abspath(__file__))
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + join(CWD, 'cscourses.sqlite')
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + join(CWD, 'chinook.sqlite')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
