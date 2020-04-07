@@ -5,17 +5,35 @@
  <img class="d-block" style="max-width: 300px" src="../static/img/logo%20-%20Copy.png" alt="First slide">
 {% endblock %}
 {% block list_of_articles %}
-<h2 class="font-weight-bold">Latest articles</h2>
+<div class="row col-12 justify-content-center">
+    <img src="../static/img/logo.jpeg" style="max-height: 200px"></div>
+</div>
+<div class="row col-12 justify-content-center">
+    Follow us on <a href="https://twitter.com/InWaitofTomorr1" class="pl-1 pr-1"> Twitter </a> and <a class="pl-1 pr-1" href="https://www.instagram.com/inwaitoftomorrow/"> Instagram</a>
+</div>
+<div class="row justify-content-center col-12 pl-5">
+    <form class="form-inline" method="POST" action="#articles" novalidate>
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.Search.label }}{{ form.Search(class_="form-control form-control-user pl-2") }}
+        </div>
+        <div class="form-group">
+        {{ form.Submit(class_="btn btn-dark btn-user btn-block") }}
+            </div>
+    </form>
+</div><br>
+<div class="row">
+<h2 class="font-weight-bold pl-3">Latest articles</h2></div>
     {% if posts|length %}
 <table>
     <tbody>
     {% for post in posts %}
     <tr>
         <td style="padding: 0.75rem">
-            <img src="{{ post.post_image }}" style="max-width: 200px">
+            <img src="..{{ post.Image_root }}" style="max-width: 200px">
         </td>
-        <td><a class="h2 font-weight-light" href="{{ url_for(post.post_hyperlink) }}" >
-                {{ post.post_name }}</a><br>
+        <td><a class="h2 font-weight-light" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}" >
+                {{ post.Title }}</a><br>
         </td>
     </tr>
     {% endfor %}

@@ -3,20 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta property="og:title" content="In Wait of Tomorrow"/>
+    <meta property="og:title" content="{% block fb_share_title %}{% endblock %}"/>
     <meta property="og:type" content="website"/>
     <meta property="og:url" content="{% block fb_share_url %}{% endblock %}"/>
     <meta property="og:description" content="{% block fb_share_description %}{% endblock %}"/>
     <meta property="og:image" content={% block fb_share_image %}{% endblock %}/>
     <meta property="fb:app_id" content="2681838985277439"/>
-    <meta name="twitter:title" content="In Wait of Tomorrow"/>
+    <meta name="twitter:title" content="{% block twitter_share_title %}{% endblock %}"/>
     <meta name="twitter:description" content="{% block twitter_share_description %}{% endblock %}"/>
     <meta name="twitter:image" content={% block twitter_share_image %}{% endblock %}/>
     <meta name="twitter:card" content="summary_large_image"/>
     <meta name="twitter:url" content="{% block twitter_share_url %}{% endblock %}"/>
     <meta name="description" content="{% block meta_description %}{% endblock %}"/>
     <script type="text/javascript" src="https://platform-api.sharethis.com/js/sharethis.js#property=5e71ee341758630012f31ae5&product=inline-follow-buttons" async="async"></script>
-    <link rel="stylesheet" href="../../static/css/bootstrap.css">
+    <script src="../static/bootstrap-4.0.0/js/tests/vendor/jquery-1.9.1.min.js"></script>
+    <script src="../static/bootstrap-4.0.0/dist/js/bootstrap.bundle.js"></script>
+    <script src="../static/bootstrap-4.0.0/assets/js/vendor/popper.min.js"></script>
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
+    <link rel="stylesheet" href="../static/bootstrap-4.0.0/dist/css/bootstrap.min.css">
+    <link rel="shortcut icon" href="../static/img/favico.ico">
     <title>{% block title %}{{ title }}{% endblock %}</title>
 </head>
 <body>
@@ -31,12 +36,24 @@
             </ul>
         {% endif %}
 {% endwith %}
-<div class="container-fluid mainimage h-75" style="background-image: url({% block image_header_tw0 %}{% endblock %})">
-    <div class="row masthead h-75">
+<div class="container-fluid">
+    <div class="row">
         <div class="col-md-12">
-            <nav class="navbar container-fluid" style="width: 100%">
-                <a href="{{url_for('main.index')}}"><span class="navbar-brand text-dark navbar-dark mb-0 h1">In Wait of Tomorrow</span></a>
-                <a href="{{url_for('main.show_blog')}}" class="btn btn-dark">Articles</a>
+            <nav class="navbar navbar-dark bg-dark container-fluid" style="width: 100%">
+                <a href="{{url_for('main.index')}}"><span class="navbar-brand text-white navbar-dark mb-0 h1">In Wait of Tomorrow</span></a>
+                <div class="dropdown dropleft show btn-group">
+                  <button class="btn btn-dark dropdown-toggle dropleft" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Articles
+                  </button>
+                  <div class="dropdown-menu" id="dropdownmenu" aria-labelledby="dropdownMenuLink">
+                    {% for category in categories %}
+                          <a class="dropdown-item" href="{{ url_for('main.show_blog_category', category=category.category_name) }}">{{ category.category_name }}</a>
+                      {% endfor %}
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{{ url_for('main.show_blog') }}">Latest articles</a>
+                    <a class="dropdown-item" href="{{ url_for('main.show_blog_category', category='Blog') }}">Blog</a>
+                  </div>
+                </div>
             </nav>
         </div>
     </div>
@@ -44,23 +61,41 @@
         {% block image_header %}{% endblock %}
     </div>
 </div>
-    <div class="row h1 ml-0 font-weight-bold text-center col-12">
+
+    <div class="sharethis-inline-follow-buttons"></div>
+<div class="row">
+<div class="col-1"></div>
+    <div class="col-10 h1 ml-0 font-weight-bold pl-4">
         {% block article_title %}{% endblock %}
     </div>
-    <div class="row ml-0 font-weight-bold">
-        {% block intro %}{% endblock %}
+<div class="col-1"></div>
+</div>
+<div class="row">
+<div class="col-1"></div>
+<div class="font-weight-normal h6 text-center pt-2 col-4" style="text-align: center">{% block time_and_date %}{% endblock %}</div>
+    <div class="col-4"></div>
+    <div class="col-1 h1 ml-0 font-weight-bold"><a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
     </div>
-    <div class="row">
-        {% block article_media %}{% endblock %}
-    </div>
-    <div class="row ml-0 font-weight-light pr-5">
+</div>
+
+<div class="row">
+<div class="col-1"></div>
+    <img class="col-10" src="{% block image_header_tw0 %}{% endblock %}" style="max-height: 75vh">
+<div class="col-1"></div>
+</div>
+<div class="row">
+<div class="col-1"></div>
+    <div class="col-10 ml-0 font-weight-normal">
         {% block main_article %}{% endblock %}
     </div>
-<div class="font-italic h6">{% block time_and_date %}{% endblock %}</div>
-<a href="https://twitter.com/InWaitofTomorr1?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">Follow @InWaitofTomorr1</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-    <div class="sharethis-inline-follow-buttons"></div>
-    <div class="fb-share-button" data-href="{% block comments_fb_share %}{% endblock %}" data-layout="button" data-size="large"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
+<div class="col-1"></div>
+</div>
+<div class="row">
+<div class="col-1"></div>
+   <div class="col-1 h1 ml-0 font-weight-bold">
+    <div class="fb-share-button" data-href="{% block comments_fb_share %}{% endblock %}" data-layout="button" data-size="small"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
+   </div>
+</div>
 {% block comments %}
     <div class="fb-comments" data-href="{% block comments_fb %}{% endblock %}" data-width="100%" data-numposts="5"></div>
 {% endblock %}

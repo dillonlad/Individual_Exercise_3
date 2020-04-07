@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block list_of_articles %}
+    <div class="row">
+        <div class="col-2"></div>
+        <div class="col-8">
+                <form class="user" method="POST" novalidate>
+                    {% from "_formhelpers.html" import render_field %}
+                    {{ form.hidden_tag() }}
+                    {{ form.csrf_token}}
+                    <div class="form-group">
+                      {{ render_field(form.email, class='form-control form-control-user') }}
+                    </div>
+                    <div class="form-group">
+                      {{ render_field(form.password, class='form-control form-control-user') }}
+                    </div>
+
+                    <!-- LOGIN BUTTON -->
+                    <input type=submit value='Login' class='btn btn-primary btn-user btn-block'>
+                    <hr>
+                </form>
+        </div>
+    <div class="col-2"></div>
+    </div>
+{% endblock %}

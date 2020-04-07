@@ -1,10 +1,11 @@
 google
 sqlalchemy
-wtforms
 Click==7.0
+wtforms
 Flask==1.1.1
 Flask-SQLAlchemy==2.4.1
 Flask_WTF==0.14.3
+Flask-Blogging==1.2.2
 itsdangerous==1.1.0
 Jinja2==2.11.1
 MarkupSafe==1.1.1
@@ -12,3 +13,8 @@ Werkzeug==0.16.0
 gunicorn==20.0.4
 mysql==0.0.2
 Flask-Sitemap==0.3.0
+flask-wysiwyg==0.1
+Flask-Login==0.5.0
+Flask-MySQLdb==0.2.0
+
+

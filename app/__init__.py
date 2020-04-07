@@ -1,13 +1,19 @@
 from os.path import abspath, join, dirname
 
 from flask import Flask, render_template
+from flask_login import LoginManager
 
 from flask_sqlalchemy import SQLAlchemy
 from flask_sitemap import Sitemap
+from flask_blogging import BloggingEngine
+from flask_mysqldb import MySQL
 
 
-
+login_manager = LoginManager()
 db = SQLAlchemy()
+mysql = MySQL()
+blogging_engine = BloggingEngine()
+
 
 def page_not_found(e):
     return render_template('404.html'), 404
@@ -20,6 +26,14 @@ def create_app():
     CWD = dirname(abspath(__file__))
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + join(CWD, 'new_tomorrow')
     db.init_app(app)
+    login_manager.init_app(app)
+
+    app.config['MYSQL_HOST'] = 'db818621354.hosting-data.io'
+    app.config['MYSQL_USER'] = 'dbo818621354'
+    app.config['MYSQL_PASSWORD'] = 'Kaylan14*'
+    app.config['MYSQL_DB'] = 'db818621354'
+
+    mysql.init_app(app)
 
     # The following is needed if you want to map classes to an existing database
     with app.app_context():
@@ -43,5 +57,11 @@ def create_app():
     app.config['SITEMAP_MAX_URL_COUNT'] = 10000
     app.config['SITEMAP_INCLUDE_RULES_WITHOUT_PARAMS'] = True
     ext.init_app(app)
+
+    app.config["BLOGGING_PERMISSIONS"] = True
+    app.config["BLOGGING_ALLOW_FILEUPLOAD"] = True
+    app.config["FILEUPLOAD_IMG_FOLDER"] = "fileupload"
+    app.config["FILEUPLOAD_PREFIX"] = "/fileupload"
+    app.config["FILEUPLOAD_ALLOWED_EXTENSIONS"] = ["png", "jpg", "jpeg", "gif"]
 
     return app

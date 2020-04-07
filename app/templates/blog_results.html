@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="../static/bootstrap-4.0.0/js/tests/vendor/jquery-1.9.1.min.js"></script>
+    <script src="../static/bootstrap-4.0.0/dist/js/bootstrap.bundle.js"></script>
+    <script src="../static/bootstrap-4.0.0/assets/js/vendor/popper.min.js"></script>
     <link rel="stylesheet" href="../static/css/bootstrap.css">
+    <link rel="stylesheet" href="../static/bootstrap-4.0.0/dist/css/bootstrap.min.css">
+    <link rel="shortcut icon" href="../static/img/favico.ico">
     <title>Blog Articles</title>
 </head>
 <body style="background-color: #dddddd">
@@ -12,35 +17,46 @@
         <div class="col-md-12">
             <nav class="navbar navbar-dark bg-dark container-fluid">
                 <a href="{{url_for('main.index')}}"><span class="navbar-brand mb-0 h1">In Wait of Tomorrow</span></a>
-                <a href="{{url_for('main.show_blog')}}" class="btn btn-dark">Articles</a>
+                <div class="dropdown dropleft show btn-group">
+                  <button class="btn btn-dark dropdown-toggle dropleft" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Articles
+                  </button>
+                  <div class="dropdown-menu" id="dropdownmenu" aria-labelledby="dropdownMenuLink">
+                    {% for category in categories %}
+                          <a class="dropdown-item" href="{{ url_for('main.show_blog_category', category=category.category_name) }}">{{ category.category_name }}</a>
+                      {% endfor %}
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{{ url_for('main.show_blog') }}">Latest articles</a>
+                    <a class="dropdown-item" href="{{ url_for('main.show_blog_category', category='Blog') }}">Blog</a>
+                  </div>
+                </div>
             </nav>
         </div>
     </div>
-       {% if posts|length %}
-    <div class="align-self-center align-content-center justify-content-center align-items-center">
-<table class="align-content-center justify-content-center align-self-center align-items-center">
-    <tbody class="align-content-center align-self-center justify-content-center align-items-center">
+<div class="row col-12 pl-5 justify-content-center">
+    <form class="form-inline" method="POST" action="" novalidate>
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.Search.label }}{{ form.Search(class_="form-control form-control-user") }}
+        </div>
+        <div class="form-group">
+        {{ form.Submit(class_="btn btn-dark btn-user btn-block") }}
+            </div>
+    </form>
+</div><br>
+       <h2 class="font-weight-bold text-center align-self-center align-content-center">Latest articles {% if article_category|length %}in {{ article_category }}{% endif %}</h2>
+    {% if posts|length %}
+<table class="align-content-center justify-content-center pl-2">
+    <tbody class="align-content-center">
     {% for post in posts %}
-    <div class="row align-self-center">
-        <tr class="align-content-center justify-content-center align-items-center align-self-center">
-            <td style="padding: 0.75rem" class="align-content-center justify-content-center align-items-center">
-                <img src="{{ post.post_image }}" style="max-width: 50%">
-            </td>
-        </tr>
-    </div>
-    <div class="text-center col-12 row align-self-center">
-        <tr class="align-content-center align-self-center justify-content-center align-items-center">
-            <td class="align-content-center align-self-center justify-content-center align-items-center">
-                <a class="h2 font-weight-light" href="{{ url_for(post.post_hyperlink) }}" >
-                    {{ post.post_name }}</a><br>
-            </td>
-        </tr>
-    </div>
-    <tr class="col-12 align-self-center align-content-center justify-content-center align-items-center">
-        <td class="align-content-center justify-content-center align-items-center align-self-center">
-            <a class="h6 font-weight-light" href="{{ url_for(post.post_hyperlink) }}" >
-                {{ post.post_description }}
-            </a>
+    <tr class="align-content-center justify-content-center row align-self-center">
+        <td style="padding: 0.75rem" class="text-center">
+            <img src="..{{ post.Image_root }}" style="max-width: 400px" class="row mx-auto d-block align-self-center">
+        </td>
+    </tr>
+    <tr class="align-content-center justify-content-center row align-self-center">
+        <td><a class="h2 font-weight-light align-self-center row text-center ml-2" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}" >
+                {{ post.Title }}</a><br>
         </td>
     </tr>
     {% endfor %}
@@ -49,8 +65,10 @@
 {% else %}
 <p>Sorry, no posts are available at this time</p>
 {% endif %}
-        <a class="twitter-timeline" data-width="300" data-theme="dark" href="https://twitter.com/InWaitofTomorr1?ref_src=twsrc%5Etfw">Tweets by InWaitofTomorr1</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-</div>
+        <div class="row align-content-center justify-content-center align-items-center">
+            <a class="twitter-timeline" data-width="300" data-height="500" data-theme="dark" href="https://twitter.com/InWaitofTomorr1?ref_src=twsrc%5Etfw">Tweets by InWaitofTomorr1</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></div>
+        </div>
+        </div>
 </div>
 </body>
 </html>

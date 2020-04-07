@@ -27,6 +27,21 @@
         consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
         pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
         laborum.</p>
+    <form class="form-inline" method="POST" action="#articles" novalidate>
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.name.label }}{{ form.name(class_="form-control form-control-user pl-2") }}
+        </div>
+        <div class="form-group">
+            {{ form.comment.label }}{{ form.comment(class_="form-control form-control-user pl-2") }}
+        </div>
+        <div class="form-group">
+            {{ form.date.label }}{{ form.date(class_="form-control form-control-user pl-2") }}
+        </div>
+        <div class="form-group">
+        {{ form.Submit(class_="btn btn-dark btn-user btn-block") }}
+            </div>
+    </form>
 {% endblock %}
 {% block comments_fb_share %}http://inwaitoftomorrow.appspot.com/blogs/Biotech{% endblock %}
 {% block comments_fb %}http://inwaitoftomorrow.appspot.com/blogs/Biotech{% endblock %}
