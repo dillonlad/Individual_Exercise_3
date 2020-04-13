@@ -1,3 +1,4 @@
+import os
 from os.path import abspath, join, dirname
 
 from flask import Flask, render_template
@@ -6,12 +7,10 @@ from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_sitemap import Sitemap
 from flask_blogging import BloggingEngine
-from flask_mysqldb import MySQL
 
 
 login_manager = LoginManager()
 db = SQLAlchemy()
-mysql = MySQL()
 blogging_engine = BloggingEngine()
 
 
@@ -27,13 +26,6 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + join(CWD, 'new_tomorrow')
     db.init_app(app)
     login_manager.init_app(app)
-
-    app.config['MYSQL_HOST'] = 'db818621354.hosting-data.io'
-    app.config['MYSQL_USER'] = 'dbo818621354'
-    app.config['MYSQL_PASSWORD'] = 'Kaylan14*'
-    app.config['MYSQL_DB'] = 'db818621354'
-
-    mysql.init_app(app)
 
     # The following is needed if you want to map classes to an existing database
     with app.app_context():

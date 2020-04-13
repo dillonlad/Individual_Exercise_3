@@ -9,14 +9,13 @@ from sqlalchemy.exc import IntegrityError, OperationalError
 from flask_sqlalchemy import SQLAlchemy
 from os.path import abspath, join, dirname
 from flask_sitemap import Sitemap
-from flask_mysqldb import MySQL
 
 
 import app
-from app import db, mysql
+from app import db
 from app.main.forms import CommentForm, SignupForm, LoginForm, PostForm, BlogEditor, CreateArticle, SearchForm
 
-from app.models import Comments, Posts_two, Blogs, Profile, Categories
+from app.models import Comments, Posts_two, Blogs, Profile, Categories, Series
 
 bp_main = Blueprint('main', __name__)
 bp_blogs = Blueprint('blogs', __name__, url_prefix='/blogs')
@@ -57,19 +56,33 @@ def unauthorized():
 def index():
     form = SearchForm(request.form)
     categories = Categories.query.all()
+    series = Series.query.all()
     if request.method == 'POST' and form.validate():
         search = form.Search.data
         posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Title.contains(search)).all()
+        posts_two = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Content.contains(search)).all()
+        for post in posts_two:
+            if post not in posts:
+                posts.append(post)
     else:
         posts = Blogs.query.order_by(desc(Blogs.article_id)).limit(5).all()
-    return render_template('homepage.html', posts=posts, form=form, categories=categories)
+    return render_template('homepage.html', posts=posts, form=form, categories=categories, series=series)
 
 
 @bp_main.route('/linkinbio', methods=['GET'])
 def show_blog_linkinbio():
+    form = SearchForm(request.form)
     categories = Categories.query.all()
-    posts = Blogs.query.order_by(desc(Blogs.article_id)).all()
-    return render_template("blog_results_linkinbio.html", posts=posts, categories=categories)
+    if request.method == 'POST' and form.validate():
+        search = form.Search.data
+        posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Title.contains(search)).all()
+        posts_two = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Content.contains(search)).all()
+        for post in posts_two:
+            if post not in posts:
+                posts.append(post)
+    else:
+        posts = Blogs.query.order_by(desc(Blogs.article_id)).all()
+    return render_template("blog_results.html", posts=posts, categories=categories, form=form)
 
 
 @bp_main.route('/articles', methods=['POST', 'GET'])
@@ -79,6 +92,10 @@ def show_blog():
     if request.method == 'POST' and form.validate():
         search = form.Search.data
         posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Title.contains(search)).all()
+        posts_two = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Content.contains(search)).all()
+        for post in posts_two:
+            if post not in posts:
+                posts.append(post)
     else:
         posts = Blogs.query.order_by(desc(Blogs.article_id)).all()
     return render_template("blog_results.html", posts=posts, categories=categories, form=form)
@@ -91,31 +108,34 @@ def show_blog_category(category):
     if request.method == 'POST' and form.validate():
         search = form.Search.data
         posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.category.contains(category)).filter(Blogs.Title.contains(search)).all()
+        posts_two = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.category.contains(category)).filter(Blogs.Content.contains(search)).all()
+        for post in posts_two:
+            if post not in posts:
+                posts.append(post)
     else:
-        posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.category.contains(category)).all()
+        if Categories.query.filter(Categories.category_name.contains(category)).all():
+            posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.category.contains(category)).all()
+        else:
+            return redirect(url_for('main.show_blog'))
     article_category = category
     return render_template("blog_results.html", posts=posts, categories=categories, article_category=article_category, form=form)
 
 
-@bp_blogs.route('/Biotech', methods=['POST', 'GET'])
-def biotech_blog():
-    form = CommentForm(request.form)
-    all_comments = Comments.query.filter(Comments.blog_name.contains("Biotech")).all()
+@bp_main.route('/<series_name>', methods=['POST', 'GET'])
+def show_blog_series(series_name):
+    form = SearchForm(request.form)
+    categories = Categories.query.all()
     if request.method == 'POST' and form.validate():
-        user_comment = Comments(name=form.name.data, comment=form.comment.data, blog_name="Biotech", date=form.date.data)
-        try:
-            cur = mysql.connection.cursor()
-            db.session.commit()
-            flash('Thanks for the comment!')
-            return redirect(url_for('main.biotech_blog'))
-        except IntegrityError:
-            db.session.rollback()
-            flash('ERROR commenting')
-        except OperationalError:
-            db.session.rollback()
-            flash('There was an error when commenting! Thanks for trying!')
-            return redirect(url_for('main.biotech_blog'))
-    return render_template("blogs/Biotech.html", form=form, comments=all_comments)
+        search = form.Search.data
+        posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Title.contains(series_name)).filter(Blogs.Title.contains(search)).all()
+        posts_two = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Title.contains(series_name)).filter(Blogs.Content.contains(search)).all()
+        for post in posts_two:
+            if post not in posts:
+                posts.append(post)
+    else:
+        posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Title.contains(series_name)).all()
+    article_category = series_name
+    return render_template("blog_results.html", posts=posts, categories=categories, article_category=article_category, form=form)
 
 
 @bp_main.route('/login', methods=['GET', 'POST'])
@@ -199,7 +219,7 @@ def add_post():
 def new_post():
     form = CreateArticle(request.form)
     if request.method == 'POST' and form.validate():
-        post = Blogs(Title=form.Title.data, Post_ID=form.Post_ID.data, Description=form.Description.data, Image_root=form.Image_root.data, url_=form.url_.data, Content=form.Content.data, Time=form.Time.data, Date=form.Date.data, category=form.category.data, author=form.author.data)
+        post = Blogs(Title=form.Title.data, Post_ID=form.Post_ID.data, Description=form.Description.data, Image_root=form.Image_root.data, url_=form.url_.data, Content=form.Content.data, Time=form.Time.data, Date=form.Date.data, category=form.category.data, author=form.author.data, keywords=form.keywords.data)
         try:
             db.session.add(post)
             response = make_response(redirect(url_for('main.index')))
@@ -221,6 +241,11 @@ def page_not_found(e):
 
 @bp_blogs.route('/<Post_ID>', methods=['GET'])
 def post(Post_ID):
-    categories = Categories.query.all()
-    post = Blogs.query.filter_by(Post_ID=Post_ID).all()
-    return render_template("blogs/post.html", post=post, categories=categories)
+    if Blogs.query.filter(Blogs.Post_ID.contains(Post_ID)).all():
+        categories = Categories.query.all()
+        post = Blogs.query.filter_by(Post_ID=Post_ID).all()
+        if len(post) == 0:
+            return redirect(url_for('main.show_blog'))
+        return render_template("blogs/post.html", post=post, categories=categories)
+    else:
+        return redirect(url_for('main.show_blog'))

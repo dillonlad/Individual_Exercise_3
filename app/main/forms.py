@@ -10,7 +10,7 @@ class CommentForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     comment = StringField('Comment', validators=[DataRequired()])
     date = StringField('Date')
-    submit = SubmitField('Comment')
+    Submit = SubmitField('Comment')
 
 
 class PostForm(FlaskForm):
@@ -62,9 +62,10 @@ class CreateArticle(FlaskForm):
     Date = StringField('Date', validators=[DataRequired()])
     category = StringField('Category', validators=[DataRequired()])
     author = StringField('Author', validators=[DataRequired()])
+    keywords = StringField('Keywords', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
 
 class SearchForm(FlaskForm):
-    Search = StringField('Search for articles: ')
+    Search = StringField('Search for articles:     ')
     Submit = SubmitField('Search')

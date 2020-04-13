@@ -21,6 +21,9 @@
     <script src="../static/bootstrap-4.0.0/assets/js/vendor/popper.min.js"></script>
     <link rel="stylesheet" href="../static/css/bootstrap.css">
     <link rel="stylesheet" href="../static/bootstrap-4.0.0/dist/css/bootstrap.min.css">
+    <meta name="keywords" content="inwaitoftomorrow, In Wait of Tomorrow, futurology, {% block meta_keywords %}{% endblock %}">
+    <meta name="author" content="inwaitoftomorrow">
+    <meta name="robots" content="index, follow">
     <link rel="shortcut icon" href="../static/img/favico.ico">
     <title>{% block title %}{{ title }}{% endblock %}</title>
 </head>
@@ -47,7 +50,9 @@
                   </button>
                   <div class="dropdown-menu" id="dropdownmenu" aria-labelledby="dropdownMenuLink">
                     {% for category in categories %}
-                          <a class="dropdown-item" href="{{ url_for('main.show_blog_category', category=category.category_name) }}">{{ category.category_name }}</a>
+                          {% if category.category_name != "Blog" %}
+                            <a class="dropdown-item" href="{{ url_for('main.show_blog_category', category=category.category_name) }}">{{ category.category_name }}</a>
+                          {% endif %}
                       {% endfor %}
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="{{ url_for('main.show_blog') }}">Latest articles</a>

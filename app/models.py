@@ -1,11 +1,11 @@
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from app import db, mysql
+from app import db
 
 
-class Comments(mysql.connect):
-    name = mysql.Column(db.Text, nullable=False, primary_key=True)
+class Comments(db.Model):
+    name = db.Column(db.Text, nullable=False, primary_key=True)
     comment = db.Column(db.Text, nullable=False)
     blog_name = db.Column(db.Text)
     date = db.Column(db.Text)
@@ -41,6 +41,13 @@ class Blogs(db.Model):
     category = db.Column(db.Text, nullable=True)
     article_id = db.Column(db.Integer, autoincrement=True, nullable=False)
     author = db.Column(db.Text, nullable=True)
+    keywords = db.Column(db.Text, nullable=True)
+
+
+class Series(db.Model):
+    series_id = db.Column(db.Integer, autoincrement=True, primary_key=True, nullable=False)
+    series_name = db.Column(db.Text, nullable=False)
+    series_key = db.Column(db.Text)
 
 
 class Categories(db.Model):

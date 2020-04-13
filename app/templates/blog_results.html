@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="../static/css/bootstrap.css">
     <link rel="stylesheet" href="../static/bootstrap-4.0.0/dist/css/bootstrap.min.css">
     <link rel="shortcut icon" href="../static/img/favico.ico">
+    <meta name="robots" content="index, follow">
+    <meta name="description" content="The latest in tech, science and politics, inwaitoftomorrow is a blog about what the future might look like"/>
+    <meta name="author" content="inwaitoftomorrow">
     <title>Blog Articles</title>
 </head>
 <body style="background-color: #dddddd">
@@ -23,8 +26,10 @@
                   </button>
                   <div class="dropdown-menu" id="dropdownmenu" aria-labelledby="dropdownMenuLink">
                     {% for category in categories %}
-                          <a class="dropdown-item" href="{{ url_for('main.show_blog_category', category=category.category_name) }}">{{ category.category_name }}</a>
-                      {% endfor %}
+                        {% if category.category_name != "Blog" %}
+                            <a class="dropdown-item" href="{{ url_for('main.show_blog_category', category=category.category_name) }}">{{ category.category_name }}</a>
+                        {% endif %}
+                    {% endfor %}
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="{{ url_for('main.show_blog') }}">Latest articles</a>
                     <a class="dropdown-item" href="{{ url_for('main.show_blog_category', category='Blog') }}">Blog</a>
@@ -46,22 +51,21 @@
 </div><br>
        <h2 class="font-weight-bold text-center align-self-center align-content-center">Latest articles {% if article_category|length %}in {{ article_category }}{% endif %}</h2>
     {% if posts|length %}
-<table class="align-content-center justify-content-center pl-2">
-    <tbody class="align-content-center">
-    {% for post in posts %}
-    <tr class="align-content-center justify-content-center row align-self-center">
-        <td style="padding: 0.75rem" class="text-center">
-            <img src="..{{ post.Image_root }}" style="max-width: 400px" class="row mx-auto d-block align-self-center">
-        </td>
-    </tr>
-    <tr class="align-content-center justify-content-center row align-self-center">
-        <td><a class="h2 font-weight-light align-self-center row text-center ml-2" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}" >
-                {{ post.Title }}</a><br>
-        </td>
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
+    <table class="align-content-center justify-content-center row">
+        <tbody class="align-content-center">
+        {% for post in posts %}
+        <tr class="align-content-center justify-content-center align-self-center row">
+            <td class="col-1"></td>
+            <td style="padding: 0.75rem" class="text-center col-10">
+                <img src="..{{ post.Image_root }}" style="max-height: 60vh" class="mx-auto d-block w-75 align-self-center">
+                <a class="h4 font-weight-light align-self-center col-10 text-center" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}" >
+                    {{ post.Title }}</a><br>
+            </td>
+            <td class="col-1"></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 {% else %}
 <p>Sorry, no posts are available at this time</p>
 {% endif %}
