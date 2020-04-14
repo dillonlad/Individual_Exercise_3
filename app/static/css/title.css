@@ -1,0 +1,31 @@
+.main-title {
+   position: absolute;
+   margin: 0;
+   padding: 0;
+   text-align: center;
+   top: 50%;
+   left: 50%;
+   -webkit-transform: translate3d(-50%, -50%, 0);
+   transform: translate3d(-50%, -50%, 0);
+}
+
+.demo .main-title {
+   text-transform: uppercase;
+   letter-spacing: 0.1em;
+}
+
+
+@media only screen and (max-width: 768px) {
+   .demo .main-title {
+      font-size: 3em;
+   }
+}
+
+.large-header-one {
+   position: relative;
+   width: 100%;
+   overflow: hidden;
+   background-size: cover;
+   background-position: center center;
+   z-index: 1;
+}

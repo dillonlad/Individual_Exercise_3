@@ -67,5 +67,5 @@ class CreateArticle(FlaskForm):
 
 
 class SearchForm(FlaskForm):
-    Search = StringField('Search for articles:     ')
+    Search = StringField('Search for articles:')
     Submit = SubmitField('Search')

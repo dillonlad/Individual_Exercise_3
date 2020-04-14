@@ -68,32 +68,25 @@
 </div>
 
     <div class="sharethis-inline-follow-buttons"></div>
-<div class="row">
-<div class="col-1"></div>
-    <div class="col-10 h1 ml-0 font-weight-bold pl-4">
+<div class="row m-auto" style="max-width: 800px">
+    <div class="h1 col-12 font-weight-normal">
         {% block article_title %}{% endblock %}
     </div>
-<div class="col-1"></div>
 </div>
-<div class="row">
-<div class="col-1"></div>
+<div class="row m-auto" style="max-width: 800px">
 <div class="font-weight-normal h6 text-center pt-2 col-4" style="text-align: center">{% block time_and_date %}{% endblock %}</div>
     <div class="col-4"></div>
     <div class="col-1 h1 ml-0 font-weight-bold"><a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
     </div>
 </div>
 
-<div class="row">
-<div class="col-1"></div>
-    <img class="col-10" src="{% block image_header_tw0 %}{% endblock %}" style="max-height: 75vh">
-<div class="col-1"></div>
+<div class="row m-auto" style="max-width: 800px">
+    <img src="{% block image_header_tw0 %}{% endblock %}" style="max-height: 75vh" class="col-12">
 </div>
-<div class="row">
-<div class="col-1"></div>
-    <div class="col-10 ml-0 font-weight-normal">
+<div class="row m-auto" style="max-width: 800px">
+    <div class="col-12 font-weight-normal">
         {% block main_article %}{% endblock %}
     </div>
-<div class="col-1"></div>
 </div>
 <div class="row">
 <div class="col-1"></div>

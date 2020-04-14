@@ -6,8 +6,10 @@
     <script src="../static/bootstrap-4.0.0/js/tests/vendor/jquery-1.9.1.min.js"></script>
     <script src="../static/bootstrap-4.0.0/dist/js/bootstrap.bundle.js"></script>
     <script src="../static/bootstrap-4.0.0/assets/js/vendor/popper.min.js"></script>
+    <script src="../static/js/mdb.min.js"></script>
     <link rel="stylesheet" href="../static/css/bootstrap.css">
     <link rel="stylesheet" href="../static/bootstrap-4.0.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/css/hovering.css">
     <link rel="shortcut icon" href="../static/img/favico.ico">
     <meta name="robots" content="index, follow">
     <meta name="description" content="The latest in tech, science and politics, inwaitoftomorrow is a blog about what the future might look like"/>
@@ -42,26 +44,30 @@
     <form class="form-inline" method="POST" action="" novalidate>
         {{ form.hidden_tag() }}
         <div class="form-group">
-            {{ form.Search.label }}{{ form.Search(class_="form-control form-control-user") }}
+            {{ form.Search.label(class_="pr-2") }}{{ form.Search(class_="form-control form-control-user") }}
         </div>
         <div class="form-group">
         {{ form.Submit(class_="btn btn-dark btn-user btn-block") }}
             </div>
     </form>
 </div><br>
-       <h2 class="font-weight-bold text-center align-self-center align-content-center">Latest articles {% if article_category|length %}in {{ article_category }}{% endif %}</h2>
+       <h1 class="font-weight-normal text-center align-self-center align-content-center">Latest articles {% if article_category|length %}in {{ article_category }}{% endif %}</h1>
     {% if posts|length %}
-    <table class="align-content-center justify-content-center row">
+    <table class="align-content-center justify-content-center row m-auto" style="max-width: 800px">
         <tbody class="align-content-center">
         {% for post in posts %}
         <tr class="align-content-center justify-content-center align-self-center row">
-            <td class="col-1"></td>
-            <td style="padding: 0.75rem" class="text-center col-10">
-                <img src="..{{ post.Image_root }}" style="max-height: 60vh" class="mx-auto d-block w-75 align-self-center">
-                <a class="h4 font-weight-light align-self-center col-10 text-center" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}" >
+            <td style="padding: 0.75rem" class="text-center">
+                <a class="h4 font-weight-normal align-self-center mx-auto col-12 text-center pb-2" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}" >
                     {{ post.Title }}</a><br>
+                <div class="hovereffect">
+                    <img src="..{{ post.Image_root }}" style="max-height: 60vh" class="mx-auto w-75 d-block align-self-center img-responsive">
+                    <div class="overlay">
+                        <p class="text-white">{{ post.Description }}...<br><a class="h4 text-white" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"> Read more...</a></p>
+                    </div>
+                </div>
+
             </td>
-            <td class="col-1"></td>
         </tr>
         {% endfor %}
         </tbody>
