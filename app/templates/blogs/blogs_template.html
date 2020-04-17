@@ -27,7 +27,7 @@
     <link rel="shortcut icon" href="../static/img/favico.ico">
     <title>{% block title %}{{ title }}{% endblock %}</title>
 </head>
-<body>
+<body itemscope itemtype="https://schema.org/WebPage">
 <div class="container-fluid">
     <!-- Displays flashed messages on a page -->
     {% with messages = get_flashed_messages() %}
@@ -42,7 +42,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-            <nav class="navbar navbar-dark bg-dark container-fluid" style="width: 100%">
+            <nav class="navbar navbar-dark bg-dark container-fluid" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
                 <a href="{{url_for('main.index')}}"><span class="navbar-brand text-white navbar-dark mb-0 h1">In Wait of Tomorrow</span></a>
                 <div class="dropdown dropleft show btn-group">
                   <button class="btn btn-dark dropdown-toggle dropleft" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -68,20 +68,20 @@
 </div>
 
     <div class="sharethis-inline-follow-buttons"></div>
-<div class="row m-auto" style="max-width: 800px">
+<div class="row m-auto" style="max-width: 800px" itemprop="name">
     <div class="h1 col-12 font-weight-normal">
         {% block article_title %}{% endblock %}
     </div>
 </div>
 <div class="row m-auto" style="max-width: 800px">
-<div class="font-weight-normal h6 text-center pt-2 col-4" style="text-align: center">{% block time_and_date %}{% endblock %}</div>
+<div class="font-weight-normal h6 text-center pt-2 col-4" itemtype="datePublished, author" style="text-align: center">{% block time_and_date %}{% endblock %}</div>
     <div class="col-4"></div>
     <div class="col-1 h1 ml-0 font-weight-bold"><a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
     </div>
 </div>
 
 <div class="row m-auto" style="max-width: 800px">
-    <img src="{% block image_header_tw0 %}{% endblock %}" style="max-height: 75vh" class="col-12">
+    <img itemtype="primaryImageOfPage, image" src="{% block image_header_tw0 %}{% endblock %}" style="max-height: 75vh" class="col-12">
 </div>
 <div class="row m-auto" style="max-width: 800px">
     <div class="col-12 font-weight-normal">

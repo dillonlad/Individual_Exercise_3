@@ -12,15 +12,15 @@
     <link rel="stylesheet" href="../static/css/hovering.css">
     <link rel="shortcut icon" href="../static/img/favico.ico">
     <meta name="robots" content="index, follow">
-    <meta name="description" content="The latest in tech, science and politics, inwaitoftomorrow is a blog about what the future might look like"/>
+    <meta name="description" content="Futurology: {% if article_category|length %}{{ article_category }}{% endif %}, inwaitoftomorrow is a blog about what the future might look like"/>
     <meta name="author" content="inwaitoftomorrow">
-    <title>Blog Articles</title>
+    <title>{% if article_category|length %}{{ article_category }}{% endif %} - Articles</title>
 </head>
-<body style="background-color: #dddddd">
+<body style="background-color: #dddddd" itemscope itemtype="https://schema.org/WebPage">
 <div class="container-fluid mainimage opacity-5">
     <div class="row">
         <div class="col-md-12">
-            <nav class="navbar navbar-dark bg-dark container-fluid">
+            <nav class="navbar navbar-dark bg-dark container-fluid" itemscope itemtype="https://schema.org/SiteNavigationElement">
                 <a href="{{url_for('main.index')}}"><span class="navbar-brand mb-0 h1">In Wait of Tomorrow</span></a>
                 <div class="dropdown dropleft show btn-group">
                   <button class="btn btn-dark dropdown-toggle dropleft" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -52,30 +52,25 @@
     </form>
 </div><br>
        <h1 class="font-weight-normal text-center align-self-center align-content-center">Latest articles {% if article_category|length %}in {{ article_category }}{% endif %}</h1>
-    {% if posts|length %}
-    <table class="align-content-center justify-content-center row m-auto" style="max-width: 800px">
-        <tbody class="align-content-center">
+{% if posts|length %}
+    <div class="m-auto" style="max-width: 600px">
         {% for post in posts %}
-        <tr class="align-content-center justify-content-center align-self-center row">
-            <td style="padding: 0.75rem" class="text-center">
-                <a class="h4 font-weight-normal align-self-center mx-auto col-12 text-center pb-2" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}" >
-                    {{ post.Title }}</a><br>
+            <div class="card mb-3" style="width: 100%" itemscope itemtype="https://schema.org/Blog">
                 <div class="hovereffect">
-                    <img src="..{{ post.Image_root }}" style="max-height: 60vh" class="mx-auto w-75 d-block align-self-center img-responsive">
+                    <img class="card-img-top" itemscope itemtype="https://schema.org/ImageObject" src="..{{ post.Image_root }}" alt="{{ post.Title }}">
                     <div class="overlay">
-                        <p class="text-white">{{ post.Description }}...<br><a class="h4 text-white" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"> Read more...</a></p>
+                        <p class="text-white" itemprop="description">{{ post.Description }}...<br><a class="h4 text-white" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"> Read more...</a></p>
                     </div>
                 </div>
-
-            </td>
-        </tr>
+              <div class="card-body text-center">
+                  <a class="h4" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"><p class="card-text" itemprop="name">{{ post.Title }}</p></a>
+              </div>
+            </div>
         {% endfor %}
-        </tbody>
-    </table>
+    </div>
 {% else %}
 <p>Sorry, no posts are available at this time</p>
-{% endif %}
-        <div class="row align-content-center justify-content-center align-items-center">
+{% endif %}        <div class="row align-content-center justify-content-center align-items-center">
             <a class="twitter-timeline" data-width="300" data-height="500" data-theme="dark" href="https://twitter.com/InWaitofTomorr1?ref_src=twsrc%5Etfw">Tweets by InWaitofTomorr1</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></div>
         </div>
         </div>

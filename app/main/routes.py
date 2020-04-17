@@ -27,6 +27,7 @@ def is_safe_url(target):
     redirect_url = urlparse(urljoin(request.host_url, target))
     return redirect_url.scheme in ('http', 'https') and host_url.netloc == redirect_url.netloc
 
+
 def get_safe_redirect():
     url = request.args.get('next')
     if url and is_safe_url(url):
@@ -52,24 +53,42 @@ def unauthorized():
     return redirect(url_for('main.login'))
 
 
+@bp_main.route('/robots.txt', methods=['GET'])
+def robots_file():
+    response = make_response(open('robots.txt').read())
+    response.headers["Content-type"] = "text/plain"
+    return response
+
+
 @bp_main.route('/', methods=['POST', 'GET'])
 def index():
-    form = SearchForm(request.form)
-    categories = Categories.query.all()
-    series = Series.query.all()
-    posts = Blogs.query.order_by(desc(Blogs.article_id)).limit(5).all()
-    if request.method == 'POST' and form.validate():
-        search = form.Search.data
-        if len(search) == 0:
-            posts = Blogs.query.order_by(desc(Blogs.article_id)).limit(5).all()
-        else:
-            posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Title.contains(search)).all()
-            posts_two = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Content.contains(search)).all()
-            for post in posts_two:
-                if post not in posts:
-                    posts.append(post)
-        return render_template('homepage.html', posts=posts, form=form, categories=categories, series=series)
-    return render_template('homepage.html', posts=posts, form=form, categories=categories, series=series)
+    host = request.host
+    if "www" in host:
+        return redirect('https://inwaitoftomorrow.appspot.com', code=301)
+    elif "inwaitoftomorrow.com" in host:
+        return redirect('https://inwaitoftomorrow.appspot.com', code=301)
+    elif request.url.startswith('http://') and '127' not in host:
+        url = request.url.replace('http://', 'https://', 1)
+        code = 301
+        return redirect(url, code=code)
+    else:
+        form = SearchForm(request.form)
+        categories = Categories.query.all()
+        series = Series.query.all()
+        posts = Blogs.query.order_by(desc(Blogs.article_id)).limit(5).all()
+        latest_article = Blogs.query.order_by(desc(Blogs.article_id)).limit(1).all()
+        if request.method == 'POST' and form.validate():
+            search = form.Search.data
+            if len(search) == 0:
+                posts = Blogs.query.order_by(desc(Blogs.article_id)).limit(5).all()
+            else:
+                posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Title.contains(search)).all()
+                posts_two = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Content.contains(search)).all()
+                for post in posts_two:
+                    if post not in posts:
+                        posts.append(post)
+            return render_template('homepage.html', posts=posts, form=form, categories=categories, series=series)
+        return render_template('homepage.html', latest_article=latest_article, posts=posts, form=form, categories=categories, series=series)
 
 
 @bp_main.route('/linkinbio', methods=['POST', 'GET'])
@@ -255,6 +274,11 @@ def new_post():
 @bp_main.errorhandler(500)
 def page_not_found(e):
     return render_template("500.html"), 500
+
+
+@bp_main.errorhandler(404)
+def page_not_found(e):
+    return render_template("404.html"), 404
 
 
 @bp_blogs.route('/<Post_ID>', methods=['GET'])
