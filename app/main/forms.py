@@ -1,9 +1,9 @@
 from flask_wtf import FlaskForm
 from flask_wysiwyg.wysiwyg import WysiwygField
-from wtforms import SubmitField, StringField, PasswordField, RadioField, BooleanField, TextAreaField
+from wtforms import SubmitField, StringField, PasswordField, RadioField, BooleanField, TextAreaField, SelectField
 from wtforms.validators import DataRequired, EqualTo, Email, Length, ValidationError
 
-from app.models import Profile
+from app.models import Profile, Authors
 
 
 class CommentForm(FlaskForm):
@@ -61,7 +61,7 @@ class CreateArticle(FlaskForm):
     Time = StringField('Time', validators=[DataRequired()])
     Date = StringField('Date', validators=[DataRequired()])
     category = StringField('Category', validators=[DataRequired()])
-    author = StringField('Author', validators=[DataRequired()])
+    author = SelectField(u'Author', choices=[('0',''), ('1', 'Dillon Lad'), ('2','Rajan Kholia')], validators=[DataRequired()])
     keywords = StringField('Keywords', validators=[DataRequired()])
     submit = SubmitField('Submit')
 

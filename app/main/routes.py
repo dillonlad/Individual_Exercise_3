@@ -8,14 +8,13 @@ from sqlalchemy import null, desc
 from sqlalchemy.exc import IntegrityError, OperationalError
 from flask_sqlalchemy import SQLAlchemy
 from os.path import abspath, join, dirname
-from flask_sitemap import Sitemap
-
+from flask_sitemap import Sitemap, sitemap_page_needed
 
 import app
 from app import db
 from app.main.forms import CommentForm, SignupForm, LoginForm, PostForm, BlogEditor, CreateArticle, SearchForm
 
-from app.models import Comments, Posts_two, Blogs, Profile, Categories, Series
+from app.models import Comments, Posts_two, Blogs, Profile, Categories, Series, Authors
 
 bp_main = Blueprint('main', __name__)
 bp_blogs = Blueprint('blogs', __name__, url_prefix='/blogs')
@@ -38,6 +37,12 @@ def get_safe_redirect():
     return '/'
 
 
+def has_no_underscore():
+    underscore = request.host
+    if "_" in underscore:
+        underscore.replace("_","-")
+
+
 @app.login_manager.user_loader
 def load_user(user_id):
     """Check if user is logged-in on every page load."""
@@ -58,6 +63,18 @@ def robots_file():
     response = make_response(open('robots.txt').read())
     response.headers["Content-type"] = "text/plain"
     return response
+
+
+@bp_main.route('/sitemap-index.xml')
+def sitemap_index():
+    return render_template('sitemap_index.xml')
+
+
+@bp_main.route('/articles-sitemap.xml', methods=['GET'])
+def articles_sitemap():
+    categories = Categories.query.all()
+    articles = Blogs.query.all()
+    return render_template('sitemap_blogs.xml', categories=categories, articles=articles)
 
 
 @bp_main.route('/', methods=['POST', 'GET'])
@@ -110,6 +127,7 @@ def show_blog_linkinbio():
     return render_template("blog_results.html", posts=posts, categories=categories, form=form)
 
 
+@bp_main.errorhandler(404)
 @bp_main.route('/articles', methods=['POST', 'GET'])
 def show_blog():
     form = SearchForm(request.form)
@@ -131,31 +149,29 @@ def show_blog():
 
 @bp_main.route('/<category>', methods=['POST', 'GET'])
 def show_blog_category(category):
-    form = SearchForm(request.form)
-    categories = Categories.query.all()
-    if Categories.query.filter(Categories.category_name.contains(category)).all():
-        posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.category.contains(category)).all()
-        if request.method == 'POST' and form.validate():
-            search = form.Search.data
-            if len(search) == 0:
-                posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.category.contains(category)).all()
-            else:
-                posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.category.contains(category)).filter(
-                    Blogs.Title.contains(search)).all()
-                posts_two = Blogs.query.order_by(desc(Blogs.article_id)).filter(
-                    Blogs.category.contains(category)).filter(Blogs.Content.contains(search)).all()
-                for post in posts_two:
-                    if post not in posts:
-                        posts.append(post)
+        form = SearchForm(request.form)
+        categories = Categories.query.all()
+        if Categories.query.filter(Categories.category_name.contains(category)).all():
+            posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.category.contains(category)).all()
+            if request.method == 'POST' and form.validate():
+                search = form.Search.data
+                if len(search) == 0:
+                    posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.category.contains(category)).all()
+                else:
+                    posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.category.contains(category)).filter(
+                        Blogs.Title.contains(search)).all()
+                    posts_two = Blogs.query.order_by(desc(Blogs.article_id)).filter(
+                        Blogs.category.contains(category)).filter(Blogs.Content.contains(search)).all()
+                    for post in posts_two:
+                        if post not in posts:
+                            posts.append(post)
+                article_category = category
+                return render_template("blog_results.html", posts=posts, categories=categories,
+                                       article_category=article_category, form=form)
             article_category = category
             return render_template("blog_results.html", posts=posts, categories=categories,
-                                   article_category=article_category, form=form)
-        article_category = category
-        return render_template("blog_results.html", posts=posts, categories=categories,
-                                   article_category=article_category, form=form)
-    else:
+                                       article_category=article_category, form=form)
         return redirect(url_for('main.show_blog'))
-
 
 
 @bp_main.route('/<series_name>', methods=['POST', 'GET'])
@@ -255,6 +271,7 @@ def add_post():
 @login_required
 def new_post():
     form = CreateArticle(request.form)
+    authors = Authors.query.all()
     if request.method == 'POST' and form.validate():
         post = Blogs(Title=form.Title.data, Post_ID=form.Post_ID.data, Description=form.Description.data, Image_root=form.Image_root.data, url_=form.url_.data, Content=form.Content.data, Time=form.Time.data, Date=form.Date.data, category=form.category.data, author=form.author.data, keywords=form.keywords.data)
         try:
@@ -268,7 +285,7 @@ def new_post():
         except OperationalError:
             db.session.rollback()
             flash('did not work')
-    return render_template("blogs/add_post.html", form=form)
+    return render_template("blogs/add_post.html", form=form, authors=authors)
 
 
 @bp_main.errorhandler(500)
@@ -283,11 +300,20 @@ def page_not_found(e):
 
 @bp_blogs.route('/<Post_ID>', methods=['GET'])
 def post(Post_ID):
-    if Blogs.query.filter(Blogs.Post_ID.contains(Post_ID)).all():
-        categories = Categories.query.all()
-        post = Blogs.query.filter_by(Post_ID=Post_ID).all()
-        if len(post) == 0:
-            return redirect(url_for('main.show_blog'))
-        return render_template("blogs/post.html", post=post, categories=categories)
+    host = request.host
+    if "_" in Post_ID:
+        return redirect(url_for('blogs.post', Post_ID=Post_ID.replace("_","-")), 301)
+    elif request.url.startswith('http://') and '127' not in host:
+        url = request.url.replace('http://', 'https://', 1)
+        code = 301
+        return redirect(url, code=code)
     else:
-        return redirect(url_for('main.show_blog'))
+        if Blogs.query.filter(Blogs.Post_ID.contains(Post_ID)).all():
+            categories = Categories.query.all()
+            post = Blogs.query.filter_by(Post_ID=Post_ID).all()
+            if len(post) == 0:
+                return redirect(url_for('main.show_blog'))
+            return render_template("blogs/post.html", post=post, categories=categories)
+        else:
+            flash("The article you tried to find does not exist, at least not with that URL, try using the search box to find what you're looking for")
+            return redirect(url_for('main.show_blog'))

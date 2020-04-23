@@ -81,22 +81,24 @@
 </div>
 
 <div class="row m-auto" style="max-width: 800px">
-    <img itemtype="primaryImageOfPage, image" src="{% block image_header_tw0 %}{% endblock %}" style="max-height: 75vh" class="col-12">
+    <img itemtype="primaryImageOfPage, image" src="{% block image_header_tw0 %}{% endblock %}" style="max-height: 75vh" class="col-12" alt="{% for post in posts %}{{ post.Title }}{% endfor %}">
 </div>
 <div class="row m-auto" style="max-width: 800px">
     <div class="col-12 font-weight-normal">
         {% block main_article %}{% endblock %}
     </div>
 </div>
-<div class="row">
+<div class="row m-auto" style="max-width: 800px">
 <div class="col-1"></div>
    <div class="col-1 h1 ml-0 font-weight-bold">
     <div class="fb-share-button" data-href="{% block comments_fb_share %}{% endblock %}" data-layout="button" data-size="small"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
    </div>
 </div>
+<div class="m-auto row" style="max-width: 800px">
 {% block comments %}
     <div class="fb-comments" data-href="{% block comments_fb %}{% endblock %}" data-width="100%" data-numposts="5"></div>
 {% endblock %}
+</div>
 
 </div>
 

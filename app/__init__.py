@@ -35,8 +35,8 @@ def create_app():
     # from app.models import <add the names of your model classes here>
     # with app.app_context():
         # db.create_all()
-
-    app.register_error_handler(404, page_not_found)
+    from app.main.routes import bp_main
+    bp_main.register_error_handler(404, page_not_found)
     from app.main.routes import bp_blogs
 
     app.register_blueprint(bp_blogs)
@@ -48,6 +48,7 @@ def create_app():
     from app.main.routes import ext
     app.config['SITEMAP_MAX_URL_COUNT'] = 10000
     app.config['SITEMAP_INCLUDE_RULES_WITHOUT_PARAMS'] = True
+    app.config['SITEMAP_URL_SCHEME'] = "https"
     ext.init_app(app)
 
     app.config["BLOGGING_PERMISSIONS"] = True

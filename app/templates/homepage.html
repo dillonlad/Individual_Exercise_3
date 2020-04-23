@@ -5,20 +5,14 @@
  <img class="d-block" style="max-width: 300px" src="../static/img/logo%20-%20Copy.png" alt="First slide">
 {% endblock %}
 {% block list_of_articles %}
-<div class="row container demo" id="3dpart" style="max-height: 100%">
-   <div class="content">
-      <div id="large-header" class="large-header">
-         <canvas id="demo-canvas"></canvas>
-         <h1 class="main-title"><span class="thin">Explore</span> Space</h1>
-      </div>
-   </div>
-</div>
 <div class="row col-12 justify-content-center">
-    <img src="../static/img/logo.jpeg" style="max-height: 200px" alt="In Wait of Tomorrow"></div>
+    <img src="../static/img/logo.jpeg" style="max-height: 200px" alt="In Wait of Tomorrow">
 </div>
-<div class="row"><h3 class="h3 font-weight-light text-center col-12">Latest articles</h3> </div>
-{% if posts|length %}
-<div class="m-auto" style="max-width: 600px">
+    <div class="row col-12 justify-content-center">
+    <h3 class="h3 font-weight-light text-center">Latest articles</h3>
+</div>
+    {% if posts|length %}
+<div class="m-auto row" style="max-width: 600px">
 <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
   <ol class="carousel-indicators">
     <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
@@ -59,14 +53,102 @@
     <span class="carousel-control-next-icon" aria-hidden="true"></span>
     <span class="sr-only">Next</span>
   </a>
+
 </div>
 {% else %}
 <p>Sorry, no posts are available at this time</p>
 {% endif %}
+        <div class="col-12 pt-2 pb-5">
+                    <div class="text-center text-white font-weight-normal col-12"><a class="font-weight-normal text-white" href="#aboutus"><i class="arrow down text-white"></i></a></div>
+                </div>
 </div>
-    <div class="row col-12 justify-content-center">
-    Follow inwaitoftomorrow on <a href="https://twitter.com/InWaitofTomorr1" class="pl-1 pr-1"> Twitter </a> and <a class="pl-1 pr-1" href="https://www.instagram.com/inwaitoftomorrow/"> Instagram</a>
+    <div itemscope itemtype="https://schema.org/AboutPage" class="container-fluid mainimage opacity-5 large-header-one" id="aboutus" style="background-image: url('../static/img/photo-1487525219605-eadb39ae229c.jpg')">
+    <div class="row">
+        <div class="col-md-12">
+            <nav class="navbar navbar-dark bg-transparent container-fluid" itemscope itemtype="https://schema.org/SiteNavigationElement">
+                <a href="{{url_for('main.index')}}"><span class="navbar-brand text-white mb-0 h1">In Wait of Tomorrow</span></a>
+                <div class="dropdown dropleft show btn-group">
+                  <button class="btn btn-dark dropdown-toggle dropleft" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Articles
+                  </button>
+                  <div class="dropdown-menu" id="dropdownmenu" aria-labelledby="dropdownMenuLink">
+                      {% for category in categories %}
+                          {% if category.category_name != "Blog" %}
+                            <a class="dropdown-item" href="{{ url_for('main.show_blog_category', category=category.category_name) }}">{{ category.category_name }}</a>
+                          {% endif %}
+                      {% endfor %}
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{{ url_for('main.show_blog') }}">Latest articles</a>
+                    <a class="dropdown-item" href="{{ url_for('main.show_blog_category', category='Blog') }}">Blog</a>
+                  </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <header class="masthead" style="min-height: 100vh">
+        <div class="container h-100">
+            <div class="row h-100 align-items-center">
+                <div class="col-12" style="padding-top: 0vh">
+                    <span class="h1 row font-weight-light text-white" itemprop="name">About us</span>
+                <div style="max-width: 600px">
+                    <span class="row font-weight-normal text-white">We present futurology.</span>
+                    <span class="row font-weight-normal text-white">In Wait of Tomorrow analyses current trends and discusses what they mean for our future.</span>
+                    <span class="row font-italic font-weight-normal text-white">How can biotech help avert the climate change crisis? Can artificial intelligence really help avoid deforestation?</span>
+                </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    </div>
+<div class="container-fluid mainimage opacity-5 large-header-one" itemscope itemtype="https://schema.org/AboutPage" id="aboutus_two" style="background-image: url('../static/img/WhatsApp Image 2020-04-15 at 15.03.54.jpeg')">
+    <div class="row">
+        <div class="col-md-12">
+            <nav class="navbar navbar-dark bg-transparent container-fluid" itemscope itemtype="https://schema.org/SiteNavigationElement">
+                <a href="{{url_for('main.index')}}"><span class="navbar-brand text-white mb-0 h1">In Wait of Tomorrow</span></a>
+                <div class="dropdown dropleft show btn-group">
+                  <button class="btn btn-dark dropdown-toggle dropleft" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Articles
+                  </button>
+                  <div class="dropdown-menu" id="dropdownmenu" aria-labelledby="dropdownMenuLink">
+                      {% for category in categories %}
+                          {% if category.category_name != "Blog" %}
+                            <a class="dropdown-item" href="{{ url_for('main.show_blog_category', category=category.category_name) }}">{{ category.category_name }}</a>
+                          {% endif %}
+                      {% endfor %}
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{{ url_for('main.show_blog') }}">Latest articles</a>
+                    <a class="dropdown-item" href="{{ url_for('main.show_blog_category', category='Blog') }}">Blog</a>
+                  </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <header class="masthead" style="min-height: 100vh">
+        <div class="container h-100">
+            <div class="row h-100 align-items-center">
+                <div class="col-12" style="padding-top: 0vh">
+                    <span class="h1 row font-weight-light text-white" itemprop="name">About us</span>
+                <div style="max-width: 600px">
+                    <span class="row font-weight-normal text-white">We present futurology.</span>
+                    <span class="row font-weight-normal text-white">In Wait of Tomorrow brings the most interesting developments from technology and science and explores how they will affect the future of society.</span>
+                    <span class="row font-italic font-weight-normal text-white"> Where will new technologies lead us? Can AI really be used to read your dreams?</span>
+                    <span class="row font-weight-normal font-small text-white mt-3 font-smaller">The background image you see was captured on 28th February (inwaitoftomorrow's birthday) in 2008 by NASA's Hubble</span>
+                    <span class="row font-weight-normal text-white font-smaller">It is an infrared image of the Galactic Center. The image reveals a series of massive stars in the hot gas of our galactic core.</span>
+                    <span class="row font-weight-normal text-white h4 pt-3">
+                        Follow inwaitoftomorrow on <a href="https://twitter.com/InWaitofTomorr1" class="pl-1 pr-1 font-weight-normal"> Twitter </a> and <a class="pl-1 pr-1 font-weight-normal" href="https://www.instagram.com/inwaitoftomorrow/"> Instagram</a>
+                    </span>
+                </div>
+                </div>
+                <div class="col-12">
+                    <div class="text-center text-white font-weight-normal col-12"><a class="font-weight-normal text-white" href="#articles"><i class="arrow down text-white"></i></a></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
 </div>
+
+
 
 {% endblock %}
 

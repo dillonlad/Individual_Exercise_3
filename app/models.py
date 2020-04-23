@@ -4,6 +4,11 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from app import db
 
 
+class Authors(db.Model):
+    author_id = db.Column(db.Integer, nullable=False, primary_key=True)
+    author_name = db.Column(db.Text, nullable=False)
+
+
 class Comments(db.Model):
     name = db.Column(db.Text, nullable=False, primary_key=True)
     comment = db.Column(db.Text, nullable=False)

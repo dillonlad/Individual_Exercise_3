@@ -6,18 +6,16 @@
     <meta property="og:title" content="In Wait of Tomorrow"/>
     <meta property="og:type" content="website"/>
     <meta property="og:url" content="http://inwaitoftomorrow.appspot.com/"/>
-    <meta property="og:description" content="We write futurology - analysis of current trends to predict what the future might be like"/>
+    <meta property="og:description" content="Who knows what the future might look like"/>
     <meta property="og:image" content='http://inwaitoftomorrow.appspot.com/static/img/logo.jpeg'/>
     <meta name="twitter:title" content="In Wait of Tomorrow"/>
     <meta name="twitter:description" content="Who knows what the future might look like"/>
     <meta name="twitter:image" content='http://inwaitoftomorrow.appspot.com/static/img/logo.jpeg'/>
     <meta name="twitter:card" content="summary_large_image"/>
     <meta name="twitter:url" content="http://inwaitoftomorrow.appspot.com/"/>
-    <meta name="google-site-verification" content="FXf4fXXrRB8YqX75YWs6DQXLlE3r_CWleoGSjxGSa5s" />
     <script src="../static/bootstrap-4.0.0/js/tests/vendor/jquery-1.9.1.min.js"></script>
     <script src="../static/bootstrap-4.0.0/dist/js/bootstrap.bundle.js"></script>
     <script src="../static/bootstrap-4.0.0/assets/js/vendor/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11"></script>
     <link rel="stylesheet" href="../static/css/bootstrap.css">
     <link rel="stylesheet" href="../static/css/hovering.css">
     <link rel="stylesheet" href="../static/css/title.css">
@@ -29,24 +27,26 @@
           rel="stylesheet">
     <link href="../static/css/title.css" rel="stylesheet">
     <link rel="shortcut icon" href="../static/img/favico.ico">
-    <meta name="description" content="The latest in tech, science and more, In Wait of Tomorrow is futurology - we analyse how advancements may affect our future. Follow @inwaitoftomorrow on Instagram."/>
+    <meta name="description" content="The latest in tech, science and politics, inwaitoftomorrow is a blog about what the future might look like"/>
     <meta name="keywords" content="inwaitoftomorrow, In Wait of Tomorrow, futurology, Technology, Science, Healthcare, Environment">
     <meta name="author" content="inwaitoftomorrow">
     <meta name="robots" content="index, follow">
     <title>{% block title %}{{ title }}{% endblock %}</title>
 </head>
 <body itemscope itemtype="https://schema.org/WebPage">
-    {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <div class="text-center m-auto p-5 font-weight-normal" style="max-width: 600px">
-                    {% for message in messages %}
-                        {{ message }}
-                    {% endfor %}
-                </div>
-            {% endif %}
-    {% endwith %}
-<div class="container-fluid mainimage opacity-5" style="background-image: url('../static/img/Picture3.png')">
-    <div class="row">
+{% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+{% endwith %}
+
+<div class="container row demo">
+   <div class="content">
+           <div class="row">
         <div class="col-md-12">
             <nav class="navbar navbar-dark bg-transparent container-fluid" itemscope itemtype="https://schema.org/SiteNavigationElement">
                 <a href="{{url_for('main.index')}}"><span class="navbar-brand text-white mb-0 h1">In Wait of Tomorrow</span></a>
@@ -68,16 +68,19 @@
             </nav>
         </div>
     </div>
+      <div id="large-header" class="large-header">
+         <canvas id="demo-canvas"></canvas>
+         <h1 class="main-title"><span class="thin">Explore</span> Space</h1>
+      </div>
+   </div>
+</div>
     <header class="masthead" style="min-height: 100vh">
         <div class="container h-100">
             <div class="row h-100 align-items-center">
                 <div class="col-12 text-center" style="padding-top: 0vh">
                     <h1 class="font-weight-light" itemprop="name">In Wait of Tomorrow</h1>
-                    <div id="typed-strings">
-                        <p class="lead">^1000 Futurology ^1000 - Systematic forecasting of the future ^1000 based on current trends^2000</p>
-                        <p class="font-weight-normal font-italic">"I know not with what weapons World War III will be fought ^1000, but World War IV will be fought with sticks and stones." ~ Albert Einstein ^1000</p></div>
-                    <span id="typed" class="pb-2 font-italic"></span>
-
+                    <p class="lead">Futurology - Systematic forecasting of the future based on current trends</p>
+                    <p class="font-weight-normal font-italic">"I know not with what weapons World War III will be fought, but World War IV will be fought with sticks and stones." ~ Albert Einstein</p>
                 </div>
                 <div class="col-12">
                     <div class="text-center font-weight-normal col-12"><a class="font-weight-normal text-dark" href="#articles">Check out our latest articles</a></div>
@@ -87,23 +90,13 @@
         </div>
     </header>
 
-</div>
 
-<div id="articles" class="row">
+<div id="articles" class="row p-1">
     {% block list_of_articles %}{% endblock %}
 </div>
-<div class="row">
+<div class="row p-5">
     {% block twitter %}{% endblock %}
 </div>
-<script>
-  var typed = new Typed('#typed', {
-    stringsElement: '#typed-strings',
-    typeSpeed: 50,
-    backDelay: 100,
-    backspeed: 20,
-    loop: true
-  });
-</script>
 <script src="../static/js/EasePack.min.js"></script>
 <script src="../static/js/TweenLite.min.js"></script>
 <script src="../static/js/demo.js"></script>
@@ -118,10 +111,7 @@
     "sameAs": [
       "https://www.instagram.com/inwaitoftomorrow/",
       "https://twitter.com/InWaitofTomorr1",
-      "https://www.facebook.com/AISoc.ucl/",
-      "https://medium.com/@dlad82434",
-      "https://www.reddit.com/user/inwaitoftomorrow",
-      "https://inwaitoftomorrow.com/"
+      "https://www.facebook.com/AISoc.ucl/"
     ]
   }
 </script>

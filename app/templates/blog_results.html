@@ -17,6 +17,15 @@
     <title>{% if article_category|length %}{{ article_category }}{% endif %} - Articles</title>
 </head>
 <body style="background-color: #dddddd" itemscope itemtype="https://schema.org/WebPage">
+    {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="text-center m-auto p-5 font-weight-normal" style="max-width: 600px">
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+    {% endwith %}
 <div class="container-fluid mainimage opacity-5">
     <div class="row">
         <div class="col-md-12">
