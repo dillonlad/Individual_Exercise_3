@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
 from urllib.parse import urlparse, urljoin
 
 from flask import render_template, Blueprint, request, flash, redirect, url_for, Flask, make_response, abort, \
@@ -272,6 +272,7 @@ def add_post():
 def new_post():
     form = CreateArticle(request.form)
     authors = Authors.query.all()
+    time_date = datetime.now()
     if request.method == 'POST' and form.validate():
         post = Blogs(Title=form.Title.data, Post_ID=form.Post_ID.data, Description=form.Description.data, Image_root=form.Image_root.data, url_=form.url_.data, Content=form.Content.data, Time=form.Time.data, Date=form.Date.data, category=form.category.data, author=form.author.data, keywords=form.keywords.data)
         try:
