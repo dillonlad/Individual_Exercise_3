@@ -16,5 +16,6 @@ Flask-Sitemap==0.3.0
 flask-wysiwyg==0.1
 Flask-Login==0.5.0
 Flask-MySQLdb==0.2.0
+email-validator==1.0.5
 
 
