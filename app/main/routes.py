@@ -111,6 +111,7 @@ def index():
 
 @bp_main.route('/linkinbio', methods=['POST', 'GET'])
 def show_blog_linkinbio():
+    app.track_event(category="Instagram hit", action='Blog read')
     form = SearchForm(request.form)
     categories = Categories.query.all()
     posts = Blogs.query.order_by(desc(Blogs.article_id)).all()
