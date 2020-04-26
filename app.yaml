@@ -12,3 +12,5 @@ handlers:
   static_files: app/static/images/favicon.ico
   upload: app/static/images/favicon\.ico
 
+env_variables:
+    GA_TRACKING_ID: UA-159574205-1

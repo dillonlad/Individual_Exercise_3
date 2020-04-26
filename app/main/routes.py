@@ -89,6 +89,7 @@ def index():
         code = 301
         return redirect(url, code=code)
     else:
+        app.track_event(category='Homepage', action='Homepage visit')
         form = SearchForm(request.form)
         categories = Categories.query.all()
         series = Series.query.all()
@@ -274,7 +275,7 @@ def new_post():
     authors = Authors.query.all()
     time_date = datetime.now()
     if request.method == 'POST' and form.validate():
-        post = Blogs(Title=form.Title.data, Post_ID=form.Post_ID.data, Description=form.Description.data, Image_root=form.Image_root.data, url_=form.url_.data, Content=form.Content.data, Time=form.Time.data, Date=form.Date.data, category=form.category.data, author=form.author.data, keywords=form.keywords.data)
+        post = Blogs(Title=form.Title.data, Post_ID=form.Post_ID.data, Description=form.Description.data, Image_root=form.Image_root.data, url_=form.url_.data, Content=form.Content.data, Time="{}:{}:{}".format(time_date.strftime("%H"), time_date.strftime("%M"), time_date.strftime("%S")), Date="{}-{}-{}".format(time_date.strftime("%Y"), time_date.strftime("%m"), time_date.strftime("%d")), category=form.category.data, author=form.author.data, keywords=form.keywords.data)
         try:
             db.session.add(post)
             response = make_response(redirect(url_for('main.index')))
@@ -314,6 +315,7 @@ def post(Post_ID):
             post = Blogs.query.filter_by(Post_ID=Post_ID).all()
             if len(post) == 0:
                 return redirect(url_for('main.show_blog'))
+            app.track_event(category="Blog read: {}".format(Post_ID), action='{}'.format(Post_ID))
             return render_template("blogs/post.html", post=post, categories=categories)
         else:
             flash("The article you tried to find does not exist, at least not with that URL, try using the search box to find what you're looking for")

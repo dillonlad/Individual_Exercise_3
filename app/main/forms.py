@@ -58,10 +58,8 @@ class CreateArticle(FlaskForm):
     Image_root = StringField('Image_root', validators=[DataRequired()])
     url_ = StringField('URL', validators=[DataRequired()])
     Content = TextAreaField('Content', validators=[DataRequired()])
-    Time = StringField('Time', validators=[DataRequired()])
-    Date = StringField('Date', validators=[DataRequired()])
     category = StringField('Category', validators=[DataRequired()])
-    author = SelectField(u'Author', choices=[('0',''), ('1', 'Dillon Lad'), ('2','Rajan Kholia')], validators=[DataRequired()])
+    author = SelectField(u'Author', choices=[('0',''), ('Dillon Lad', 'Dillon Lad'), ('Rajan Kholia','Rajan Kholia')], validators=[DataRequired()])
     keywords = StringField('Keywords', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
