@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="../static/css/bootstrap.css">
     <link rel="stylesheet" href="../static/bootstrap-4.0.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/css/hovering.css">
+    <link rel="stylesheet" href="../static/css/newnav.css">
     <link rel="shortcut icon" href="../static/img/favico.ico">
     <meta name="robots" content="index, follow">
     <meta name="description" content="Futurology: {% if article_category|length %}{{ article_category }}{% endif %}, inwaitoftomorrow is a blog about what the future might look like"/>
@@ -35,25 +36,27 @@
                 </div>
             {% endif %}
     {% endwith %}
+    <div id="myNav" class="overlay">
+      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+      <div class="overlay-content">
+          <a href="{{ url_for('main.show_blog') }}">Latest articles</a>
+          <a href="{{ url_for('main.show_blog_category', category='Blog') }}">Blog</a>
+          <div class="dropdown-divider text-center align-self-center m-auto" style="max-width: 600px"></div>
+          {% for category in categories %}
+            {% if category.category_name != "Blog" %}
+                <a href="{{ url_for('main.show_blog_category', category=category.category_name) }}">{{ category.category_name }}</a>
+            {% endif %}
+          {% endfor %}
+      </div>
+  </div>
 <div class="container-fluid mainimage opacity-5">
     <div class="row">
         <div class="col-md-12">
             <nav class="navbar navbar-dark bg-dark container-fluid" itemscope itemtype="https://schema.org/SiteNavigationElement">
                 <a href="{{url_for('main.index')}}"><span class="navbar-brand mb-0 h1">In Wait of Tomorrow</span></a>
                 <div class="dropdown dropleft show btn-group">
-                  <button class="btn btn-dark dropdown-toggle dropleft" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Articles
+                  <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
                   </button>
-                  <div class="dropdown-menu" id="dropdownmenu" aria-labelledby="dropdownMenuLink">
-                    {% for category in categories %}
-                        {% if category.category_name != "Blog" %}
-                            <a class="dropdown-item" href="{{ url_for('main.show_blog_category', category=category.category_name) }}">{{ category.category_name }}</a>
-                        {% endif %}
-                    {% endfor %}
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="{{ url_for('main.show_blog') }}">Latest articles</a>
-                    <a class="dropdown-item" href="{{ url_for('main.show_blog_category', category='Blog') }}">Blog</a>
-                  </div>
                 </div>
             </nav>
         </div>
@@ -76,7 +79,7 @@
             <div class="card mb-3" style="width: 100%" itemscope itemtype="https://schema.org/Blog">
                 <div class="hovereffect">
                     <img class="card-img-top" itemscope itemtype="https://schema.org/ImageObject" src="..{{ post.Image_root }}" alt="{{ post.Title }}">
-                    <div class="overlay">
+                    <div class="overlay" id="img_overlay">
                         <p class="text-white" itemprop="description">{{ post.Description }}...<br><a class="h4 text-white" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"> Read more...</a></p>
                     </div>
                 </div>
@@ -91,7 +94,17 @@
 {% endif %}        <div class="row align-content-center justify-content-center align-items-center">
             <a class="twitter-timeline" data-width="300" data-height="500" data-theme="dark" href="https://twitter.com/InWaitofTomorr1?ref_src=twsrc%5Etfw">Tweets by InWaitofTomorr1</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></div>
         </div>
-        </div>
-</div>
+
+<script>
+    function openNav() {
+      document.getElementById("myNav").style.width = "100%";
+      document.getElementById("img_overlay").className = document.getElementById("img_overlay").className.replace( /(?:^|\s)overlay(?!\S)/g , '' )
+    }
+
+    function closeNav() {
+      document.getElementById("myNav").style.width = "0%";
+      document.getElementById("img_overlay").className = document.getElementById("img_overlay").className.replace( /(?:^|\s)(?!\S)/g , 'overlay' )
+    }
+</script>
 </body>
 </html>

@@ -68,19 +68,8 @@
             <nav class="navbar navbar-dark bg-transparent container-fluid" itemscope itemtype="https://schema.org/SiteNavigationElement">
                 <a href="{{url_for('main.index')}}"><span class="navbar-brand text-white mb-0 h1">In Wait of Tomorrow</span></a>
                 <div class="dropdown dropleft show btn-group">
-                  <button class="btn btn-dark dropdown-toggle dropleft" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Articles
+                  <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
                   </button>
-                  <div class="dropdown-menu" id="dropdownmenu" aria-labelledby="dropdownMenuLink">
-                      {% for category in categories %}
-                          {% if category.category_name != "Blog" %}
-                            <a class="dropdown-item" href="{{ url_for('main.show_blog_category', category=category.category_name) }}">{{ category.category_name }}</a>
-                          {% endif %}
-                      {% endfor %}
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="{{ url_for('main.show_blog') }}">Latest articles</a>
-                    <a class="dropdown-item" href="{{ url_for('main.show_blog_category', category='Blog') }}">Blog</a>
-                  </div>
                 </div>
             </nav>
         </div>
@@ -91,6 +80,14 @@
                 <div class="col-12" style="padding-top: 0vh">
                     <span class="h1 row font-weight-light text-white" itemprop="name">About us</span>
                 <div style="max-width: 600px">
+                    <span class="row font-weight-normal text-white pt-3 text-center">
+    <div class="text-center text-dark">
+        <a href="https://www.facebook.com/inwaitoftomorrow/" class="fa fa-facebook"></a>
+        <a href="https://www.instagram.com/inwaitoftomorrow/" class="fa fa-twitter"></a>
+        <a href="https://twitter.com/InWaitofTomorr1" class="fa fa-instagram"></a>
+        <a href="https://www.reddit.com/user/inwaitoftomorrow" class="fa fa-reddit"></a>
+
+</div>                    </span>
                     <span class="row font-weight-normal text-white">We present futurology.</span>
                     <span class="row font-weight-normal text-white">In Wait of Tomorrow analyses current trends and discusses what they mean for our future.</span>
                     <span class="row font-italic font-weight-normal text-white">How can biotech help avert the climate change crisis? Can artificial intelligence really help avoid deforestation?</span>
@@ -106,19 +103,8 @@
             <nav class="navbar navbar-dark bg-transparent container-fluid" itemscope itemtype="https://schema.org/SiteNavigationElement">
                 <a href="{{url_for('main.index')}}"><span class="navbar-brand text-white mb-0 h1">In Wait of Tomorrow</span></a>
                 <div class="dropdown dropleft show btn-group">
-                  <button class="btn btn-dark dropdown-toggle dropleft" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Articles
+                  <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
                   </button>
-                  <div class="dropdown-menu" id="dropdownmenu" aria-labelledby="dropdownMenuLink">
-                      {% for category in categories %}
-                          {% if category.category_name != "Blog" %}
-                            <a class="dropdown-item" href="{{ url_for('main.show_blog_category', category=category.category_name) }}">{{ category.category_name }}</a>
-                          {% endif %}
-                      {% endfor %}
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="{{ url_for('main.show_blog') }}">Latest articles</a>
-                    <a class="dropdown-item" href="{{ url_for('main.show_blog_category', category='Blog') }}">Blog</a>
-                  </div>
                 </div>
             </nav>
         </div>
@@ -129,14 +115,20 @@
                 <div class="col-12" style="padding-top: 0vh">
                     <span class="h1 row font-weight-light text-white" itemprop="name">About us</span>
                 <div style="max-width: 600px">
+                    <span class="row font-weight-normal text-white pt-3 text-center">
+    <div class="text-center text-dark">
+        <a href="https://www.facebook.com/inwaitoftomorrow/" class="fa fa-facebook"></a>
+        <a href="https://www.instagram.com/inwaitoftomorrow/" class="fa fa-twitter"></a>
+        <a href="https://twitter.com/InWaitofTomorr1" class="fa fa-instagram"></a>
+        <a href="https://www.reddit.com/user/inwaitoftomorrow" class="fa fa-reddit"></a>
+
+</div>                    </span>
                     <span class="row font-weight-normal text-white">We present futurology.</span>
                     <span class="row font-weight-normal text-white">In Wait of Tomorrow brings the most interesting developments from technology and science and explores how they will affect the future of society.</span>
                     <span class="row font-italic font-weight-normal text-white"> Where will new technologies lead us? Can AI really be used to read your dreams?</span>
-                    <span class="row font-weight-normal font-small text-white mt-3 font-smaller">The background image you see was captured on 28th February (inwaitoftomorrow's birthday) in 2008 by NASA's Hubble</span>
-                    <span class="row font-weight-normal text-white font-smaller">It is an infrared image of the Galactic Center. The image reveals a series of massive stars in the hot gas of our galactic core.</span>
-                    <span class="row font-weight-normal text-white h4 pt-3">
-                        Follow inwaitoftomorrow on <a href="https://twitter.com/InWaitofTomorr1" class="pl-1 pr-1 font-weight-normal"> Twitter </a> and <a class="pl-1 pr-1 font-weight-normal" href="https://www.instagram.com/inwaitoftomorrow/"> Instagram</a>
-                    </span>
+                    <span class="row font-weight-normal font-small text-white mt-3 font-smaller float-right">The background image you see was captured on 28th February (inwaitoftomorrow's birthday) in 2008 by NASA's Hubble</span>
+                    <span class="row font-weight-normal text-white font-smaller float-right">It is an infrared image of the Galactic Center. The image reveals a series of massive stars in the hot gas of our galactic core.</span>
+
                 </div>
                 </div>
                 <div class="col-12">

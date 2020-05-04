@@ -30,6 +30,8 @@
     <script src="../static/bootstrap-4.0.0/assets/js/vendor/popper.min.js"></script>
     <link rel="stylesheet" href="../static/css/bootstrap.css">
     <link rel="stylesheet" href="../static/bootstrap-4.0.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/css/newnav.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <meta name="keywords" content="inwaitoftomorrow, In Wait of Tomorrow, futurology, {% block meta_keywords %}{% endblock %}">
     <meta name="author" content="inwaitoftomorrow">
     <meta name="robots" content="index, follow">
@@ -37,6 +39,19 @@
     <title>{% block title %}{{ title }}{% endblock %}</title>
 </head>
 <body itemscope itemtype="https://schema.org/WebPage">
+<div id="myNav" class="overlay">
+      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+      <div class="overlay-content">
+          <a href="{{ url_for('main.show_blog') }}">Latest articles</a>
+          <a href="{{ url_for('main.show_blog_category', category='Blog') }}">Blog</a>
+          <div class="dropdown-divider text-center align-self-center m-auto" style="max-width: 600px"></div>
+          {% for category in categories %}
+            {% if category.category_name != "Blog" %}
+                <a href="{{ url_for('main.show_blog_category', category=category.category_name) }}">{{ category.category_name }}</a>
+            {% endif %}
+          {% endfor %}
+      </div>
+  </div>
 <div class="container-fluid">
     <!-- Displays flashed messages on a page -->
     {% with messages = get_flashed_messages() %}
@@ -54,19 +69,8 @@
             <nav class="navbar navbar-dark bg-dark container-fluid" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
                 <a href="{{url_for('main.index')}}"><span class="navbar-brand text-white navbar-dark mb-0 h1">In Wait of Tomorrow</span></a>
                 <div class="dropdown dropleft show btn-group">
-                  <button class="btn btn-dark dropdown-toggle dropleft" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Articles
+                  <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
                   </button>
-                  <div class="dropdown-menu" id="dropdownmenu" aria-labelledby="dropdownMenuLink">
-                    {% for category in categories %}
-                          {% if category.category_name != "Blog" %}
-                            <a class="dropdown-item" href="{{ url_for('main.show_blog_category', category=category.category_name) }}">{{ category.category_name }}</a>
-                          {% endif %}
-                      {% endfor %}
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="{{ url_for('main.show_blog') }}">Latest articles</a>
-                    <a class="dropdown-item" href="{{ url_for('main.show_blog_category', category='Blog') }}">Blog</a>
-                  </div>
                 </div>
             </nav>
         </div>
@@ -75,8 +79,13 @@
         {% block image_header %}{% endblock %}
     </div>
 </div>
+    <div class="text-center text-dark p-2">
+        <a href="https://www.facebook.com/inwaitoftomorrow/" class="fa fa-facebook"></a>
+        <a href="https://www.instagram.com/inwaitoftomorrow/" class="fa fa-twitter"></a>
+        <a href="https://twitter.com/InWaitofTomorr1" class="fa fa-instagram"></a>
+        <a href="https://www.reddit.com/user/inwaitoftomorrow" class="fa fa-reddit"></a>
 
-    <div class="sharethis-inline-follow-buttons"></div>
+</div>
 <div class="row m-auto" style="max-width: 800px" itemprop="name">
     <div class="h1 col-12 font-weight-normal">
         {% block article_title %}{% endblock %}
@@ -110,7 +119,15 @@
 </div>
 
 </div>
+<script>
+    function openNav() {
+      document.getElementById("myNav").style.width = "100%";
+    }
 
+    function closeNav() {
+      document.getElementById("myNav").style.width = "0%";
+    }
+</script>
 </body>
 <div id="fb-root"></div>
 <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v6.0"></script>

@@ -47,6 +47,7 @@ class Blogs(db.Model):
     article_id = db.Column(db.Integer, autoincrement=True, nullable=False)
     author = db.Column(db.Text, nullable=True)
     keywords = db.Column(db.Text, nullable=True)
+    no_series_name = db.Column(db.Text, nullable=True)
 
 
 class Series(db.Model):
