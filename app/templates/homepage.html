@@ -32,7 +32,7 @@
         {% endfor %}
       <div class="card d-block" itemscope itemtype="https://schema.org/Blog" style="width: 100%">
             <div class="hovereffect">
-                <img class="card-img-top" itemscope itemtype="https://schema.org/ImageObject" src="..{{ post.Image_root }}" alt="Card image cap">
+                <img class="card-img-top img-fluid" itemscope itemtype="https://schema.org/ImageObject" src="..{{ post.Image_root }}" alt="Card image cap" style="max-width: 600px; height: auto">
                 <div class="overlay">
                     <p class="text-white" itemprop="description">{{ post.Description }}...<br><a class="h4 text-white" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"> Read more...</a></p>
                 </div>
