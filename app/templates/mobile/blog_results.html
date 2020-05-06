@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-159574205-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-159574205-1');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="../../static/bootstrap-4.0.0/js/tests/vendor/jquery-1.9.1.min.js"></script>
+    <script src="../../static/bootstrap-4.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../static/bootstrap-4.0.0/assets/js/vendor/popper.min.js"></script>
+    <script src="../../static/js/mdb.min.js"></script>
+    <link rel="stylesheet" href="../../static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../static/bootstrap-4.0.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../static/css/hovering.css">
+    <link rel="stylesheet" href="../../static/css/newnav.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="shortcut icon" href="../../static/img/favico.ico">
+    <meta name="robots" content="index, follow">
+    <meta name="description" content="Futurology: {% if article_category|length %}{{ article_category }}{% endif %}, inwaitoftomorrow is a blog about what the future might look like"/>
+    <meta name="author" content="inwaitoftomorrow">
+    <title>{% if article_category|length %}{{ article_category }}{% else %}Latest{% endif %} Articles</title>
+</head>
+<body style="background-color: #dddddd" itemscope itemtype="https://schema.org/WebPage">
+    {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="text-center m-auto p-5 font-weight-normal" style="max-width: 600px">
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+    {% endwith %}
+    <div id="myNav" class="overlay">
+      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+      <div class="overlay-content">
+          <a href="{{ url_for('main.show_blog') }}">Latest articles</a>
+          <div class="dropdown-divider text-center align-self-center m-auto" style="max-width: 600px"></div>
+          {% for category in categories %}
+            {% if category.category_name != "Blog" %}
+                <a href="{{ url_for('main.show_blog_category', category=category.category_name) }}">{{ category.category_name }}</a>
+            {% endif %}
+          {% endfor %}
+      </div>
+  </div>
+<div class="container-fluid mainimage opacity-5">
+    <div class="row">
+        <div class="col-md-12">
+            <nav class="navbar navbar-dark bg-dark container-fluid" itemscope itemtype="https://schema.org/SiteNavigationElement">
+                <a href="{{url_for('main.index')}}"><span class="navbar-brand mb-0 h1">In Wait of Tomorrow</span></a>
+                <div class="dropdown dropleft show btn-group">
+                  <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
+                  </button>
+                </div>
+            </nav>
+        </div>
+    </div>
+{% if request.MOBILE %}
+    <div class="row col-12 pl-5 justify-content-center">
+        <form class="form-inline" method="POST" action="" novalidate>
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{ form.Search.label(class_="pr-2") }}{{ form.Search(class_="form-control form-control-user") }}
+            </div>
+            <div class="form-group">
+            {{ form.Submit(class_="btn btn-dark btn-user btn-block") }}
+                </div>
+        </form>
+    </div>
+    <br>
+    <h1 class="font-weight-normal text-center align-self-center align-content-center">Latest articles {% if article_category|length %}in {{ article_category }}{% endif %}</h1>
+    {% if posts|length %}
+        <div class="m-auto" style="max-width: 600px">
+            {% for post in posts %}
+                <div class="card mb-3" style="width: 100%" itemscope itemtype="https://schema.org/Blog">
+                    <div class="hovereffect">
+                        <img class="card-img-top img-fluid" itemscope itemtype="https://schema.org/ImageObject" src="..{{ post.Image_root }}" alt="{{ post.Title }}" style="max-width: 600px; height: auto">
+                        <div class="overlay" id="img_overlay">
+                            <p class="text-white" itemprop="description">{{ post.Description }}...<br><a class="h4 text-white" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"> Read more...</a></p>
+                        </div>
+                    </div>
+                  <div class="card-body text-center">
+                      <a class="h4" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"><p class="card-text" itemprop="name">{{ post.Title }}</p></a>
+                  </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+    <p>Sorry, no posts are available at this time</p>
+    {% endif %}
+    <div class="row align-content-center justify-content-center align-items-center">
+        <a class="twitter-timeline" data-width="300" data-height="500" data-theme="dark" href="https://twitter.com/InWaitofTomorr1?ref_src=twsrc%5Etfw">Tweets by InWaitofTomorr1</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    </div>
+
+{% else %}
+    <div class="text-center text-dark p-2">
+        <a href="https://www.facebook.com/inwaitoftomorrow/" class="fa fa-facebook"></a>
+        <a href="https://www.instagram.com/inwaitoftomorrow/" class="fa fa-twitter"></a>
+        <a href="https://twitter.com/InWaitofTomorr1" class="fa fa-instagram"></a>
+        <a href="https://www.reddit.com/user/inwaitoftomorrow" class="fa fa-reddit"></a>
+    </div>
+    <div class="row col-12 pl-5 justify-content-center">
+        <form class="form-inline" method="POST" action="" novalidate>
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{ form.Search.label(class_="pr-2") }}{{ form.Search(class_="form-control form-control-user") }}
+            </div>
+            <div class="form-group">
+            {{ form.Submit(class_="btn btn-dark btn-user btn-block") }}
+                </div>
+        </form>
+    </div>
+    <br>
+    <h1 class="font-weight-normal text-center align-self-center align-content-center">Latest articles {% if article_category|length %}in {{ article_category }}{% endif %}</h1>
+    {% if posts|length %}
+        <div class="row" id="cards">
+            {% for post in posts %}
+                <div class="card col-4 mb-3" style="background-color: #dddddd; border-color: #dddddd" itemscope itemtype="https://schema.org/Blog">
+                    <div class="hovereffect">
+                        <img class="card-img-top img-fluid" itemscope itemtype="https://schema.org/ImageObject" src="..{{ post.Image_root }}" alt="{{ post.Title }}" style="max-width: 600px; min-height: 200px">
+                        <div class="overlay" id="img_overlay">
+                            <p class="text-white" itemprop="description">{{ post.Description }}...<br><a class="text-white" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"> Read more...</a></p>
+                        </div>
+                    </div>
+                  <div class="card-body text-center">
+                      <a class="text-dark" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"><p class="card-text" itemprop="name">{{ post.Title }}</p></a>
+                  </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+    <p>Sorry, no posts are available at this time</p>
+    {% endif %}
+    <div class="row align-content-center justify-content-center align-items-center">
+            <a class="twitter-timeline" data-width="300" data-height="500" data-theme="dark" href="https://twitter.com/InWaitofTomorr1?ref_src=twsrc%5Etfw">Tweets by InWaitofTomorr1</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    </div>
+    {% endif %}
+</div>
+
+
+<script>
+    function openNav() {
+      document.getElementById("myNav").style.width = "100%";
+      document.getElementById("img_overlay").className = document.getElementById("img_overlay").className.replace( /(?:^|\s)overlay(?!\S)/g , '' )
+      document.getElementById("cards").style.visibility = "hidden"
+    }
+
+    function closeNav() {
+      document.getElementById("myNav").style.width = "0%";
+      document.getElementById("img_overlay").className = document.getElementById("img_overlay").className.replace( /(?:^|\s)(?!\S)/g , 'overlay' )
+      document.getElementById("cards").style.visibility = "visible"
+
+    }
+</script>
+</body>
+</html>

@@ -4,6 +4,8 @@ from urllib.parse import urlparse, urljoin
 from flask import render_template, Blueprint, request, flash, redirect, url_for, Flask, make_response, abort, \
     render_template_string
 from flask_login import login_required, current_user, logout_user, login_user
+from flask_mobility import Mobility
+from flask_mobility.decorators import mobile_template, mobilized
 from sqlalchemy import null, desc
 from sqlalchemy.exc import IntegrityError, OperationalError
 from flask_sqlalchemy import SQLAlchemy
@@ -125,11 +127,10 @@ def show_blog_linkinbio():
             for post in posts_two:
                 if post not in posts:
                     posts.append(post)
-        return render_template("blog_results.html", article_category=search, posts=posts, categories=categories, form=form)
-    return render_template("blog_results.html", posts=posts, categories=categories, form=form)
+        return render_template("mobile/blog_results.html", article_category=search, posts=posts, categories=categories, form=form)
+    return render_template("mobile/blog_results.html", posts=posts, categories=categories, form=form)
 
 
-@bp_main.errorhandler(404)
 @bp_main.route('/articles', methods=['POST', 'GET'])
 def show_blog():
     form = SearchForm(request.form)
@@ -145,8 +146,8 @@ def show_blog():
             for post in posts_two:
                 if post not in posts:
                     posts.append(post)
-        return render_template("blog_results.html", posts=posts, categories=categories, form=form)
-    return render_template("blog_results.html", posts=posts, categories=categories, form=form)
+        return render_template("mobile/blog_results.html", posts=posts, categories=categories, form=form)
+    return render_template("mobile/blog_results.html", posts=posts, categories=categories, form=form)
 
 
 @bp_main.route('/<category>', methods=['POST', 'GET'])
@@ -168,11 +169,11 @@ def show_blog_category(category):
                         if post not in posts:
                             posts.append(post)
                 article_category = category
-                return render_template("blog_results.html", posts=posts, categories=categories,
+                return render_template("mobile/blog_results.html", posts=posts, categories=categories,
                                        article_category=article_category, form=form)
             article_category = category
-            return render_template("blog_results.html", posts=posts, categories=categories,
-                                       article_category=article_category, form=form)
+            return render_template("mobile/blog_results.html", posts=posts, categories=categories,
+                                   article_category=article_category, form=form)
         return redirect(url_for('main.show_blog'))
 
 
@@ -190,7 +191,7 @@ def show_blog_series(series_name):
     else:
         posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Title.contains(series_name)).all()
     article_category = series_name
-    return render_template("blog_results.html", posts=posts, categories=categories, article_category=article_category, form=form)
+    return render_template("mobile/blog_results.html", posts=posts, categories=categories, article_category=article_category, form=form)
 
 
 @bp_main.route('/login', methods=['GET', 'POST'])

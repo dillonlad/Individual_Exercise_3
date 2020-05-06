@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="../static/bootstrap-4.0.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/css/hovering.css">
     <link rel="stylesheet" href="../static/css/newnav.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="shortcut icon" href="../static/img/favico.ico">
     <meta name="robots" content="index, follow">
     <meta name="description" content="Futurology: {% if article_category|length %}{{ article_category }}{% endif %}, inwaitoftomorrow is a blog about what the future might look like"/>
@@ -60,6 +61,13 @@
             </nav>
         </div>
     </div>
+    <div class="text-center text-dark p-2">
+        <a href="https://www.facebook.com/inwaitoftomorrow/" class="fa fa-facebook"></a>
+        <a href="https://www.instagram.com/inwaitoftomorrow/" class="fa fa-twitter"></a>
+        <a href="https://twitter.com/InWaitofTomorr1" class="fa fa-instagram"></a>
+        <a href="https://www.reddit.com/user/inwaitoftomorrow" class="fa fa-reddit"></a>
+
+</div>
 <div class="row col-12 pl-5 justify-content-center">
     <form class="form-inline" method="POST" action="" novalidate>
         {{ form.hidden_tag() }}
@@ -71,19 +79,20 @@
             </div>
     </form>
 </div><br>
+
        <h1 class="font-weight-normal text-center align-self-center align-content-center">Latest articles {% if article_category|length %}in {{ article_category }}{% endif %}</h1>
 {% if posts|length %}
-    <div class="m-auto" style="max-width: 600px">
+    <div class="row" id="cards">
         {% for post in posts %}
-            <div class="card mb-3" style="width: 100%" itemscope itemtype="https://schema.org/Blog">
+            <div class="card col-4 mb-3" style="background-color: #dddddd; border-color: #dddddd" itemscope itemtype="https://schema.org/Blog">
                 <div class="hovereffect">
-                    <img class="card-img-top img-fluid" itemscope itemtype="https://schema.org/ImageObject" src="..{{ post.Image_root }}" alt="{{ post.Title }}" style="max-width: 600px; height: auto">
+                    <img class="card-img-top img-fluid" itemscope itemtype="https://schema.org/ImageObject" src="..{{ post.Image_root }}" alt="{{ post.Title }}" style="max-width: 600px; min-height: 200px">
                     <div class="overlay" id="img_overlay">
-                        <p class="text-white" itemprop="description">{{ post.Description }}...<br><a class="h4 text-white" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"> Read more...</a></p>
+                        <p class="text-white" itemprop="description">{{ post.Description }}...<br><a class="text-white" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"> Read more...</a></p>
                     </div>
                 </div>
               <div class="card-body text-center">
-                  <a class="h4" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"><p class="card-text" itemprop="name">{{ post.Title }}</p></a>
+                  <a class="text-dark" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"><p class="card-text" itemprop="name">{{ post.Title }}</p></a>
               </div>
             </div>
         {% endfor %}
@@ -98,11 +107,14 @@
     function openNav() {
       document.getElementById("myNav").style.width = "100%";
       document.getElementById("img_overlay").className = document.getElementById("img_overlay").className.replace( /(?:^|\s)overlay(?!\S)/g , '' )
+      document.getElementById("cards").style.visibility = "hidden"
     }
 
     function closeNav() {
       document.getElementById("myNav").style.width = "0%";
       document.getElementById("img_overlay").className = document.getElementById("img_overlay").className.replace( /(?:^|\s)(?!\S)/g , 'overlay' )
+      document.getElementById("cards").style.visibility = "visible"
+
     }
 </script>
 </body>

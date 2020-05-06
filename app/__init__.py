@@ -4,6 +4,7 @@ from os.path import abspath, join, dirname
 import requests
 from flask import Flask, render_template
 from flask_login import LoginManager
+from flask_mobility import Mobility
 
 from flask_sqlalchemy import SQLAlchemy
 from flask_sitemap import Sitemap
@@ -13,6 +14,8 @@ from flask_blogging import BloggingEngine
 login_manager = LoginManager()
 db = SQLAlchemy()
 blogging_engine = BloggingEngine()
+mobility = Mobility()
+
 
 
 def page_not_found(e):
@@ -27,6 +30,7 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + join(CWD, 'new_tomorrow')
     db.init_app(app)
     login_manager.init_app(app)
+
 
     # The following is needed if you want to map classes to an existing database
     with app.app_context():
@@ -57,6 +61,8 @@ def create_app():
     app.config["FILEUPLOAD_IMG_FOLDER"] = "fileupload"
     app.config["FILEUPLOAD_PREFIX"] = "/fileupload"
     app.config["FILEUPLOAD_ALLOWED_EXTENSIONS"] = ["png", "jpg", "jpeg", "gif"]
+
+    mobility.init_app(app)
 
     return app
 

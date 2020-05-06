@@ -18,6 +18,7 @@ Flask-Login==0.5.0
 Flask-MySQLdb==0.2.0
 email-validator==1.0.5
 requests==2.0.0
+flask-mobility==1.0.0
 
 
 
