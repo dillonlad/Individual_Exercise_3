@@ -11,8 +11,10 @@
 {% block meta_keywords %}{% for post in post %}{{ post.keywords | safe }}{% endfor %}{% endblock %}
 {% block title %}{% for post in post %}{% if post.no_series_name is none %}{{ post.Title | safe }}{% else %}{{ post.no_series_name | safe }}{% endif %}{% endfor %}{% endblock %}
 {% block image_header_tw0 %}..{% for post in post %}{{ post.Image_root | safe }}{% endfor %}{% endblock %}
+{% block image_header_tw0_mob %}..{% for post in post %}{{ post.Image_root | safe }}{% endfor %}{% endblock %}
 {% block header %}{% for post in post %}{{ post.Title | safe }}{% endfor %}{% endblock %}
 {% block article_title %}{% for post in post %}{{ post.Title | safe }}{% endfor %}{% endblock %}
+{% block main_article_mob %}{% for post in post %}{{ post.Content | safe }}{% endfor %}{% endblock %}
 {% block main_article %}{% for post in post %}{{ post.Content | safe }}{% endfor %}{% endblock %}
 {% block time_and_date %}By {% for post in post %}{{ post.author | safe }}{% endfor %}, {% for post in post %}{{ post.Date | safe }}{% endfor %}{% endblock %}
 {% block comments_fb_share %}{% for post in post %}{{ post.url_ | safe }}{% endfor %}{% endblock %}

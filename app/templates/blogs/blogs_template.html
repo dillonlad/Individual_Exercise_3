@@ -64,8 +64,8 @@
 {% endwith %}
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-12">
-            <nav class="navbar navbar-dark bg-dark container-fluid" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
+        <div class="col-12">
+            <nav class="navbar navbar-dark bg-dark" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
                 <a href="{{url_for('main.index')}}"><span class="navbar-brand text-white navbar-dark mb-0 h1">In Wait of Tomorrow</span></a>
                 <div class="dropdown dropleft show btn-group">
                   <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
@@ -96,15 +96,27 @@
     <div class="col-1 h1 ml-0 font-weight-bold"><a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
     </div>
 </div>
-
-<div class="row m-auto pb-3" style="max-width: 800px">
-    <img itemtype="primaryImageOfPage, image" src="{% block image_header_tw0 %}{% endblock %}" style="max-height: 75vh" class="col-12" alt="{% for post in posts %}{{ post.Title }}{% endfor %}">
-</div>
-<div class="row m-auto" style="max-width: 800px">
-    <div class="col-12 font-weight-normal">
-        {% block main_article %}{% endblock %}
+{% if request.MOBILE %}
+    <div class="row pb-3" style="max-width: 800px">
+        <img itemtype="primaryImageOfPage, image" src="{% block image_header_tw0_mob %}{% endblock %}" style="max-height: 75vh" class="w-100" alt="{% for post in posts %}{{ post.Title }}{% endfor %}">
     </div>
-</div>
+    <div class="row" style="max-width: 800px">
+        <div class="col-12 font-weight-normal w-100">
+            {% block main_article_mob %}{% endblock %}
+        </div>
+    </div>
+{% else %}
+    <div class="row m-auto pb-3" style="max-width: 800px">
+        <img itemtype="primaryImageOfPage, image" src="{% block image_header_tw0 %}{% endblock %}" style="max-height: 75vh" class="col-12" alt="{% for post in posts %}{{ post.Title }}{% endfor %}">
+    </div>
+    <div class="row m-auto" style="max-width: 800px">
+        <div class="col-12 font-weight-normal">
+            {% block main_article %}{% endblock %}
+        </div>
+    </div>
+{% endif %}
+
+
 <div class="row m-auto" style="max-width: 800px">
 <div class="col-1"></div>
    <div class="col-1 h1 ml-0 font-weight-bold">
