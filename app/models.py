@@ -48,12 +48,14 @@ class Blogs(db.Model):
     author = db.Column(db.Text, nullable=True)
     keywords = db.Column(db.Text, nullable=True)
     no_series_name = db.Column(db.Text, nullable=True)
+    series = db.Column(db.Text, nullable=True)
 
 
 class Series(db.Model):
     series_id = db.Column(db.Integer, autoincrement=True, primary_key=True, nullable=False)
     series_name = db.Column(db.Text, nullable=False)
     series_key = db.Column(db.Text)
+    series_image = db.Column(db.Text, nullable=False)
 
 
 class Categories(db.Model):

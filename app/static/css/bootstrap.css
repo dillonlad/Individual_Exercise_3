@@ -9046,6 +9046,13 @@ a.text-dark:hover, a.text-dark:focus {
   background-repeat: no-repeat;
 }
 
+.masthead-mob {
+  height: 40vh;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 .mainimage {
   background-position: center;
   background-repeat: no-repeat;

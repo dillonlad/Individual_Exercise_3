@@ -69,6 +69,7 @@
           {% endfor %}
       </div>
   </div>
+    {% if request.MOBILE %}
 <div class="container-fluid mainimage opacity-5" style="background-image: url('../static/img/Picture3.png')">
     <div class="row">
         <div class="col-md-12">
@@ -101,7 +102,36 @@
     </header>
 
 </div>
+    {% else %}
+    <div class="container-fluid mainimage opacity-5" style="background-image: url('../static/img/Picture3.png')">
+    <div class="row">
+        <div class="col-md-12">
+            <nav class="navbar navbar-dark bg-transparent container-fluid" itemscope itemtype="https://schema.org/SiteNavigationElement">
+                <a href="{{url_for('main.index')}}"><span class="navbar-brand text-white mb-0 h1">In Wait of Tomorrow</span></a>
+                <div class="dropdown dropleft show btn-group">
+                  <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
+                  </button>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <header class="masthead-mob" style="min-height: 40vh">
+        <div class="container h-40">
+            <div class="row h-40 align-items-center p-5">
+                <div class="col-12 text-center" style="padding-top: 0vh">
+                    <h1 class="font-weight-light" itemprop="name">In Wait of Tomorrow</h1>
+                    <div id="typed-strings" style="max-width: 600px">
+                        <p class="lead">^1000 Futurology ^1000 - Systematic forecasting of the future ^1000 based on current trends^2000</p>
+                        <p class="font-weight-normal font-italic">"I know not with what weapons World War III will be fought ^1000, but World War IV will be fought with sticks and stones." ~ Albert Einstein ^1000</p></div>
+                    <span id="typed" class="pb-2 font-italic"></span>
 
+                </div>
+            </div>
+        </div>
+    </header>
+
+</div>
+{% endif %}
 <div id="articles" class="row">
     {% block list_of_articles %}{% endblock %}
 </div>
@@ -124,10 +154,12 @@
 <script>
     function openNav() {
       document.getElementById("myNav").style.width = "100%";
+      document.getElementById("cards").style.visibility = "hidden"
     }
 
     function closeNav() {
       document.getElementById("myNav").style.width = "0%";
+      document.getElementById("cards").style.visibility = "visible"
     }
 </script>
 <script type="application/ld+json">

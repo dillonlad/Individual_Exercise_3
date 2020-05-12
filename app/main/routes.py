@@ -177,21 +177,24 @@ def show_blog_category(category):
         return redirect(url_for('main.show_blog'))
 
 
-@bp_main.route('/<series_name>', methods=['POST', 'GET'])
-def show_blog_series(series_name):
+@bp_main.route('/<series_id>', methods=['POST', 'GET'])
+def show_blog_series(series_id):
     form = SearchForm(request.form)
     categories = Categories.query.all()
-    if request.method == 'POST' and form.validate():
-        search = form.Search.data
-        posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Title.contains(series_name)).filter(Blogs.Title.contains(search)).all()
-        posts_two = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Title.contains(series_name)).filter(Blogs.Content.contains(search)).all()
-        for post in posts_two:
-            if post not in posts:
-                posts.append(post)
-    else:
-        posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Title.contains(series_name)).all()
-    article_category = series_name
-    return render_template("mobile/blog_results.html", posts=posts, categories=categories, article_category=article_category, form=form)
+    if Series.query.filter(Series.series_id.contains(series_id)).all():
+        posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.series.contains(series_name)).all()
+        if request.method == 'POST' and form.validate():
+            search = form.Search.data
+            posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.series.contains(series_name)).filter(Blogs.Title.contains(search)).all()
+            posts_two = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.series.contains(series_name)).filter(Blogs.Content.contains(search)).all()
+            for post in posts_two:
+                if post not in posts:
+                    posts.append(post)
+        else:
+            posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.series.contains(series_name)).all()
+        article_category = series_name
+        return render_template("mobile/blog_results.html", posts=posts, categories=categories, article_category=article_category, form=form)
+
 
 
 @bp_main.route('/login', methods=['GET', 'POST'])
