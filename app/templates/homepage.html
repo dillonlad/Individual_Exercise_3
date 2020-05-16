@@ -7,7 +7,7 @@
 {% block list_of_articles %}
 {% if request.MOBILE %}
     <div class="row col-12 justify-content-center">
-        <img src="../static/img/logo.jpeg" style="max-height: 200px" alt="In Wait of Tomorrow">
+        <img src="../static/img/logo.webp" style="max-height: 200px" alt="In Wait of Tomorrow">
     </div>
         <div class="row col-12 justify-content-center">
         <h3 class="h3 font-weight-light text-center">Latest articles</h3>
@@ -63,7 +63,8 @@
                     <div class="text-center text-white font-weight-normal col-12"><a class="font-weight-normal text-white" href="#aboutus"><i class="arrow down text-white"></i></a></div>
                 </div>
 </div>
-    <div itemscope itemtype="https://schema.org/AboutPage" class="container-fluid mainimage opacity-5 large-header-one" id="aboutus" style="background-image: url('../static/img/photo-1487525219605-eadb39ae229c.jpg')">
+    <link rel="stylesheet" href="../static/css/title.css">
+    <div itemscope itemtype="https://schema.org/AboutPage" class="container-fluid mainimage opacity-5 large-header-one" id="aboutus" style="background-image: url('../static/img/photo-1487525219605-eadb39ae229c.webp')">
     <div class="row">
         <div class="col-md-12">
             <nav class="navbar navbar-dark bg-transparent container-fluid" itemscope itemtype="https://schema.org/SiteNavigationElement">
@@ -98,7 +99,7 @@
         </div>
     </header>
     </div>
-<div class="container-fluid mainimage opacity-5 large-header-one" itemscope itemtype="https://schema.org/AboutPage" id="aboutus_two" style="background-image: url('../static/img/WhatsApp Image 2020-04-15 at 15.03.54.jpeg')">
+<div class="container-fluid mainimage opacity-5 large-header-one" itemscope itemtype="https://schema.org/AboutPage" id="aboutus_two" style="background-image: url('../static/img/nasahubble.webp')">
     <div class="row">
         <div class="col-md-12">
             <nav class="navbar navbar-dark bg-transparent container-fluid" itemscope itemtype="https://schema.org/SiteNavigationElement">
@@ -143,7 +144,7 @@
 {% else %}
     <div class="row container-fluid" id="cards">
                 <h4 class="col-12 font-weight-normal text-center">Most recent</h4>
-        <div class="card-group p-2">
+        <div class="card-group col-12" style="padding-left: 40px">
                 {% for post in posts %}
                       <div class="card rounded-0">
                       <div class="hovereffect">
@@ -153,7 +154,7 @@
                         </div>
                       </div>
                         <div class="card-body p-2 text-left">
-                            <h6 class="card-subtitle mb-2 text-muted">By {{ post.author }}, {{ post.Date }}</h6>
+                            <h6 class="card-subtitle mb-2 text-muted font-weight-normal">By {{ post.author }}, {{ post.Date }}</h6>
                             <h5><a itemprop="name" class="text-dark font-weight-normal h-5" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}">{{ post.Title }}</a></h5>
                         </div>
                       </div>
@@ -162,7 +163,7 @@
     </div>
     <div class="row container-fluid">
             <h4 class="col-12 font-weight-normal text-center">In Wait of Tomorrow series</h4>
-    <div class="card-group text-center w-100 col-12">
+    <div class="card-group text-center col-12" style="padding-left: 40px">
                 {% for thing in series %}
                       <div class="card rounded-0">
                         <img class="card-img-top" src="..{{ thing.series_image }}" alt="Card image cap">
@@ -174,7 +175,7 @@
     </div>
     </div>
          <div class= "row col-12 justify-content-center">
-            <img src="../static/img/logo.jpeg" style="max-height: 200px" alt="In Wait of Tomorrow">
+            <img src="../static/img/logo.webp" style="max-height: 200px" alt="In Wait of Tomorrow">
         </div>
         <div class="row col-12 justify-content-center text-center text-dark">
             <a href="https://www.facebook.com/inwaitoftomorrow/" class="fa fa-facebook"></a>

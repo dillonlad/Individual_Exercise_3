@@ -17,10 +17,7 @@
     <script src="../../static/bootstrap-4.0.0/assets/js/vendor/popper.min.js"></script>
     <script src="../../static/js/mdb.min.js"></script>
     <link rel="stylesheet" href="../../static/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../static/bootstrap-4.0.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../static/css/hovering.css">
-    <link rel="stylesheet" href="../../static/css/newnav.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
     <link rel="shortcut icon" href="../../static/img/favico.ico">
     <meta name="robots" content="index, follow">
     <meta name="description" content="Futurology: {% if article_category|length %}{{ article_category }}{% endif %}, inwaitoftomorrow is a blog about what the future might look like"/>
@@ -37,6 +34,7 @@
                 </div>
             {% endif %}
     {% endwith %}
+    <link rel="stylesheet" href="../../static/css/newnav.css">
     <div id="myNav" class="overlay">
       <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
       <div class="overlay-content">
@@ -78,6 +76,7 @@
     {% if posts|length %}
         <div class="m-auto" style="max-width: 600px">
             {% for post in posts %}
+                <link rel="stylesheet" href="../../static/css/hovering.css">
                 <div class="card mb-3" style="width: 100%" itemscope itemtype="https://schema.org/Blog">
                     <div class="hovereffect">
                         <img class="card-img-top img-fluid" itemscope itemtype="https://schema.org/ImageObject" src="..{{ post.Image_root }}" alt="{{ post.Title }}" style="max-width: 600px; height: auto">
@@ -99,6 +98,7 @@
     </div>
 
 {% else %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <div class="text-center text-dark p-2">
         <a href="https://www.facebook.com/inwaitoftomorrow/" class="fa fa-facebook"></a>
         <a href="https://www.instagram.com/inwaitoftomorrow/" class="fa fa-twitter"></a>
@@ -120,6 +120,7 @@
     <h1 class="font-weight-normal text-center align-self-center align-content-center">Latest articles {% if article_category|length %}in {{ article_category }}{% endif %}</h1>
     {% if posts|length %}
         <div class="row" id="cards">
+        <link rel="stylesheet" href="../../static/css/hovering.css">
             {% for post in posts %}
                 <div class="card col-4 mb-3" style="background-color: #dddddd; border-color: #dddddd" itemscope itemtype="https://schema.org/Blog">
                     <div class="hovereffect">

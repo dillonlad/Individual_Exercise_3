@@ -63,6 +63,7 @@ def create_app():
     app.config["FILEUPLOAD_ALLOWED_EXTENSIONS"] = ["png", "jpg", "jpeg", "gif"]
 
     mobility.init_app(app)
+    app.jinja_env.cache = {}
 
     return app
 
