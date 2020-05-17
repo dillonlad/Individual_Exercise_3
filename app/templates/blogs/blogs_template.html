@@ -107,7 +107,7 @@
     </div>
 {% else %}
     <div class="row m-auto pb-3" style="max-width: 800px">
-        <img itemtype="primaryImageOfPage, image" src="{% block image_header_tw0 %}{% endblock %}" style="max-height: 75vh" class="col-12" alt="{% for post in posts %}{{ post.Title }}{% endfor %}">
+        <img itemtype="primaryImageOfPage, image" src="{% block image_header_tw0 %}{% endblock %}" alt="{% for post in posts %}{{ post.Title }}{% endfor %}" style="max-height: 75vh" class="col-12">
     </div>
     <div class="row m-auto" style="max-width: 800px">
         <div class="col-12 font-weight-normal">
@@ -123,12 +123,40 @@
     <div class="fb-share-button" data-href="{% block comments_fb_share %}{% endblock %}" data-layout="button" data-size="small"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
    </div>
 </div>
-<div class="m-auto row" style="max-width: 800px">
-{% block comments %}
-    <div class="fb-comments" data-href="{% block comments_fb %}{% endblock %}" data-width="100%" data-numposts="5"></div>
-{% endblock %}
-</div>
-
+<div class="row m-auto" style="max-width: 800px"><h4 class="font-weight-normal">Leave a reply below</h4> </div>
+<div class="row m-auto" id="commentsform" style="max-width: 800px">
+             <form class="user col-12" method="POST" novalidate>
+                {{ form.hidden_tag() }}
+                <div class="form-group font-weight-normal">
+                  {{ form.name.label }}{{ form.name(class_="form-control form-control-user") }}
+                </div>
+                <div class="form-group font-weight-normal">
+                  {{ form.comment.label }}{{ form.comment(class_="form-control form-control-user")}}
+                </div>
+                <div class="form-group">
+                     <b>{{ form.post_on_page.label }}</b>
+                </div>
+                    <div class="form-group form-check-inline">
+                        {% for subfield in form.post_on_page %}
+                            {{ subfield(class_="form-check-input") }}
+                            {{ subfield.label(class_="form-check-label pr-5") }}
+                        {% endfor %}
+                    </div>
+                <div class="form-group">
+                     <b>{{ form.newsletter.label }}</b>
+                </div>
+                <div class="form-group form-check-inline">
+                        {% for subfield in form.newsletter %}
+                            {{ subfield(class_="form-check-input") }}
+                            {{ subfield.label(class_="form-check-label pr-5") }}
+                        {% endfor %}
+                    </div>
+                <div class="form-group font-weight-normal">
+                  {{ form.email.label }}{{ form.email(class_="form-control form-control-user")}}
+                </div>
+                {{ form.Submit(class_="btn btn-dark btn-user btn-block") }}
+            </form>
+        </div>
 </div>
 <script>
     function openNav() {

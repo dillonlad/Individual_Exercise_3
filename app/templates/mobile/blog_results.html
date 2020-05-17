@@ -79,8 +79,11 @@
                 <link rel="stylesheet" href="../../static/css/hovering.css">
                 <div class="card mb-3" style="width: 100%" itemscope itemtype="https://schema.org/Blog">
                     <div class="hovereffect">
-                        <img class="card-img-top img-fluid" itemscope itemtype="https://schema.org/ImageObject" src="..{{ post.Image_root }}" alt="{{ post.Title }}" style="max-width: 600px; height: auto">
-                        <div class="overlay" id="img_overlay">
+                        <picture>
+                            <source style="max-width: 600px; height: auto" class="card-img-top img-fluid" srcset="..{{ post.Image_root }}" type="image/webp">
+                            <img class="card-img-top img-fluid" itemscope itemtype="https://schema.org/ImageObject" src="..{{ post.Image_iphone }}" alt="{{ post.Title }}" style="max-width: 600px; height: auto">
+                        </picture>
+                            <div class="overlay" id="img_overlay">
                             <p class="text-white" itemprop="description">{{ post.Description }}...<br><a class="h4 text-white" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"> Read more...</a></p>
                         </div>
                     </div>
@@ -124,7 +127,10 @@
             {% for post in posts %}
                 <div class="card col-4 mb-3" style="background-color: #dddddd; border-color: #dddddd" itemscope itemtype="https://schema.org/Blog">
                     <div class="hovereffect">
-                        <img class="card-img-top img-fluid" itemscope itemtype="https://schema.org/ImageObject" src="..{{ post.Image_root }}" alt="{{ post.Title }}" style="max-width: 600px; min-height: 200px">
+                        <picture>
+                            <source style="max-width: 600px; height: auto" class="card-img-top img-fluid" srcset="..{{ post.Image_root }}" type="image/webp">
+                            <img class="card-img-top img-fluid" itemscope itemtype="https://schema.org/ImageObject" src="..{{ post.Image_iphone }}" alt="{{ post.Title }}" style="max-width: 600px; height: auto">
+                        </picture>
                         <div class="overlay" id="img_overlay">
                             <p class="text-white" itemprop="description">{{ post.Description }}...<br><a class="text-white" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"> Read more...</a></p>
                         </div>

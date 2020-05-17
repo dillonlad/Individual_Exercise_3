@@ -4,6 +4,7 @@ from os.path import abspath, join, dirname
 import requests
 from flask import Flask, render_template
 from flask_login import LoginManager
+from flask_mail import Mail
 from flask_mobility import Mobility
 
 from flask_sqlalchemy import SQLAlchemy
@@ -15,6 +16,7 @@ login_manager = LoginManager()
 db = SQLAlchemy()
 blogging_engine = BloggingEngine()
 mobility = Mobility()
+mail = Mail()
 
 
 
@@ -62,8 +64,19 @@ def create_app():
     app.config["FILEUPLOAD_PREFIX"] = "/fileupload"
     app.config["FILEUPLOAD_ALLOWED_EXTENSIONS"] = ["png", "jpg", "jpeg", "gif"]
 
+    app.config["MAIL_SERVER"] = 'smtp.gmail.com'
+    app.config["MAIL_PORT"] = 465
+    app.config["MAIL_USE_TLS"] = False
+    app.config["MAIL_USE_SSL"] = True
+    app.config["MAIL_USERNAME"] = 'inwaitoftomorrow@gmail.com'
+    app.config["MAIL_PASSWORD"] = 'Kaylan14'
+    app.config["MAIL_DEBUG"] = True
+    app.config["MAIL_SUPPRESS_SEND"] = False
+
+
     mobility.init_app(app)
     app.jinja_env.cache = {}
+    mail.init_app(app)
 
     return app
 

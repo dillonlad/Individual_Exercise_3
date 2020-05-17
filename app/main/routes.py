@@ -4,6 +4,7 @@ from urllib.parse import urlparse, urljoin
 from flask import render_template, Blueprint, request, flash, redirect, url_for, Flask, make_response, abort, \
     render_template_string
 from flask_login import login_required, current_user, logout_user, login_user
+from flask_mail import Mail, Message
 from flask_mobility import Mobility
 from flask_mobility.decorators import mobile_template, mobilized
 from sqlalchemy import null, desc
@@ -21,6 +22,7 @@ from app.models import Comments, Posts_two, Blogs, Profile, Categories, Series, 
 bp_main = Blueprint('main', __name__)
 bp_blogs = Blueprint('blogs', __name__, url_prefix='/blogs')
 ext = Sitemap()
+ADMINS = ['inwaitoftomorrow@gmail.com']
 
 
 def is_safe_url(target):
@@ -305,7 +307,7 @@ def page_not_found(e):
     return render_template("404.html"), 404
 
 
-@bp_blogs.route('/<Post_ID>', methods=['GET'])
+@bp_blogs.route('/<Post_ID>', methods=['POST', 'GET'])
 def post(Post_ID):
     host = request.host
     if "_" in Post_ID:
@@ -321,7 +323,51 @@ def post(Post_ID):
             if len(post) == 0:
                 return redirect(url_for('main.show_blog'))
             app.track_event(category="Blog read: {}".format(Post_ID), action='{}'.format(Post_ID))
-            return render_template("blogs/post.html", post=post, categories=categories)
+            form = CommentForm(request.form)
+            if request.method == 'POST' and form.validate():
+                with app.mail.connect() as conn:
+                    time_date = datetime.now()
+                    msg = Message('{} - comment'.format(form.name.data), sender=ADMINS[0], recipients=ADMINS)
+                    msg.body = '{}'.format(form.comment.data)
+                    user_email = form.email.data
+                    if user_email == "":
+                        user_email = "not provided"
+                    msg.html = '<b>{}</b> says {} about {} at this time {}:{}:{} on this date {}-{}-{}. User said {} to posting on the page and {} to newsletter, with the email {}'.format(
+                        form.name.data, form.comment.data, Post_ID, time_date.strftime("%H"), time_date.strftime("%M"),
+                        time_date.strftime("%S"), time_date.strftime("%Y"), time_date.strftime("%m"),
+                        time_date.strftime("%d"),
+                        form.post_on_page.data, form.newsletter.data, user_email)
+                    conn.send(msg)
+                app.track_event(category="Blog comment form: {}".format(Post_ID),
+                                action='Name:{}, Comment: {}, Post:{}, Date:{}-{}-{}, Newsletter:{}, email:{}'.format(
+                                    form.name.data, form.comment.data, form.post_on_page.data, time_date.strftime("%Y"),
+                                    time_date.strftime("%m"), time_date.strftime("%d"), form.newsletter.data,
+                                    form.email.data))
+                flash('Thanks for the reply!')
+            return render_template("blogs/post.html", post=post, categories=categories, form=form)
         else:
             flash("The article you tried to find does not exist, at least not with that URL, try using the search box to find what you're looking for")
             return redirect(url_for('main.show_blog'))
+
+
+@bp_blogs.route('/comment/<Post_ID>', methods=["GET", "POST"])
+def leave_a_reply(Post_ID):
+    form = CommentForm(request.form)
+    if request.method == 'POST' and form.validate():
+        time_date = datetime.now()
+        msg = Message('{} - comment'.format(form.name.data), sender=ADMINS[0], recipients=ADMINS)
+        msg.body = '{}'.format(form.comment.data)
+        user_email = form.email.data
+        if user_email == "":
+            user_email = "not provided"
+        msg.html = '<b>{}</b> says {} about {} at this time {}:{}:{} on this date {}-{}-{}. User said {} to posting on the page and {} to newsletter, with the email {}'.format(
+            form.name.data, form.comment.data, Post_ID, time_date.strftime("%H"), time_date.strftime("%M"),
+            time_date.strftime("%S"), time_date.strftime("%Y"), time_date.strftime("%m"), time_date.strftime("%d"),
+            form.post_on_page.data, form.newsletter.data, user_email)
+        app.mail.send(msg)
+        app.track_event(category="Blog comment form: {}".format(Post_ID),
+                        action='Name:{}, Comment: {}, Post:{}, Date:{}-{}-{}, Newsletter:{}, email:{}'.format(
+                            form.name.data, form.comment.data, form.post_on_page.data, time_date.strftime("%Y"),
+                            time_date.strftime("%m"), time_date.strftime("%d"), form.newsletter.data, form.email.data))
+        flash('Thanks for the reply!')
+    return render_template("blogs/comments.html", form=form)

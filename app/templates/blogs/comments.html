@@ -1,0 +1,72 @@
+{% extends "blogs/blogs_template.html" %}
+{% block main_article_mob %}
+    <div class="row m-auto" style="max-width: 800px"><h4 class="font-weight-normal">Leave a reply below</h4> </div>
+<div class="row m-auto" id="commentsform" style="max-width: 800px">
+                <form class="user col-12" method="POST" action="" novalidate>
+                {{ form.hidden_tag() }}
+                <div class="form-group font-weight-normal">
+                  {{ form.name.label }}{{ form.name(class_="form-control form-control-user") }}
+                </div>
+                <div class="form-group font-weight-normal">
+                  {{ form.comment.label }}{{ form.comment(class_="form-control form-control-user")}}
+                </div>
+                <div class="form-group">
+                     <b>{{ form.post_on_page.label }}</b>
+                </div>
+                    <div class="form-group form-check-inline">
+                        {% for subfield in form.post_on_page %}
+                            {{ subfield(class_="form-check-input") }}
+                            {{ subfield.label(class_="form-check-label pr-5") }}
+                        {% endfor %}
+                    </div>
+                <div class="form-group">
+                     <b>{{ form.newsletter.label }}</b>
+                </div>
+                <div class="form-group form-check-inline">
+                        {% for subfield in form.newsletter %}
+                            {{ subfield(class_="form-check-input") }}
+                            {{ subfield.label(class_="form-check-label pr-5") }}
+                        {% endfor %}
+                    </div>
+                <div class="form-group font-weight-normal">
+                  {{ form.email.label }}{{ form.email(class_="form-control form-control-user")}}
+                </div>
+                {{ form.Submit(class_="btn btn-dark btn-user btn-block") }}
+            </form>
+        </div>{% endblock %}
+{% block main_article %}
+    <div class="row m-auto" style="max-width: 800px"><h4 class="font-weight-normal">Leave a reply below</h4> </div>
+<div class="row m-auto" id="commentsform" style="max-width: 800px">
+                <form class="user col-12" method="POST" action="" novalidate>
+                {{ form.hidden_tag() }}
+                <div class="form-group font-weight-normal">
+                  {{ form.name.label }}{{ form.name(class_="form-control form-control-user") }}
+                </div>
+                <div class="form-group font-weight-normal">
+                  {{ form.comment.label }}{{ form.comment(class_="form-control form-control-user")}}
+                </div>
+                <div class="form-group">
+                     <b>{{ form.post_on_page.label }}</b>
+                </div>
+                    <div class="form-group form-check-inline">
+                        {% for subfield in form.post_on_page %}
+                            {{ subfield(class_="form-check-input") }}
+                            {{ subfield.label(class_="form-check-label pr-5") }}
+                        {% endfor %}
+                    </div>
+                <div class="form-group">
+                     <b>{{ form.newsletter.label }}</b>
+                </div>
+                <div class="form-group form-check-inline">
+                        {% for subfield in form.newsletter %}
+                            {{ subfield(class_="form-check-input") }}
+                            {{ subfield.label(class_="form-check-label pr-5") }}
+                        {% endfor %}
+                    </div>
+                <div class="form-group font-weight-normal">
+                  {{ form.email.label }}{{ form.email(class_="form-control form-control-user")}}
+                </div>
+                {{ form.Submit(class_="btn btn-dark btn-user btn-block") }}
+            </form>
+        </div>
+{% endblock %}
