@@ -160,8 +160,10 @@
                         </div>
                       </div>
                         <div class="card-body p-2 text-left">
-                            <h6 class="card-subtitle mb-2 text-muted font-weight-normal">By {{ post.author }}, {{ post.Date }}</h6>
+                            <h6 class="card-subtitle mb-2 text-muted font-weight-normal">{{ post.author }} | {{ post.Date }}</h6>
                             <h5><a itemprop="name" class="text-dark font-weight-normal h-5" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}">{{ post.Title }}</a></h5>
+                            <h6 class="card-subtitle mb-2 text-muted font-weight-normal">{{ post.category }}</h6>
+                            <h6 class="card-subtitle mb-2 text-muted font-weight-normal">4 min read</h6>
                         </div>
                       </div>
                 {% endfor %}

@@ -323,28 +323,7 @@ def post(Post_ID):
             if len(post) == 0:
                 return redirect(url_for('main.show_blog'))
             app.track_event(category="Blog read: {}".format(Post_ID), action='{}'.format(Post_ID))
-            form = CommentForm(request.form)
-            if request.method == 'POST' and form.validate():
-                with app.mail.connect() as conn:
-                    time_date = datetime.now()
-                    msg = Message('{} - comment'.format(form.name.data), sender=ADMINS[0], recipients=ADMINS)
-                    msg.body = '{}'.format(form.comment.data)
-                    user_email = form.email.data
-                    if user_email == "":
-                        user_email = "not provided"
-                    msg.html = '<b>{}</b> says {} about {} at this time {}:{}:{} on this date {}-{}-{}. User said {} to posting on the page and {} to newsletter, with the email {}'.format(
-                        form.name.data, form.comment.data, Post_ID, time_date.strftime("%H"), time_date.strftime("%M"),
-                        time_date.strftime("%S"), time_date.strftime("%Y"), time_date.strftime("%m"),
-                        time_date.strftime("%d"),
-                        form.post_on_page.data, form.newsletter.data, user_email)
-                    conn.send(msg)
-                app.track_event(category="Blog comment form: {}".format(Post_ID),
-                                action='Name:{}, Comment: {}, Post:{}, Date:{}-{}-{}, Newsletter:{}, email:{}'.format(
-                                    form.name.data, form.comment.data, form.post_on_page.data, time_date.strftime("%Y"),
-                                    time_date.strftime("%m"), time_date.strftime("%d"), form.newsletter.data,
-                                    form.email.data))
-                flash('Thanks for the reply!')
-            return render_template("blogs/post.html", post=post, categories=categories, form=form)
+            return render_template("blogs/post.html", post=post, categories=categories)
         else:
             flash("The article you tried to find does not exist, at least not with that URL, try using the search box to find what you're looking for")
             return redirect(url_for('main.show_blog'))

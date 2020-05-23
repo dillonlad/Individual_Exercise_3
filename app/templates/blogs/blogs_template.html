@@ -66,11 +66,11 @@
     <div class="row">
         <div class="col-12">
             <nav class="navbar navbar-dark bg-dark" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
-                <a href="{{url_for('main.index')}}"><span class="navbar-brand text-white navbar-dark mb-0 h1">In Wait of Tomorrow</span></a>
-                <div class="dropdown dropleft show btn-group">
-                  <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
-                  </button>
-                </div>
+                    <a href="{{url_for('main.index')}}"><span class="navbar-brand text-white navbar-dark mb-0 h1">In Wait of Tomorrow</span></a>
+                    <div class="dropdown dropleft show btn-group">
+                      <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
+                      </button>
+                    </div>
             </nav>
         </div>
     </div>
@@ -91,10 +91,8 @@
     </div>
 </div>
 <div class="row m-auto" style="max-width: 800px">
-<div class="font-weight-normal h6 text-center pt-2 col-4" itemtype="datePublished, author" style="text-align: center">{% block time_and_date %}{% endblock %}</div>
-    <div class="col-4"></div>
-    <div class="col-1 h1 ml-0 font-weight-bold"><a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-    </div>
+    <div class="col-12 font-weight-normal h6" itemtype="datePublished, author">{% block time_and_date %}{% endblock %}<a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script><div class="fb-share-button pl-2" data-href="{% block comments_fb_share %}{% endblock %}" data-layout="button" data-size="small"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
+</div>
 </div>
 {% if request.MOBILE %}
     <div class="row pb-3" style="max-width: 800px">
@@ -120,43 +118,25 @@
 <div class="row m-auto" style="max-width: 800px">
 <div class="col-1"></div>
    <div class="col-1 h1 ml-0 font-weight-bold">
-    <div class="fb-share-button" data-href="{% block comments_fb_share %}{% endblock %}" data-layout="button" data-size="small"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
    </div>
 </div>
-<div class="row m-auto" style="max-width: 800px"><h4 class="font-weight-normal">Leave a reply below</h4> </div>
-<div class="row m-auto" id="commentsform" style="max-width: 800px">
-             <form class="user col-12" method="POST" novalidate>
-                {{ form.hidden_tag() }}
-                <div class="form-group font-weight-normal">
-                  {{ form.name.label }}{{ form.name(class_="form-control form-control-user") }}
-                </div>
-                <div class="form-group font-weight-normal">
-                  {{ form.comment.label }}{{ form.comment(class_="form-control form-control-user")}}
-                </div>
-                <div class="form-group">
-                     <b>{{ form.post_on_page.label }}</b>
-                </div>
-                    <div class="form-group form-check-inline">
-                        {% for subfield in form.post_on_page %}
-                            {{ subfield(class_="form-check-input") }}
-                            {{ subfield.label(class_="form-check-label pr-5") }}
-                        {% endfor %}
-                    </div>
-                <div class="form-group">
-                     <b>{{ form.newsletter.label }}</b>
-                </div>
-                <div class="form-group form-check-inline">
-                        {% for subfield in form.newsletter %}
-                            {{ subfield(class_="form-check-input") }}
-                            {{ subfield.label(class_="form-check-label pr-5") }}
-                        {% endfor %}
-                    </div>
-                <div class="form-group font-weight-normal">
-                  {{ form.email.label }}{{ form.email(class_="form-control form-control-user")}}
-                </div>
-                {{ form.Submit(class_="btn btn-dark btn-user btn-block") }}
-            </form>
-        </div>
+<div class="row m-auto text-center align-content-center" style="max-width: 800px">
+    <a class="btn btn-dark h4 text-center w-100" data-toggle="collapse" href="#collapse-comments" role="button" aria-expanded="false" aria-controls="collapse-comments">
+    Leave a reply
+  </a>
+</div>
+<div class="row m-auto text-center collapse" id="collapse-comments" style="max-width: 800px">
+    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfZGNg17QmfJn7ZFlufISUUIdn4Omw2OXizQ4oT3JUpq9yFQQ/viewform?embedded=true" width="100%" height="1244" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+</div>
+<div class="row m-auto text-center align-content-center" style="max-width: 800px">
+    <a class="btn btn-dark h4 text-center w-100" data-toggle="collapse" href="#collapse-newsletter" role="button" aria-expanded="false" aria-controls="collapse-newsletter">
+    Sign up to our mailing list
+  </a>
+</div>
+<div class="row m-auto text-center collapse" id="collapse-newsletter" style="max-width: 800px">
+    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScoHhaRss18jQt3Ps4Nkd0d8ihjj8g0-xXQUV8TxEU1adYTqQ/viewform?embedded=true" width="100%" height="407" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+</div>
+
 </div>
 <script>
     function openNav() {
@@ -168,8 +148,6 @@
     }
 </script>
 </body>
-<div id="fb-root"></div>
-<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v6.0"></script>
 <div id="fb-root"></div>
 <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v6.0"></script>
 </html>

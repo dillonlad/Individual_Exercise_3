@@ -77,7 +77,7 @@
         <div class="m-auto" style="max-width: 600px">
             {% for post in posts %}
                 <link rel="stylesheet" href="../../static/css/hovering.css">
-                <div class="card mb-3" style="width: 100%" itemscope itemtype="https://schema.org/Blog">
+                <div class="card mb-3 rounded-0" style="width: 100%" itemscope itemtype="https://schema.org/Blog">
                     <div class="hovereffect">
                         <picture>
                             <source style="max-width: 600px; height: auto" class="card-img-top img-fluid" srcset="..{{ post.Image_root }}" type="image/webp">
@@ -87,8 +87,10 @@
                             <p class="text-white" itemprop="description">{{ post.Description }}...<br><a class="h4 text-white" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"> Read more...</a></p>
                         </div>
                     </div>
-                  <div class="card-body text-center">
-                      <a class="h4" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"><p class="card-text" itemprop="name">{{ post.Title }}</p></a>
+                  <div class="card-body">
+                      <h6 class="card-subtitle mb-2 text-muted font-weight-normal">{{ post.author }} | {{ post.Date }}</h6>
+                      <a class="h4 mb-2" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"><p class="card-text mb-2" itemprop="name">{{ post.Title }}</p></a>
+                      <p class="card-subtitle mb-2 text-muted font-weight-normal">{{ post.category }} | 4 min read</p>
                   </div>
                 </div>
             {% endfor %}
@@ -96,9 +98,6 @@
     {% else %}
     <p>Sorry, no posts are available at this time</p>
     {% endif %}
-    <div class="row align-content-center justify-content-center align-items-center">
-        <a class="twitter-timeline" data-width="300" data-height="500" data-theme="dark" href="https://twitter.com/InWaitofTomorr1?ref_src=twsrc%5Etfw">Tweets by InWaitofTomorr1</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-    </div>
 
 {% else %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -125,7 +124,8 @@
         <div class="row" id="cards">
         <link rel="stylesheet" href="../../static/css/hovering.css">
             {% for post in posts %}
-                <div class="card col-4 mb-3" style="background-color: #dddddd; border-color: #dddddd" itemscope itemtype="https://schema.org/Blog">
+                <div class="col-4">
+                <div class="card mb-3 rounded-0" style="border-color: #dddddd" itemscope itemtype="https://schema.org/Blog">
                     <div class="hovereffect">
                         <picture>
                             <source style="max-width: 600px; height: auto" class="card-img-top img-fluid" srcset="..{{ post.Image_root }}" type="image/webp">
@@ -136,8 +136,11 @@
                         </div>
                     </div>
                   <div class="card-body">
-                      <a class="text-dark font-weight-bold h-5" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"><p class="card-text" itemprop="name">{{ post.Title }}</p></a>
+                      <h6 class="card-subtitle mb-2 text-muted font-weight-normal">{{ post.author }} | {{ post.Date }}</h6>
+                      <a class="text-dark font-weight-normal h-5 mb-2" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"><p class="card-text mb-2" itemprop="name">{{ post.Title }}</p></a>
+                      <h6 class="card-subtitle mb-2 text-muted font-weight-normal">{{ post.category }} | 4 min read</h6>
                   </div>
+                </div>
                 </div>
             {% endfor %}
         </div>
