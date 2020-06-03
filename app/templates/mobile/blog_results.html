@@ -150,10 +150,19 @@
 
     {% endif %}
 </div>
+    <div class="text-center row m-auto" style="max-width: 800px">
+        {% if prev_url %}
+        <a class="text-center col-12" href="{{ prev_url }}">Newer posts</a>
+        {% endif %}
+        {% if next_url %}
+        <a class="text-center col-12" href="{{ next_url }}">Older posts</a>
+        {% endif %}
+    </div>
     <footer class="text-center p-5" style="background-color: #dddddd">
         <p>Made in Leicestershire, with love from London.</p>
         <p class="text-muted">&copy; 2020 In Wait of Tomorrow</p>
     </footer>
+
 
 <script>
     function openNav() {

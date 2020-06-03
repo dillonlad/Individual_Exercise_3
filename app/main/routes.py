@@ -118,7 +118,12 @@ def show_blog_linkinbio():
     app.track_event(category="Instagram hit", action='Blog read')
     form = SearchForm(request.form)
     categories = Categories.query.all()
-    posts = Blogs.query.order_by(desc(Blogs.article_id)).all()
+    page = request.args.get('page',1,type=int)
+    posts = Blogs.query.order_by(desc(Blogs.article_id)).paginate(page,5,False)
+    next_url = url_for('main.show_blog_linkinbio', page=posts.next_num) \
+        if posts.has_next else None
+    prev_url = url_for('main.show_blog_linkinbio', page=posts.prev_num) \
+        if posts.has_prev else None
     if request.method == 'POST' and form.validate():
         search = form.Search.data
         if len(search) == 0:
@@ -130,7 +135,7 @@ def show_blog_linkinbio():
                 if post not in posts:
                     posts.append(post)
         return render_template("mobile/blog_results.html", article_category=search, posts=posts, categories=categories, form=form)
-    return render_template("mobile/blog_results.html", posts=posts, categories=categories, form=form)
+    return render_template("mobile/blog_results.html", posts=posts.items, categories=categories, form=form, next_url=next_url, prev_url=prev_url)
 
 
 @bp_main.route('/articles', methods=['POST', 'GET'])
