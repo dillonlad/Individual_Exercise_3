@@ -9,11 +9,19 @@ class Authors(db.Model):
     author_name = db.Column(db.Text, nullable=False)
 
 
-class Comments(db.Model):
-    name = db.Column(db.Text, nullable=False, primary_key=True)
+class Comments_dg_tmp(db.Model):
+    name = db.Column(db.Text, nullable=False)
     comment = db.Column(db.Text, nullable=False)
     blog_name = db.Column(db.Text)
     date = db.Column(db.Text)
+    comment_id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
+    stars = db.Column(db.Integer, nullable=True)
+
+
+class MailingList(db.Model):
+    recipient_id = db.Column(db.Text, nullable=False, primary_key=True, autoincrement=True)
+    name = db.Column(db.Text, nullable=False)
+    email = db.Column(db.Text, nullable=False)
 
 
 class Posts(db.Model):

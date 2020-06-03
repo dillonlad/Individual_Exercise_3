@@ -28,6 +28,7 @@
     <script src="../static/bootstrap-4.0.0/js/tests/vendor/jquery-1.9.1.min.js"></script>
     <script src="../static/bootstrap-4.0.0/dist/js/bootstrap.bundle.js"></script>
     <script src="../static/bootstrap-4.0.0/assets/js/vendor/popper.min.js"></script>
+    <script src="https://kit.fontawesome.com/7380e39ab3.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="../static/css/bootstrap.css">
     <link rel="stylesheet" href="../static/bootstrap-4.0.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/css/newnav.css">
@@ -38,7 +39,7 @@
     <link rel="shortcut icon" href="../static/img/favico.ico">
     <title>{% block title %}{{ title }}{% endblock %}</title>
 </head>
-<body itemscope itemtype="https://schema.org/WebPage">
+<body itemscope itemtype="https://schema.org/WebPage" style="font-family: Verdana">
 <div id="myNav" class="overlay">
       <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
       <div class="overlay-content">
@@ -85,13 +86,14 @@
         <a href="https://www.reddit.com/user/inwaitoftomorrow" class="fa fa-reddit"></a>
 
 </div>
-<div class="row m-auto" style="max-width: 800px" itemprop="name">
+{% if request.MOBILE %}{% else %}<div class="row"><div class="col-8">{% endif %}
+<div class="{% if request.MOBILE %}row m-auto{% else %}{% endif %}" style="max-width: 800px" itemprop="name">
     <div class="h1 col-12 font-weight-normal">
         {% block article_title %}{% endblock %}
     </div>
 </div>
-<div class="row m-auto" style="max-width: 800px">
-    <div class="col-12 font-weight-normal h6" itemtype="datePublished, author">{% block time_and_date %}{% endblock %}<a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script><div class="fb-share-button pl-2" data-href="{% block comments_fb_share %}{% endblock %}" data-layout="button" data-size="small"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
+<div class="{% if request.MOBILE %}row m-auto{% else %}{% endif %}" style="max-width: 800px">
+    <div class="col-12 font-weight-normal h6" itemtype="datePublished, author">{% block time_and_date %}{% endblock %}<i class="fas fa-comment" style="border: none"></i>{{ number_of_comments }} | <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script><div class="fb-share-button pl-2" data-href="{% block comments_fb_share %}{% endblock %}" data-layout="button" data-size="small"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
 </div>
 </div>
 {% if request.MOBILE %}
@@ -104,10 +106,10 @@
         </div>
     </div>
 {% else %}
-    <div class="row m-auto pb-3" style="max-width: 800px">
+    <div class="pb-3" style="max-width:800px">
         <img itemtype="primaryImageOfPage, image" src="{% block image_header_tw0 %}{% endblock %}" alt="{% for post in posts %}{{ post.Title }}{% endfor %}" style="max-height: 75vh" class="col-12">
     </div>
-    <div class="row m-auto" style="max-width: 800px">
+    <div style="max-width: 800px">
         <div class="col-12 font-weight-normal">
             {% block main_article %}{% endblock %}
         </div>
@@ -128,6 +130,32 @@
 <div class="row m-auto text-center collapse" id="collapse-comments" style="max-width: 800px">
     <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfZGNg17QmfJn7ZFlufISUUIdn4Omw2OXizQ4oT3JUpq9yFQQ/viewform?embedded=true" width="100%" height="1244" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
 </div>
+<div class="row m-auto pb-2" style="max-width: 800px">
+    <h2 class="font-weight-normal">View our comments</h2>
+    {% if comments|length %}
+        {% for comment in comments %}
+            <div class="card w-100 mb-2">
+                <div class="card-header text-right">
+                    {% for number in range(comment.stars) %}<i class="fas fa-star" style="border: none"></i>{% endfor %}
+                </div>
+                <div class="card-body">
+                    <table>
+                        <tr class="col-12">
+                            <td class="text-primary font-weight-bold" style="max-width: 30%">{{ comment.name }}</td>
+                            <td class="font-weight-normal pl-3">{{ comment.comment }}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="card-footer">
+                    <p class="text-muted text-right">{{ comment.date }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>There are no comments, use the form above to leave one and sign up for our newsletter</p>
+    {% endif %}
+
+</div>
 <div class="row m-auto text-center align-content-center" style="max-width: 800px">
     <a class="btn btn-dark h4 text-center w-100" data-toggle="collapse" href="#collapse-newsletter" role="button" aria-expanded="false" aria-controls="collapse-newsletter">
     Sign up to our mailing list
@@ -136,15 +164,57 @@
 <div class="row m-auto text-center collapse" id="collapse-newsletter" style="max-width: 800px">
     <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScoHhaRss18jQt3Ps4Nkd0d8ihjj8g0-xXQUV8TxEU1adYTqQ/viewform?embedded=true" width="100%" height="407" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
 </div>
+{% if request.MOBILE %}{% else %}
+    </div>
+    <div class="col-4 bg-dark pt-2" id="articles">
+        <a class="btn btn-dark h4 text-center w-100" data-toggle="collapse" href="#collapse-newsletter2" role="button" aria-expanded="false" aria-controls="collapse-newsletter"><img src="../static/img/newsletter.png" style="max-width: 300px"></a>
+    <div class="row m-auto text-center collapse" id="collapse-newsletter2" style="max-width: 800px">
+        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScoHhaRss18jQt3Ps4Nkd0d8ihjj8g0-xXQUV8TxEU1adYTqQ/viewform?embedded=true" width="100%" height="407" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+    </div>
+        <h3 class="font-weight-normal text-white text-left align-self-center align-content-center">Other articles {% if article_category|length %}in {{ article_category }}{% endif %}</h3>
+    {% if latest_articles|length %}
+        <div class="m-auto" style="max-width: 600px">
+            {% for post in latest_articles %}
+                <link rel="stylesheet" href="../../static/css/hovering.css">
+                <div class="card mb-3 rounded-0" style="width: 100%" itemscope itemtype="https://schema.org/Blog">
+                    <div class="hovereffect">
+                        <picture>
+                            <source style="max-width: 600px; height: auto" class="card-img-top img-fluid" srcset="..{{ post.Image_root }}" type="image/webp">
+                            <img class="card-img-top img-fluid" itemscope itemtype="https://schema.org/ImageObject" src="..{{ post.Image_iphone }}" alt="{{ post.Title }}" style="max-width: 600px; height: auto">
+                        </picture>
+                            <div class="overlay" id="img_overlay">
+                            <p class="text-white" itemprop="description">{{ post.Description }}...<br><a class="h4 text-white" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"> Read more...</a></p>
+                        </div>
+                    </div>
+                  <div class="card-body">
+                      <h6 class="card-subtitle mb-2 text-muted font-weight-normal">{{ post.author }} | {{ post.Date }}</h6>
+                      <a class="mb-2" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"><p class="card-text mb-2" itemprop="name">{{ post.Title }}</p></a>
+                      <p class="card-subtitle mb-2 text-muted font-weight-normal">{{ post.category }} | 4 min read</p>
+                  </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+    <p>Sorry, no posts are available at this time</p>
+        {% endif %}
+    </div>
+    </div>
+{% endif %}
 
 </div>
+    <footer class="text-center p-5" style="background-color: #dddddd">
+        <p>Made in Leicestershire, with love from London.</p>
+        <p class="text-muted">&copy; 2020 In Wait of Tomorrow</p>
+    </footer>
 <script>
     function openNav() {
       document.getElementById("myNav").style.width = "100%";
+      document.getElementById("articles").style.visibility = "hidden"
     }
 
     function closeNav() {
       document.getElementById("myNav").style.width = "0%";
+      document.getElementById("articles").style.visibility = "visible"
     }
 </script>
 </body>

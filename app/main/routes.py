@@ -17,7 +17,7 @@ import app
 from app import db
 from app.main.forms import CommentForm, SignupForm, LoginForm, PostForm, BlogEditor, CreateArticle, SearchForm
 
-from app.models import Comments, Posts_two, Blogs, Profile, Categories, Series, Authors
+from app.models import Posts_two, Blogs, Profile, Categories, Series, Authors, Comments_dg_tmp
 
 bp_main = Blueprint('main', __name__)
 bp_blogs = Blueprint('blogs', __name__, url_prefix='/blogs')
@@ -320,10 +320,13 @@ def post(Post_ID):
         if Blogs.query.filter(Blogs.Post_ID.contains(Post_ID)).all():
             categories = Categories.query.all()
             post = Blogs.query.filter_by(Post_ID=Post_ID).all()
+            latest_articles = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Post_ID!=Post_ID).limit(5).all()
             if len(post) == 0:
                 return redirect(url_for('main.show_blog'))
+            comments = Comments_dg_tmp.query.order_by(desc(Comments_dg_tmp.comment_id)).filter(Comments_dg_tmp.blog_name.contains(Post_ID)).all()
+            number_of_comments = len(comments)
             app.track_event(category="Blog read: {}".format(Post_ID), action='{}'.format(Post_ID))
-            return render_template("blogs/post.html", post=post, categories=categories)
+            return render_template("blogs/post.html", post=post, categories=categories, comments=comments, number_of_comments=number_of_comments, latest_articles=latest_articles)
         else:
             flash("The article you tried to find does not exist, at least not with that URL, try using the search box to find what you're looking for")
             return redirect(url_for('main.show_blog'))
