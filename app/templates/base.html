@@ -66,7 +66,7 @@
       </div>
   </div>
     {% if request.MOBILE %}
-<div class="container-fluid mainimage opacity-5" style="background-image: url('../static/img/Picture3.png')">
+<div class="container-fluid mainimage opacity-5 w-100" style="background-image: url('../static/img/Picture3.png')">
     <div class="row">
         <div class="col-md-12">
             <nav class="navbar navbar-dark bg-transparent container-fluid" itemscope itemtype="https://schema.org/SiteNavigationElement">
@@ -100,7 +100,7 @@
 
 </div>
     {% else %}
-    <div class="container-fluid mainimage opacity-5" style="background-image: url('../static/img/Picture3.png'); max-width: 100%">
+    <div class="container-fluid w-100 mainimage opacity-5" style="background-image: url('../static/img/background (1).png')">
     <div class="row">
         <div class="col-12">
             <nav class="navbar navbar-dark bg-transparent container-fluid" itemscope itemtype="https://schema.org/SiteNavigationElement">
@@ -116,12 +116,12 @@
         <div class="container h-40">
             <div class="row h-40 align-items-center p-5">
                 <div class="col-12 text-center" style="padding-top: 0vh">
-                    <h1 class="font-weight-light" itemprop="name">In Wait of Tomorrow</h1>
+                    <h1 class="font-weight-normal text-white" itemprop="name">In Wait of Tomorrow</h1>
                     <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11"></script>
-                    <div id="typed-strings" style="max-width: 600px">
-                        <p class="lead">^1000 Futurology ^1000 - Systematic forecasting of the future ^1000 based on current trends^2000</p>
-                        <p class="font-weight-normal font-italic">"I know not with what weapons World War III will be fought ^1000, but World War IV will be fought with sticks and stones." ~ Albert Einstein ^1000</p></div>
-                    <span id="typed" class="pb-2 font-italic"></span>
+                    <div id="typed-strings" class="text-white" style="max-width: 600px">
+                        <p class="lead text-white">^1000 Futurology ^1000 - Systematic forecasting of the future ^1000 based on current trends^2000</p>
+                        <p class="font-weight-normal font-italic text-white">"I know not with what weapons World War III will be fought ^1000, but World War IV will be fought with sticks and stones." ~ Albert Einstein ^1000</p></div>
+                    <span id="typed" class="pb-2 font-italic text-white"></span>
 
                 </div>
             </div>
@@ -130,10 +130,10 @@
 
 </div>
 {% endif %}
-<div id="articles" class="row">
+<div id="articles" class="row w-100 m-auto">
     {% block list_of_articles %}{% endblock %}
 </div>
-    <footer class="text-center p-5" style="background-color: #dddddd">
+    <footer class="text-center p-5 w-100" style="background-color: #dddddd">
         <p>Made in Leicestershire, with love from London.</p>
         <p class="text-muted">&copy; 2020 In Wait of Tomorrow</p>
     </footer>
