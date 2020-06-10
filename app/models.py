@@ -18,8 +18,8 @@ class Comments_dg_tmp(db.Model):
     stars = db.Column(db.Integer, nullable=True)
 
 
-class MailingList(db.Model):
-    recipient_id = db.Column(db.Text, nullable=False, primary_key=True, autoincrement=True)
+class mailing_list(db.Model):
+    recipient_id = db.Column(db.Integer, nullable=False, primary_key=True, autoincrement=True)
     name = db.Column(db.Text, nullable=False)
     email = db.Column(db.Text, nullable=False)
 

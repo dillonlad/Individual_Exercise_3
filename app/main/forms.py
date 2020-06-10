@@ -69,3 +69,9 @@ class CreateArticle(FlaskForm):
 class SearchForm(FlaskForm):
     Search = StringField('Search for articles:')
     Submit = SubmitField('Search')
+
+
+class SubmitNewsletter(FlaskForm):
+    specific_message_one = StringField('Opening message: ')
+    specific_message_two = StringField('Closing message: ')
+    Submit = SubmitField('Send Newsletter')

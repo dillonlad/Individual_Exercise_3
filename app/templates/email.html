@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>In Wait of Tomorrow Newsletter</title>
+    <style>
+        body{
+            font-family: Verdana;
+            padding: 0px;
+            margin: auto;
+            max-width: 600px;
+        }
+
+        emailheading{
+            text-align: center;
+        }
+
+
+        table{
+            max-width: 600px;
+        }
+    </style>
+</head>
+<body style="font-family: Arial">
+    <div style="max-width: 600px; margin: auto; height: 30%; background-color: #6e6e6e">
+        <table style="width: 100%">
+            <tr>
+                <td style="width: 80%; padding: 5%"><h1 style="font-weight: normal; color: white; text-align: left">In Wait of Tomorrow</h1></td>
+                <td style="padding: 5%"><img style="text-align: right; max-width: 50px; padding: 5%; float: right" src="https://inwaitoftomorrow.appspot.com/static/img/logo.jpeg" alt="In Wait of Tomorrow"></td>
+            </tr>
+        </table>
+    </div>
+    <div style="max-width: 600px; margin: auto">
+        <p>Dear {{ fella.name }},</p>
+        <p>{{ opening_message }}</p>
+    </div>
+    <div style="max-width: 600px; margin: auto">
+        <table>
+            <tr>
+                <td style="width: 50%"><img style="text-align: center; width: 100%; max-width: 300px" src="https://inwaitoftomorrow.appspot.com{% for post in latest_post %}{{ post.Image_iphone }}{% endfor %}" alt="Latest article"></td>
+                <td>{% for post in latest_post %}<a href="{{ post.url_ }}"><h3>{{ post.Title }}</h3></a>{% endfor %}
+                    <p>{% for post in latest_post %}{{ post.Description }} | By {{ post.author }}{% endfor %}</p>
+                </td>
+            </tr>
+            <tr>
+                <td>{% for post in second_latest_post %}<a href="{{ post.url_ }}"><h3>{{ post.Title }}</h3></a>{% endfor %}
+                    <p>{% for post in second_latest_post %}{{ post.Description }} | By {{ post.author }}{% endfor %}</p>
+                </td>
+                <td style="width: 50%"><img style="text-align: center; width: 100%; max-width: 300px" src="https://inwaitoftomorrow.appspot.com{% for post in second_latest_post %}{{ post.Image_iphone }}{% endfor %}" alt="Latest article"></td>
+            </tr>
+        </table>
+    </div>
+    <div style="max-width: 600px; margin: auto; padding-top: 10px">
+        <p>{{ closing_message }}</p>
+        <p><a href="https://inwaitoftomorrow.appspot.com">In Wait of Tomorrow</a></p>
+    </div>
+    <div style="text-align: center; background-color: #dddddd; max-width: 600px; margin: auto; padding-top: 5px; padding-bottom: 5px">
+        <h3>Don't already follow us?</h3>
+        <p>Click here to find us on <a href="https://www.facebook.com/inwaitoftomorrow/">Facebook</a>, <a href="https://www.instagram.com/inwaitoftomorrow/">Instagram</a> and <a href="https://twitter.com/InWaitofTomorr1">Twitter</a> </p>
+    </div>
+
+</body>
+</html>

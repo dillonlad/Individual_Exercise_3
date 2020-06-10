@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
+    <link rel="stylesheet" href="../static/bootstrap-4.0.0/dist/css/bootstrap.min.css">
+    <title>Submit Newsletter</title>
+</head>
+<body>
+{% if form.errors %}
+    {% for field_name, field_errors in form.errors|dictsort if field_errors %}
+        <div class="alert alert-danger" role="alert">
+            {% for error in field_errors %}
+                {{ form[field_name].label }}: {{ error }}
+            {% endfor %}
+        </div>
+    {% endfor %}
+{% endif %}
+<div class="row">
+    <div class="col-2"></div>
+    <div class="col-8">
+    <form method="POST" action="" novalidate>
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                  {{ form.specific_message_one.label }}{{ form.specific_message_one(class_="form-control form-control-user", spellcheck_="True") }}
+                </div>
+        <div class="col-sm-12">
+                    {{ form.specific_message_two.label }}{{ form.specific_message_two(class_="form-control form-control-user", spellcheck_="True")}}
+                  </div>
+                {{ form.Submit(class_="btn btn-primary btn-user btn-block") }}
+              </form>
+    </div>
+    <div class="col-2"></div>
+
+</div>
+</body>
+</html>

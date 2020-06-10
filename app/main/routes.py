@@ -15,14 +15,17 @@ from flask_sitemap import Sitemap, sitemap_page_needed
 
 import app
 from app import db
-from app.main.forms import CommentForm, SignupForm, LoginForm, PostForm, BlogEditor, CreateArticle, SearchForm
+from app.main.forms import CommentForm, SignupForm, LoginForm, PostForm, BlogEditor, CreateArticle, SearchForm, \
+    SubmitNewsletter
 
-from app.models import Posts_two, Blogs, Profile, Categories, Series, Authors, Comments_dg_tmp
+from app.models import Posts_two, Blogs, Profile, Categories, Series, Authors, Comments_dg_tmp, \
+    mailing_list
 
 bp_main = Blueprint('main', __name__)
 bp_blogs = Blueprint('blogs', __name__, url_prefix='/blogs')
 ext = Sitemap()
 ADMINS = ['inwaitoftomorrow@gmail.com']
+
 
 
 def is_safe_url(target):
@@ -184,23 +187,22 @@ def show_blog_category(category):
         return redirect(url_for('main.show_blog'))
 
 
-@bp_main.route('/<series_id>', methods=['POST', 'GET'])
-def show_blog_series(series_id):
+@bp_main.route('/<series_key>', methods=['POST', 'GET'])
+def show_blog_series(series_key):
     form = SearchForm(request.form)
     categories = Categories.query.all()
-    if Series.query.filter(Series.series_id.contains(series_id)).all():
-        posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.series.contains(series_name)).all()
-        if request.method == 'POST' and form.validate():
-            search = form.Search.data
-            posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.series.contains(series_name)).filter(Blogs.Title.contains(search)).all()
-            posts_two = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.series.contains(series_name)).filter(Blogs.Content.contains(search)).all()
-            for post in posts_two:
-                if post not in posts:
-                    posts.append(post)
-        else:
-            posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.series.contains(series_name)).all()
-        article_category = series_name
-        return render_template("mobile/blog_results.html", posts=posts, categories=categories, article_category=article_category, form=form)
+    episode = Series.query.filter(Series.series_key.contains(series_key)).all()
+    if request.method == 'POST' and form.validate():
+        search = form.Search.data
+        posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.series.contains(episode.series_name)).filter(Blogs.Title.contains(search)).all()
+        posts_two = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.series.contains(episode.series_name)).filter(Blogs.Content.contains(search)).all()
+        for post in posts_two:
+            if post not in posts:
+                posts.append(post)
+    else:
+        posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.series.contains(episode.series_name)).all()
+    article_category = episode.series_name
+    return render_template("mobile/blog_results.html", posts=posts, categories=categories, article_category=article_category, form=form)
 
 
 
@@ -229,6 +231,7 @@ def login():
 @login_required
 def logout():
     logout_user()
+    flash('You have successfully logged off')
     return redirect(url_for('main.index'))
 
 
@@ -337,24 +340,21 @@ def post(Post_ID):
             return redirect(url_for('main.show_blog'))
 
 
-@bp_blogs.route('/comment/<Post_ID>', methods=["GET", "POST"])
-def leave_a_reply(Post_ID):
-    form = CommentForm(request.form)
-    if request.method == 'POST' and form.validate():
-        time_date = datetime.now()
-        msg = Message('{} - comment'.format(form.name.data), sender=ADMINS[0], recipients=ADMINS)
-        msg.body = '{}'.format(form.comment.data)
-        user_email = form.email.data
-        if user_email == "":
-            user_email = "not provided"
-        msg.html = '<b>{}</b> says {} about {} at this time {}:{}:{} on this date {}-{}-{}. User said {} to posting on the page and {} to newsletter, with the email {}'.format(
-            form.name.data, form.comment.data, Post_ID, time_date.strftime("%H"), time_date.strftime("%M"),
-            time_date.strftime("%S"), time_date.strftime("%Y"), time_date.strftime("%m"), time_date.strftime("%d"),
-            form.post_on_page.data, form.newsletter.data, user_email)
-        app.mail.send(msg)
-        app.track_event(category="Blog comment form: {}".format(Post_ID),
-                        action='Name:{}, Comment: {}, Post:{}, Date:{}-{}-{}, Newsletter:{}, email:{}'.format(
-                            form.name.data, form.comment.data, form.post_on_page.data, time_date.strftime("%Y"),
-                            time_date.strftime("%m"), time_date.strftime("%d"), form.newsletter.data, form.email.data))
-        flash('Thanks for the reply!')
-    return render_template("blogs/comments.html", form=form)
+@bp_blogs.route('/email', methods=['GET', 'POST'])
+@login_required
+def send_newsletter():
+    form = SubmitNewsletter(request.form)
+    if request.method == 'POST':
+        latest_post = Blogs.query.order_by(desc(Blogs.article_id)).limit(1).all()
+        second_latest_post = Blogs.query.order_by(desc(Blogs.article_id)).offset(1).limit(1).all()
+        opening_message = form.specific_message_one.data
+        closing_message = form.specific_message_two.data
+        for fella in mailing_list.query.order_by(desc(mailing_list.recipient_id)).all():
+            recp = fella.email.split()
+            msg = Message(sender=ADMINS[0], recipients=recp)
+            msg.subject = "Latest | In Wait of Tomorrow"
+            msg.html = render_template("email.html", latest_post=latest_post, fella=fella, second_latest_post=second_latest_post, opening_message=opening_message, closing_message=closing_message)
+            app.mail.send(msg)
+        flash('Your email has been sent, please logout by at https://inwaitoftomorrow.appspot.com/logout')
+        return redirect(url_for('main.index'))
+    return render_template('submit_newsletter.html', form=form)

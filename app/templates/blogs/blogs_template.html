@@ -24,10 +24,9 @@
     <meta name="twitter:card" content="summary_large_image"/>
     <meta name="twitter:url" content="{% block twitter_share_url %}{% endblock %}"/>
     <meta name="description" content="{% block meta_description %}{% endblock %}"/>
-    <script type="text/javascript" src="https://platform-api.sharethis.com/js/sharethis.js#property=5e71ee341758630012f31ae5&product=inline-follow-buttons" async="async"></script>
-    <script src="../static/bootstrap-4.0.0/js/tests/vendor/jquery-1.9.1.min.js"></script>
-    <script src="../static/bootstrap-4.0.0/dist/js/bootstrap.bundle.js"></script>
-    <script src="../static/bootstrap-4.0.0/assets/js/vendor/popper.min.js"></script>
+    <script src="../static/bootstrap-4.0.0/js/tests/vendor/jquery-1.9.1.min.js" defer></script>
+    <script src="../static/bootstrap-4.0.0/dist/js/bootstrap.bundle.js" defer></script>
+    <script src="../static/bootstrap-4.0.0/assets/js/vendor/popper.min.js" defer></script>
     <link rel="stylesheet" href="../static/css/bootstrap.css">
     <link rel="stylesheet" href="../static/bootstrap-4.0.0/dist/css/bootstrap.min.css">
     <meta name="keywords" content="inwaitoftomorrow, In Wait of Tomorrow, futurology, {% block meta_keywords %}{% endblock %}">
@@ -93,7 +92,7 @@
     </div>
 </div>
 <div class="{% if request.MOBILE %}row m-auto{% else %}{% endif %}" style="max-width: 800px">
-    <div class="col-12 font-weight-normal h6" itemtype="datePublished, author">{% block time_and_date %}{% endblock %}<i class="fas fa-comment" style="border: none"></i>{{ number_of_comments }} | <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script><div class="fb-share-button pl-2" data-href="{% block comments_fb_share %}{% endblock %}" data-layout="button" data-size="small"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
+    <div class="col-12 font-weight-normal h6" itemtype="datePublished, author">{% block time_and_date %}{% endblock %}<i class="fas fa-comment" style="border: none"></i>{{ number_of_comments }} | <a class="text-dark" href="https://api.whatsapp.com/send?text={% for post in post %}{{ post.url_ | safe }}{% endfor %}"><i style="border: none" class="fab fa-whatsapp"></i></a> <a class="text-dark" href="http://www.facebook.com/sharer.php?u={% for post in post %}{{ post.url_ | safe }}{% endfor %}"><i class="fab fa-facebook-square" style="border: none"></i></a> <a class="text-dark" href="https://twitter.com/intent/tweet?url={% for post in post %}{{ post.url_ | safe }}{% endfor %}&text={% for post in post %}{{ post.Title | safe }}{% endfor %}"><i class="fab fa-twitter-square" style="border: none"></i></a> <a class="text-dark" href="https://www.linkedin.com/sharing/share-offsite/?url={% for post in post %}{{ post.url_ | safe }}{% endfor %}"><i style="border: none" class="fab fa-linkedin-in"></i></a>
 </div>
 </div>
 {% if request.MOBILE %}
@@ -218,6 +217,4 @@
     }
 </script>
 </body>
-<div id="fb-root"></div>
-<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v6.0"></script>
 </html>
