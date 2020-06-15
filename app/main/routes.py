@@ -13,6 +13,7 @@ from flask_sqlalchemy import SQLAlchemy
 from os.path import abspath, join, dirname
 from flask_sitemap import Sitemap, sitemap_page_needed
 
+
 import app
 from app import db
 from app.main.forms import CommentForm, SignupForm, LoginForm, PostForm, BlogEditor, CreateArticle, SearchForm, \
@@ -25,6 +26,7 @@ bp_main = Blueprint('main', __name__)
 bp_blogs = Blueprint('blogs', __name__, url_prefix='/blogs')
 ext = Sitemap()
 ADMINS = ['inwaitoftomorrow@gmail.com']
+NEWSLETTER_TEST = ['dlad82434@gmail.com']
 
 
 
@@ -191,7 +193,7 @@ def show_blog_category(category):
 def show_blog_series(series_key):
     form = SearchForm(request.form)
     categories = Categories.query.all()
-    episode = Series.query.filter(Series.series_key.contains(series_key)).all()
+    episode = Series.query.filter(Series.series_key.contains(series_key)).all().split()
     if request.method == 'POST' and form.validate():
         search = form.Search.data
         posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.series.contains(episode.series_name)).filter(Blogs.Title.contains(search)).all()
@@ -237,29 +239,34 @@ def logout():
 
 @bp_main.route('/register/', methods=['POST', 'GET'])
 def register():
-    if current_user.is_authenticated:
-        flash('You are logged in')
+    host = request.host
+    if '127' not in host:
+        flash('This view is restricted')
         return redirect(url_for('main.index'))
-    form = SignupForm(request.form)
-    if request.method == 'POST' and form.validate():
-        user = Profile(username=form.username.data, email=form.email.data, password=form.password.data)
-        user.set_password(form.password.data)
-        try:
-            db.session.add(user)
-            response = make_response(redirect(url_for('main.index')))
-            response.set_cookie("username", form.username.data)
-            user = Profile.query.filter_by(email=form.email.data).first()
-            login_user(user)
-            db.session.commit()
-            flash('registered successfully')
-            return response
-        except IntegrityError:
-            db.session.rollback()
-            flash('Unable to register {}. Please try again.'.format(form.username.data), 'error')
-        except OperationalError:
-            db.session.rollback()
-            flash('Register feature not working')
-    return render_template('register.html', form=form)
+    else:
+        if current_user.is_authenticated:
+            flash('You are logged in')
+            return redirect(url_for('main.index'))
+        form = SignupForm(request.form)
+        if request.method == 'POST' and form.validate():
+            user = Profile(username=form.username.data, email=form.email.data, password=form.password.data)
+            user.set_password(form.password.data)
+            try:
+                db.session.add(user)
+                response = make_response(redirect(url_for('main.index')))
+                response.set_cookie("username", form.username.data)
+                user = Profile.query.filter_by(email=form.email.data).first()
+                login_user(user)
+                db.session.commit()
+                flash('registered successfully')
+                return response
+            except IntegrityError:
+                db.session.rollback()
+                flash('Unable to register {}. Please try again.'.format(form.username.data), 'error')
+            except OperationalError:
+                db.session.rollback()
+                flash('Register feature not working')
+        return render_template('register.html', form=form)
 
 
 @bp_main.route('/add_post/', methods=['POST', 'GET'])
@@ -358,3 +365,24 @@ def send_newsletter():
         flash('Your email has been sent, please logout by at https://inwaitoftomorrow.appspot.com/logout')
         return redirect(url_for('main.index'))
     return render_template('submit_newsletter.html', form=form)
+
+
+@bp_blogs.route('/test-email', methods=['GET', 'POST'])
+@login_required
+def test_send_newsletter():
+    form = SubmitNewsletter(request.form)
+    if request.method == 'POST':
+        latest_post = Blogs.query.order_by(desc(Blogs.article_id)).limit(1).all()
+        second_latest_post = Blogs.query.order_by(desc(Blogs.article_id)).offset(1).limit(1).all()
+        opening_message = form.specific_message_one.data
+        closing_message = form.specific_message_two.data
+        for fella in NEWSLETTER_TEST:
+            recp = fella.split()
+            msg = Message(sender=ADMINS[0], recipients=recp)
+            msg.subject = "Latest | In Wait of Tomorrow"
+            msg.html = render_template("email.html", latest_post=latest_post, fella=fella, second_latest_post=second_latest_post, opening_message=opening_message, closing_message=closing_message)
+            app.mail.send(msg)
+        flash('Your email has been sent, please logout by at https://inwaitoftomorrow.appspot.com/logout')
+        return redirect(url_for('main.index'))
+    return render_template('submit_newsletter.html', form=form)
+
