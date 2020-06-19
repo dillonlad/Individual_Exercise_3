@@ -20,6 +20,7 @@ email-validator==1.0.5
 requests==2.0.0
 flask-mobility==1.0.0
 flask-mail==0.9.1
+urlfetch==1.2.1
 
 
 

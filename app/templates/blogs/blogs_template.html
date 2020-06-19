@@ -63,7 +63,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
-            <nav class="navbar navbar-dark {% if request.MOBILE %}fixed-top{% else %}{% endif %} bg-dark" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
+            <nav class="navbar navbar-dark fixed-top bg-dark" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
                     <a href="{{url_for('main.index')}}"><span class="navbar-brand text-white navbar-dark mb-0 h1">In Wait of Tomorrow</span></a>
                     <div class="dropdown dropleft show btn-group">
                       <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
@@ -76,7 +76,7 @@
         {% block image_header %}{% endblock %}
     </div>
 </div>
-    <div class="text-center text-dark p-2" {% if request.MOBILE %}style="margin-top: 50px"{% else %}{% endif %}>
+    <div class="text-center text-dark p-2" {% if request.MOBILE %}style="margin-top: 50px" {% else %}style="margin-top:5%"{% endif %}>
         <script src="https://kit.fontawesome.com/7380e39ab3.js" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <a href="https://www.facebook.com/inwaitoftomorrow/" class="fa fa-facebook"></a>
@@ -85,16 +85,20 @@
         <a href="https://www.reddit.com/user/inwaitoftomorrow" class="fa fa-reddit"></a>
 
 </div>
-{% if request.MOBILE %}{% else %}<div class="row"><div class="col-8">{% endif %}
+    {% if request.MOBILE %}{% else %}<div class="row"><div class="col-8" style="max-width: 800px">{% endif %}
 <div class="{% if request.MOBILE %}row m-auto{% else %}{% endif %}" style="max-width: 800px" itemprop="name">
-    <div class="h1 col-12 font-weight-normal">
+    <div class="h1 col-12 font-weight-normal {% if request.MOBILE %}{% else %}mt-3{% endif %}">
         {% block article_title %}{% endblock %}
     </div>
 </div>
-<div class="{% if request.MOBILE %}row m-auto{% else %}{% endif %}" style="max-width: 800px">
-    <div class="col-12 font-weight-normal h6" itemtype="datePublished, author">{% block time_and_date %}{% endblock %}<i class="fas fa-comment" style="border: none"></i>{{ number_of_comments }} | <a class="text-dark" href="https://api.whatsapp.com/send?text={% for post in post %}{{ post.url_ | safe }}{% endfor %}"><i style="border: none" class="fab fa-whatsapp"></i></a> <a class="text-dark" href="http://www.facebook.com/sharer.php?u={% for post in post %}{{ post.url_ | safe }}{% endfor %}"><i class="fab fa-facebook-square" style="border: none"></i></a> <a class="text-dark" href="https://twitter.com/intent/tweet?url={% for post in post %}{{ post.url_ | safe }}{% endfor %}&text={% for post in post %}{{ post.Title | safe }}{% endfor %}"><i class="fab fa-twitter-square" style="border: none"></i></a> <a class="text-dark" href="https://www.linkedin.com/sharing/share-offsite/?url={% for post in post %}{{ post.url_ | safe }}{% endfor %}"><i style="border: none" class="fab fa-linkedin-in"></i></a>
+{% if request.MOBILE %}{% else %}
+<div class="dropdown-divider text-center mb-0 mt-3" style="max-width: 800px"></div>{% endif %}
+<div class="{% if request.MOBILE %}row m-auto{% else %}pt-2 pb-2{% endif %}" style="max-width: 800px">
+    <div class="col-12 font-weight-normal h6 {% if request.MOBILE %}{% else %}mb-0{% endif %}" itemtype="datePublished, author">{% block time_and_date %}{% endblock %}{% if number_of_comments > 0 %}<i class="fas fa-comment" style="border: none"></i>{{ number_of_comments }} | {% else %}{% endif %}<a class="text-dark" href="https://api.whatsapp.com/send?text={% for post in post %}{{ post.url_ | safe }}{% endfor %}"><i style="border: none" class="fab fa-whatsapp"></i></a> <a class="text-dark" href="http://www.facebook.com/sharer.php?u={% for post in post %}{{ post.url_ | safe }}{% endfor %}"><i class="fab fa-facebook-square" style="border: none"></i></a> <a class="text-dark" href="https://twitter.com/intent/tweet?url={% for post in post %}{{ post.url_ | safe }}{% endfor %}&text={% for post in post %}{{ post.Title | safe }}{% endfor %}"><i class="fab fa-twitter-square" style="border: none"></i></a> <a class="text-dark" href="https://www.linkedin.com/sharing/share-offsite/?url={% for post in post %}{{ post.url_ | safe }}{% endfor %}"><i style="border: none" class="fab fa-linkedin-in"></i></a>
 </div>
 </div>
+    {% if request.MOBILE %}{% else %}
+<div class="dropdown-divider text-center mb-0 pb-4" style="max-width: 800px"></div>{% endif %}
 {% if request.MOBILE %}
     <div class="row pb-3" style="max-width: 800px">
         <img itemtype="primaryImageOfPage, image" src="{% block image_header_tw0_mob %}{% endblock %}" style="max-height: 75vh" class="w-100" alt="{% for post in posts %}{{ post.Title }}{% endfor %}">
@@ -109,7 +113,7 @@
         <img itemtype="primaryImageOfPage, image" src="{% block image_header_tw0 %}{% endblock %}" alt="{% for post in posts %}{{ post.Title }}{% endfor %}" style="max-height: 75vh" class="col-12">
     </div>
     <div style="max-width: 800px">
-        <div class="col-12 font-weight-normal">
+        <div class="col-12 pl-0 ml-0 font-weight-normal">
             {% block main_article %}{% endblock %}
         </div>
     </div>
@@ -165,12 +169,17 @@
 </div>
 {% if request.MOBILE %}{% else %}
     </div>
-    <div class="col-4 pt-2" id="articles">
-        <a class="btn btn-dark h4 text-center w-100" data-toggle="collapse" href="#collapse-newsletter2" role="button" aria-expanded="false" aria-controls="collapse-newsletter"><img src="../static/img/newsletter.png" style="max-width: 300px"></a>
-    <div class="row m-auto text-center collapse" id="collapse-newsletter2" style="max-width: 800px">
-        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScoHhaRss18jQt3Ps4Nkd0d8ihjj8g0-xXQUV8TxEU1adYTqQ/viewform?embedded=true" width="100%" height="407" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
-    </div>
-        <h3 class="font-weight-normal text-white text-left align-self-center align-content-center">Other articles {% if article_category|length %}in {{ article_category }}{% endif %}</h3>
+    <div class="col-4 pt-2 mr-0 ml-3" id="articles">
+        <div class="m-auto p-3 border-dark" style="max-width: 600px; border-width: thin; border-color: black">
+            <h3 class="font-weight-normal text-left ml-0">Question of the week</h3>
+            <p class="ml-0">Who does this famous quote belong to? "The greatest glory in living lies not in never falling, but in rising every time we fall."</p>
+            <form id="quiz" class="btn-group-vertical align-items-center pl-5 pr-5">
+                <button onclick="optioncorrect()" type="button" id="option_correct" class="w-100 btn m-0 text-left rounded-0" style="border-color: black">Nelson Mandela <i class="fa fa-lg fa-check m-0" id="tick" style="visibility: hidden; border: none"></i></button>
+                <button onclick="optionincorrect()" type="button" id="option_incorrect" class="w-100 btn m-0 text-left rounded-0" style="border-color: black">Martin Luther King Jr <i class="fa fa-lg fa-times m-0" id="cross" style="visibility: hidden; border: none"></i></button>
+                <button onclick="optionincorrect()" type="button" id="option_incorrect_one" class="w-100 btn m-0 text-left rounded-0" style="border-color: black">Malcolm X <i class="fa fa-lg fa-times m-0" id="cross_one" style="visibility: hidden; border: none"></i></button>
+            </form>
+        </div>
+        <h3 class="font-weight-normal text-left ml-0">Recent posts {% if article_category|length %}in {{ article_category }}{% endif %}</h3>
     {% if latest_articles|length %}
         <div class="m-auto" style="max-width: 600px">
             {% for post in latest_articles %}
@@ -181,14 +190,14 @@
                             <source style="max-width: 600px; height: auto" class="card-img-top img-fluid" srcset="..{{ post.Image_root }}" type="image/webp">
                             <img class="card-img-top img-fluid" itemscope itemtype="https://schema.org/ImageObject" src="..{{ post.Image_iphone }}" alt="{{ post.Title }}" style="max-width: 600px; height: auto">
                         </picture>
-                            <div class="overlay" id="img_overlay">
-                            <p class="text-white" itemprop="description">{{ post.Description }}...<br><a class="h4 text-white" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"> Read more...</a></p>
+                            <div class="overlay text-left" id="img_overlay">
+                            <p class="text-white" itemprop="description">{{ post.Description }}...<br><a class="h4 text-white ml-0" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"> Read more...</a></p>
                         </div>
                     </div>
                   <div class="card-body">
-                      <h6 class="card-subtitle mb-2 text-muted font-weight-normal">{{ post.author }} | {{ post.Date }}</h6>
-                      <a class="mb-2" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"><p class="card-text mb-2" itemprop="name">{{ post.Title }}</p></a>
-                      <p class="card-subtitle mb-2 text-muted font-weight-normal">{{ post.category }} | 4 min read</p>
+                      <h6 class="card-subtitle mb-2 text-muted font-weight-normal ml-0">{{ post.author }} | {{ post.Date }}</h6>
+                      <a class="mb-2 ml-0" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"><p class="card-text mb-2 ml-0" itemprop="name">{{ post.Title }}</p></a>
+                      <p class="card-subtitle mb-2 text-muted font-weight-normal ml-0">{{ post.category }} | 4 min read</p>
                   </div>
                 </div>
             {% endfor %}
@@ -196,6 +205,10 @@
     {% else %}
     <p>Sorry, no posts are available at this time</p>
         {% endif %}
+    <a class="btn h4 text-center w-100" data-toggle="collapse" href="#collapse-newsletter2" role="button" aria-expanded="false" aria-controls="collapse-newsletter"><img src="../static/img/newsletter.png" style="max-width: 300px"></a>
+    <div class="row m-auto text-center collapse" id="collapse-newsletter2" style="max-width: 800px">
+        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScoHhaRss18jQt3Ps4Nkd0d8ihjj8g0-xXQUV8TxEU1adYTqQ/viewform?embedded=true" width="100%" height="407" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+    </div>
     </div>
     </div>
 {% endif %}
@@ -214,6 +227,20 @@
     function closeNav() {
       document.getElementById("myNav").style.width = "0%";
       document.getElementById("articles").style.visibility = "visible"
+    }
+
+    function optioncorrect() {
+        document.getElementById("option_correct").style.color = "green";
+        document.getElementById("tick").style.visibility = "visible"
+    }
+
+    function optionincorrect() {
+        document.getElementById("option_incorrect").style.color = "red";
+        document.getElementById("option_incorrect_one").style.color = "red";
+        document.getElementById("cross").style.visibility = "visible";
+        document.getElementById("cross_one").style.visibility = "visible";
+        document.getElementById("option_correct").style.color = "green";
+        document.getElementById("tick").style.visibility = "visible"
     }
 </script>
 </body>
