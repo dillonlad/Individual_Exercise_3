@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-2"></div>
         <div class="col-8">
-                <form class="user" method="POST" novalidate>
+                <form class="user" method="POST" action="{{ url_for('main.login') }}" novalidate>
                     {% from "_formhelpers.html" import render_field %}
                     {{ form.hidden_tag() }}
                     {{ form.csrf_token}}

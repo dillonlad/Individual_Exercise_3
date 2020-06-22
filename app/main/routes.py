@@ -225,8 +225,26 @@ def login():
             return abort(400)
         profiles = Profile.query.filter(Profile.username != current_user.username).all()
         flash('Welcome {}'.format(current_user.username))
-        return redirect(next or url_for('main.index'))
-    return render_template('login.html', form=form)
+        return redirect(url_for('main.index'), code=303)
+    else:
+        if form.is_submitted():
+            form.method = 'POST'
+            if len(form.email.data) > 0 and len(form.password.data) > 0:
+                user = Profile.query.filter_by(email=form.email.data).first()
+                if user is None or not user.check_password(form.password.data):
+                    flash('Invalid email/password combination', 'error')
+                    return redirect(url_for('main.login'))
+                login_user(user, duration=timedelta(minutes=1))
+                next = request.args.get('next')
+                if not is_safe_url(next):
+                    return abort(400)
+                profiles = Profile.query.filter(Profile.username != current_user.username).all()
+                flash('Welcome {}'.format(current_user.username))
+                return redirect(url_for('main.index'), code=303)
+            else:
+                return redirect(url_for('main.login'), code=302)
+        else:
+            return render_template('login.html', form=form)
 
 
 @bp_main.route('/logout/')
@@ -335,13 +353,14 @@ def post(Post_ID):
         if Blogs.query.filter(Blogs.Post_ID.contains(Post_ID)).all():
             categories = Categories.query.all()
             post = Blogs.query.filter_by(Post_ID=Post_ID).all()
+            quiz_of_the_week = render_template('blogs/quiz.html')
             latest_articles = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Post_ID!=Post_ID).limit(5).all()
             if len(post) == 0:
                 return redirect(url_for('main.show_blog'))
             comments = Comments_dg_tmp.query.order_by(desc(Comments_dg_tmp.comment_id)).filter(Comments_dg_tmp.blog_name.contains(Post_ID)).all()
             number_of_comments = len(comments)
             app.track_event(category="Blog read: {}".format(Post_ID), action='{}'.format(Post_ID))
-            return render_template("blogs/post.html", post=post, categories=categories, comments=comments, number_of_comments=number_of_comments, latest_articles=latest_articles)
+            return render_template("blogs/post.html", post=post, categories=categories, comments=comments, number_of_comments=number_of_comments, latest_articles=latest_articles, quiz_of_the_week=quiz_of_the_week)
         else:
             flash("The article you tried to find does not exist, at least not with that URL, try using the search box to find what you're looking for")
             return redirect(url_for('main.show_blog'))
