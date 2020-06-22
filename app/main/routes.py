@@ -98,24 +98,28 @@ def index():
         code = 301
         return redirect(url, code=code)
     else:
-        app.track_event(category='Homepage', action='Homepage visit')
-        form = SearchForm(request.form)
-        categories = Categories.query.all()
-        series = Series.query.all()
-        posts = Blogs.query.order_by(desc(Blogs.article_id)).limit(5).all()
-        latest_article = Blogs.query.order_by(desc(Blogs.article_id)).limit(1).all()
-        if request.method == 'POST' and form.validate():
-            search = form.Search.data
-            if len(search) == 0:
-                posts = Blogs.query.order_by(desc(Blogs.article_id)).limit(5).all()
-            else:
-                posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Title.contains(search)).all()
-                posts_two = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Content.contains(search)).all()
-                for post in posts_two:
-                    if post not in posts:
-                        posts.append(post)
-            return render_template('homepage.html', posts=posts, form=form, categories=categories, series=series)
-        return render_template('homepage.html', latest_article=latest_article, posts=posts, form=form, categories=categories, series=series)
+        if current_user.is_authenticated:
+            profile = Profile.query.filter(Profile.username==current_user.username).all()
+            return render_template('landing.html', profile=profile)
+        else:
+            app.track_event(category='Homepage', action='Homepage visit')
+            form = SearchForm(request.form)
+            categories = Categories.query.all()
+            series = Series.query.all()
+            posts = Blogs.query.order_by(desc(Blogs.article_id)).limit(5).all()
+            latest_article = Blogs.query.order_by(desc(Blogs.article_id)).limit(1).all()
+            if request.method == 'POST' and form.validate():
+                search = form.Search.data
+                if len(search) == 0:
+                    posts = Blogs.query.order_by(desc(Blogs.article_id)).limit(5).all()
+                else:
+                    posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Title.contains(search)).all()
+                    posts_two = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Content.contains(search)).all()
+                    for post in posts_two:
+                        if post not in posts:
+                            posts.append(post)
+                return render_template('homepage.html', posts=posts, form=form, categories=categories, series=series)
+            return render_template('homepage.html', latest_article=latest_article, posts=posts, form=form, categories=categories, series=series)
 
 
 @bp_main.route('/linkinbio', methods=['POST', 'GET'])
@@ -224,7 +228,6 @@ def login():
         if not is_safe_url(next):
             return abort(400)
         profiles = Profile.query.filter(Profile.username != current_user.username).all()
-        flash('Welcome {}'.format(current_user.username))
         return redirect(url_for('main.index'), code=303)
     else:
         if form.is_submitted():
@@ -239,7 +242,6 @@ def login():
                 if not is_safe_url(next):
                     return abort(400)
                 profiles = Profile.query.filter(Profile.username != current_user.username).all()
-                flash('Welcome {}'.format(current_user.username))
                 return redirect(url_for('main.index'), code=303)
             else:
                 return redirect(url_for('main.login'), code=302)
@@ -382,8 +384,29 @@ def send_newsletter():
             msg.html = render_template("email.html", latest_post=latest_post, fella=fella, second_latest_post=second_latest_post, opening_message=opening_message, closing_message=closing_message)
             app.mail.send(msg)
         flash('Your email has been sent, please logout by at https://inwaitoftomorrow.appspot.com/logout')
-        return redirect(url_for('main.index'))
-    return render_template('submit_newsletter.html', form=form)
+        return redirect(url_for('main.index'), code=303)
+    else:
+        if form.is_submitted():
+            form.method = 'POST'
+            if len(form.specific_message_one.data) > 0 and len(form.specific_message_two.data) > 0:
+                latest_post = Blogs.query.order_by(desc(Blogs.article_id)).limit(1).all()
+                second_latest_post = Blogs.query.order_by(desc(Blogs.article_id)).offset(1).limit(1).all()
+                opening_message = form.specific_message_one.data
+                closing_message = form.specific_message_two.data
+                for fella in mailing_list.query.order_by(desc(mailing_list.recipient_id)).all():
+                    recp = fella.email.split()
+                    msg = Message(sender=ADMINS[0], recipients=recp)
+                    msg.subject = "Latest | In Wait of Tomorrow"
+                    msg.html = render_template("email.html", latest_post=latest_post, fella=fella,
+                                               second_latest_post=second_latest_post, opening_message=opening_message,
+                                               closing_message=closing_message)
+                    app.mail.send(msg)
+                flash('Your email has been sent, please logout by at https://inwaitoftomorrow.appspot.com/logout')
+                return redirect(url_for('main.index'), code=303)
+            else:
+                return redirect(url_for('blogs.send_newsletter'), code=302)
+        else:
+            return render_template('submit_newsletter.html', form=form)
 
 
 @bp_blogs.route('/test-email', methods=['GET', 'POST'])
@@ -391,6 +414,9 @@ def send_newsletter():
 def test_send_newsletter():
     form = SubmitNewsletter(request.form)
     if request.method == 'POST':
+        if form.authenticate.data != "theshowgoeson":
+            flash("Incorrect admin password")
+            return redirect(url_for('blogs.test_send_newsletter'))
         latest_post = Blogs.query.order_by(desc(Blogs.article_id)).limit(1).all()
         second_latest_post = Blogs.query.order_by(desc(Blogs.article_id)).offset(1).limit(1).all()
         opening_message = form.specific_message_one.data
@@ -402,6 +428,27 @@ def test_send_newsletter():
             msg.html = render_template("email.html", latest_post=latest_post, fella=fella, second_latest_post=second_latest_post, opening_message=opening_message, closing_message=closing_message)
             app.mail.send(msg)
         flash('Your email has been sent, please logout by at https://inwaitoftomorrow.appspot.com/logout')
-        return redirect(url_for('main.index'))
-    return render_template('submit_newsletter.html', form=form)
+        return redirect(url_for('main.index'), code=303)
+    else:
+        if form.is_submitted():
+            form.method = 'POST'
+            if len(form.specific_message_one.data) > 0 and len(form.specific_message_two.data) > 0:
+                latest_post = Blogs.query.order_by(desc(Blogs.article_id)).limit(1).all()
+                second_latest_post = Blogs.query.order_by(desc(Blogs.article_id)).offset(1).limit(1).all()
+                opening_message = form.specific_message_one.data
+                closing_message = form.specific_message_two.data
+                for fella in NEWSLETTER_TEST:
+                    recp = fella.split()
+                    msg = Message(sender=ADMINS[0], recipients=recp)
+                    msg.subject = "Latest | In Wait of Tomorrow"
+                    msg.html = render_template("email.html", latest_post=latest_post, fella=fella,
+                                               second_latest_post=second_latest_post, opening_message=opening_message,
+                                               closing_message=closing_message)
+                    app.mail.send(msg)
+                flash('Your email has been sent, please logout by at https://inwaitoftomorrow.appspot.com/logout')
+                return redirect(url_for('main.index'), code=303)
+            else:
+                return redirect(url_for('blogs.test_send_newsletter'), code=302)
+        else:
+            return render_template('submit_newsletter.html', form=form)
 

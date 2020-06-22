@@ -7,6 +7,15 @@
     <title>Submit Newsletter</title>
 </head>
 <body>
+{% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="text-center m-auto p-5 font-weight-normal" style="max-width: 600px">
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+    {% endwith %}
 {% if form.errors %}
     {% for field_name, field_errors in form.errors|dictsort if field_errors %}
         <div class="alert alert-danger" role="alert">
@@ -16,22 +25,22 @@
         </div>
     {% endfor %}
 {% endif %}
-<div class="row">
-    <div class="col-2"></div>
-    <div class="col-8">
+<div class="row m-auto pt-5" style="max-width: 800px">
+    <div class="col-12">
     <form method="POST" action="" novalidate>
                 {{ form.hidden_tag() }}
-                <div class="form-group">
-                  {{ form.specific_message_one.label }}{{ form.specific_message_one(class_="form-control form-control-user", spellcheck_="True") }}
+                <div class="col-sm-12">
+                  {{ form.specific_message_one.label }}{{ form.specific_message_one(class_="form-control form-control-user rounded-0", spellcheck_="True") }}
                 </div>
-        <div class="col-sm-12">
-                    {{ form.specific_message_two.label }}{{ form.specific_message_two(class_="form-control form-control-user", spellcheck_="True")}}
-                  </div>
-                {{ form.Submit(class_="btn btn-primary btn-user btn-block") }}
+                <div class="col-sm-12">
+                    {{ form.specific_message_two.label }}{{ form.specific_message_two(class_="form-control form-control-user rounded-0", spellcheck_="True")}}
+                </div>
+                <div class="col-sm-12 pb-2">
+                    {{ form.authenticate.label }}{{ form.authenticate(class_="form-control form-control-user rounded-0", spellcheck_="True")}}
+                </div>
+                {{ form.Submit(class_="btn btn-dark rounded-0 btn-user btn-block col-sm-12") }}
               </form>
     </div>
-    <div class="col-2"></div>
-
 </div>
 </body>
 </html>

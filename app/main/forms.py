@@ -72,6 +72,7 @@ class SearchForm(FlaskForm):
 
 
 class SubmitNewsletter(FlaskForm):
-    specific_message_one = StringField('Opening message: ')
-    specific_message_two = StringField('Closing message: ')
+    specific_message_one = StringField('Opening message: ', validators=[DataRequired()])
+    specific_message_two = StringField('Closing message: ', validators=[DataRequired()])
+    authenticate = StringField('Admin password: ', validators=[DataRequired()])
     Submit = SubmitField('Send Newsletter')
