@@ -362,7 +362,48 @@ def post(Post_ID):
             comments = Comments_dg_tmp.query.order_by(desc(Comments_dg_tmp.comment_id)).filter(Comments_dg_tmp.blog_name.contains(Post_ID)).all()
             number_of_comments = len(comments)
             app.track_event(category="Blog read: {}".format(Post_ID), action='{}'.format(Post_ID))
-            return render_template("blogs/post.html", post=post, categories=categories, comments=comments, number_of_comments=number_of_comments, latest_articles=latest_articles, quiz_of_the_week=quiz_of_the_week)
+            form = CommentForm(request.form)
+            if request.method == 'POST' and form.validate():
+                with app.mail.connect() as conn:
+                    time_date = datetime.now()
+                    msg = Message('{} - comment'.format(form.name.data), sender=ADMINS[0], recipients=ADMINS)
+                    msg.body = '{}'.format(form.comment.data)
+                    user_email = form.email.data
+                    if user_email == "":
+                        user_email = "not provided"
+                    msg.html = '<b>{}</b> says {} about {} at this time {}:{}:{} on this date {}-{}-{}. User said {} to posting on the page and {} to newsletter, with the email {}. An overall rating of {}'.format(
+                        form.name.data, form.comment.data, Post_ID, time_date.strftime("%H"), time_date.strftime("%M"),
+                        time_date.strftime("%S"), time_date.strftime("%Y"), time_date.strftime("%m"),
+                        time_date.strftime("%d"),
+                        form.post_on_page.data, form.newsletter.data, user_email, form.rating.data)
+                    conn.send(msg)
+                flash('Thanks for the reply!')
+                return redirect(url_for('blogs.post', Post_ID=Post_ID), code=303)
+            else:
+                if form.is_submitted():
+                    form.method ='POST'
+                    if len(form.name.data) > 0 and len(form.comment.data) > 0:
+                        with app.mail.connect() as conn:
+                            time_date = datetime.now()
+                            msg = Message('{} - comment'.format(form.name.data), sender=ADMINS[0], recipients=ADMINS)
+                            msg.body = '{}'.format(form.comment.data)
+                            user_email = form.email.data
+                            if user_email == "":
+                                user_email = "not provided"
+                            msg.html = '<b>{}</b> says {} about {} at this time {}:{}:{} on this date {}-{}-{}. User said {} to posting on the page and {} to newsletter, with the email {}. User gave the rating {}'.format(
+                                form.name.data, form.comment.data, Post_ID, time_date.strftime("%H"),
+                                time_date.strftime("%M"),
+                                time_date.strftime("%S"), time_date.strftime("%Y"), time_date.strftime("%m"),
+                                time_date.strftime("%d"),
+                                form.post_on_page.data, form.newsletter.data, user_email, form.rating.data)
+                            conn.send(msg)
+                        flash('Thanks for the reply!')
+                        return redirect(url_for('blogs.post', Post_ID=Post_ID), code=303)
+                    else:
+                        flash('Thanks for the reply')
+                        return redirect(url_for('blogs.post', Post_ID=Post_ID), code=302)
+                else:
+                    return render_template("blogs/post.html", post=post, categories=categories, comments=comments, number_of_comments=number_of_comments, latest_articles=latest_articles, quiz_of_the_week=quiz_of_the_week, form=form)
         else:
             flash("The article you tried to find does not exist, at least not with that URL, try using the search box to find what you're looking for")
             return redirect(url_for('main.show_blog'))
@@ -445,7 +486,7 @@ def test_send_newsletter():
                                                second_latest_post=second_latest_post, opening_message=opening_message,
                                                closing_message=closing_message)
                     app.mail.send(msg)
-                flash('Your email has been sent, please logout by at https://inwaitoftomorrow.appspot.com/logout')
+                flash('Your email has been sent')
                 return redirect(url_for('main.index'), code=303)
             else:
                 return redirect(url_for('blogs.test_send_newsletter'), code=302)

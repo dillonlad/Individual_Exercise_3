@@ -153,18 +153,18 @@
                       <div class="card rounded-0">
                       <div class="hovereffect">
                         <picture>
-                            <source style="max-width: 600px; height: auto" class="card-img-top img-fluid" srcset="..{{ post.Image_root }}" type="image/webp">
+                            <source style="max-width: 600px; height: auto" class="card-img-top img-fluid rounded-0" srcset="..{{ post.Image_root }}" type="image/webp">
                             <img class="card-img-top img-fluid" itemscope itemtype="https://schema.org/ImageObject" src="..{{ post.Image_iphone }}" alt="{{ post.Title }}" style="max-width: 600px; height: auto">
                         </picture>
                           <div class="overlay" id="img_overlay">
-                            <p class="text-white" itemprop="description">{{ post.Description }}...<br><a class="text-white" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"> Read more...</a></p>
+                            <p class="text-white text-left ml-1" style="font-size: small" itemprop="description">{{ post.Description }}<br><a class="text-center bg-transparent border-white btn rounded-0 text-white w-50" style="font-size: x-small" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}">Read more</a></p>
                         </div>
                       </div>
                         <div class="card-body p-2 text-left">
-                            <h6 class="card-subtitle mb-2 text-muted font-weight-normal">{{ post.author }} | {{ post.Date }}</h6>
-                            <h5><a itemprop="name" class="text-dark font-weight-normal h-5" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}">{{ post.Title }}</a></h5>
-                            <h6 class="card-subtitle mb-2 text-muted font-weight-normal">{{ post.category }}</h6>
-                            <h6 class="card-subtitle mb-2 text-muted font-weight-normal">4 min read</h6>
+                            <h6 class="card-subtitle mb-2 text-muted font-weight-normal ml-0">{{ post.author }} | {{ post.Date }}</h6>
+                            <h5 class="ml-0"><a itemprop="name" class="text-dark font-weight-normal h-5 ml-0" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}">{{ post.Title }}</a></h5>
+                            <h6 class="card-subtitle mb-2 text-muted font-weight-normal ml-0">{{ post.category }}</h6>
+                            <h6 class="card-subtitle mb-2 text-muted font-weight-normal ml-0">4 min read</h6>
                         </div>
                       </div>
                 {% endfor %}

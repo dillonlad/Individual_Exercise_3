@@ -59,16 +59,6 @@
       </div>
   </div>
 <div class="container-fluid">
-    <!-- Displays flashed messages on a page -->
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <ul>
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-            </ul>
-        {% endif %}
-{% endwith %}
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
@@ -92,6 +82,14 @@
         <a href="https://www.instagram.com/inwaitoftomorrow/" class="fa fa-twitter"></a>
         <a href="https://twitter.com/InWaitofTomorr1" class="fa fa-instagram"></a>
         <a href="https://www.reddit.com/user/inwaitoftomorrow" class="fa fa-reddit"></a>
+        <!-- Displays flashed messages on a page -->
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
 
 </div>
     {% if request.MOBILE %}{% else %}<div class="row"><div class="col-8" style="max-width: 800px">{% endif %}
@@ -135,18 +133,57 @@
    </div>
 </div>
 <div class="row m-auto text-center align-content-center" style="max-width: 800px">
-    <a class="btn btn-dark h4 text-center w-100" data-toggle="collapse" href="#collapse-comments" role="button" aria-expanded="false" aria-controls="collapse-comments">
+    <a class="btn btn-dark h4 text-center w-100 rounded-0" data-toggle="collapse" href="#collapse-comments" role="button" aria-expanded="false" aria-controls="collapse-comments">
     Leave a reply
   </a>
 </div>
 <div class="row m-auto text-center collapse" id="collapse-comments" style="max-width: 800px">
-    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfZGNg17QmfJn7ZFlufISUUIdn4Omw2OXizQ4oT3JUpq9yFQQ/viewform?embedded=true" width="100%" height="1244" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+     <form class="user col-12 text-left" method='POST' novalidate>
+        {{ form.hidden_tag() }}
+        <div class="form-group font-weight-normal">
+          {{ form.name.label }}{{ form.name(class_="form-control form-control-user rounded-0") }}
+        </div>
+        <div class="form-group font-weight-normal">
+          {{ form.comment.label }}{{ form.comment(class_="form-control form-control-user rounded-0")}}
+        </div>
+        <div class="form-group">
+             {{ form.rating.label }}
+        </div>
+        <div class="form-group form-check-inline">
+                {% for subfield in form.rating %}
+                    {{ subfield(class_="form-check-input") }}
+                    {{ subfield.label(class_="form-check-label pr-5") }}
+                {% endfor %}
+            </div>
+        <div class="form-group">
+             {{ form.post_on_page.label }}
+        </div>
+            <div class="form-group form-check-inline">
+                {% for subfield in form.post_on_page %}
+                    {{ subfield(class_="form-check-input") }}
+                    {{ subfield.label(class_="form-check-label pr-5") }}
+                {% endfor %}
+            </div>
+        <div class="form-group">
+             <b>{{ form.newsletter.label }}</b>
+        </div>
+        <div class="form-group form-check-inline">
+                {% for subfield in form.newsletter %}
+                    {{ subfield(class_="form-check-input") }}
+                    {{ subfield.label(class_="form-check-label pr-5") }}
+                {% endfor %}
+            </div>
+        <div class="form-group">
+          {{ form.email.label }}{{ form.email(class_="form-control form-control-user rounded-0")}}
+        </div>
+        {{ form.Submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
+    </form>
 </div>
 <div class="row m-auto pb-2" style="max-width: 800px">
     <h2 class="font-weight-normal">View our comments</h2>
     {% if comments|length %}
         {% for comment in comments %}
-            <div class="card w-100 mb-2">
+            <div class="card w-100 mb-2 rounded-0">
                 <div class="card-header text-right">
                     {% for number in range(comment.stars) %}<i class="fas fa-star" style="border: none"></i>{% endfor %}
                 </div>
@@ -170,7 +207,7 @@
 </div>
     {% if request.MOBILE %}{{ quiz_of_the_week | safe }}{% else %}{% endif %}
 <div class="row m-auto text-center align-content-center" style="max-width: 800px">
-    <a class="btn btn-dark h4 text-center w-100" data-toggle="collapse" href="#collapse-newsletter" role="button" aria-expanded="false" aria-controls="collapse-newsletter">
+    <a class="btn btn-dark h4 text-center w-100 rounded-0" data-toggle="collapse" href="#collapse-newsletter" role="button" aria-expanded="false" aria-controls="collapse-newsletter">
     Sign up to our mailing list
   </a>
 </div>

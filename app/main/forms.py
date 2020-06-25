@@ -9,6 +9,7 @@ from app.models import Profile, Authors
 class CommentForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     comment = StringField('Comment', validators=[DataRequired()])
+    rating = RadioField('Leave a rating (5 being the best)', choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5')])
     post_on_page = RadioField('Are you happy for this reply to be posted on the page?', validators=[DataRequired()], choices=[('Yes','Yes'),('No','No')])
     newsletter = RadioField('Would you like to sign up for our email newsletter', choices=[('Yes', 'Yes'), ('No', 'No')], default='No')
     email = StringField('Please provide your email address if you want to sign up to our newsletter')
