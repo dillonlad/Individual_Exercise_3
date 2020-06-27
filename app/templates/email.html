@@ -38,7 +38,7 @@
         <table>
             <tr>
                 <td style="width: 50%"><img style="text-align: center; width: 100%; max-width: 300px" src="https://inwaitoftomorrow.appspot.com{% for post in latest_post %}{{ post.Image_iphone }}{% endfor %}" alt="Latest article"></td>
-                <td>{% for post in latest_post %}<a href="{{ post.url_ }}"><h3>{{ post.Title }}</h3></a>{% endfor %}
+                <td>{% for post in latest_post %}<a href="{{ post.url_ }}"><h2>{{ post.Title }}</h2></a>{% endfor %}
                 </td>
             </tr>
         </table>
@@ -49,7 +49,7 @@
         </table>
         <table>
             <tr>
-                <td>{% for post in second_latest_post %}<a href="{{ post.url_ }}"><h3>{{ post.Title }}</h3></a>{% endfor %}
+                <td>{% for post in second_latest_post %}<a href="{{ post.url_ }}"><h2>{{ post.Title }}</h2></a>{% endfor %}
                 </td>
                 <td style="width: 50%"><img style="text-align: center; width: 100%; max-width: 300px" src="https://inwaitoftomorrow.appspot.com{% for post in second_latest_post %}{{ post.Image_iphone }}{% endfor %}" alt="Latest article"></td>
             </tr>

@@ -177,7 +177,7 @@
                       <div class="card rounded-0">
                         <img class="card-img-top" src="..{{ thing.series_image }}" alt="Card image cap">
                         <div class="card-body p-2 text-left">
-                            <h5 class="card-title text-dark"><a class="text-dark font-weight-normal" href="{{ url_for('main.show_blog') }}">{{ thing.series_name }}</a></h5>
+                            <h5 class="card-title text-dark"><a class="text-dark font-weight-normal" href="{{ url_for('main.show_blog_series', series_key=thing.series_key) }}">{{ thing.series_name }}</a></h5>
                         </div>
                       </div>
                 {% endfor %}
