@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-159574205-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-159574205-1');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="In Wait of Tomorrow"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="http://inwaitoftomorrow.appspot.com/"/>
+    <meta property="og:description" content="We write futurology - analysis of current trends to predict what the future might be like"/>
+    <meta property="og:image" content='http://inwaitoftomorrow.appspot.com/static/img/logo.jpeg'/>
+    <meta name="twitter:title" content="In Wait of Tomorrow"/>
+    <meta name="twitter:description" content="Who knows what the future might look like"/>
+    <meta name="twitter:image" content='http://inwaitoftomorrow.appspot.com/static/img/logo.jpeg'/>
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:url" content="http://inwaitoftomorrow.appspot.com/"/>
+    <meta name="google-site-verification" content="FXf4fXXrRB8YqX75YWs6DQXLlE3r_CWleoGSjxGSa5s" />
+    <script src="../static/bootstrap-4.0.0/js/tests/vendor/jquery-1.9.1.min.js"></script>
+    <script src="../static/bootstrap-4.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../static/bootstrap-4.0.0/assets/js/vendor/popper.min.js"></script>
+    <link rel="stylesheet" href="../static/css/bootstrapnew.min.css">
+    <link rel="stylesheet" href="../static/css/hovering.min.css">
+
+    <link rel="stylesheet" href="../static/css/newnav.min.css">
+    <link rel="canonical" href="https://inwaitoftomorrow.appspot.com">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+          rel="stylesheet">
+    <link href="../static/css/title.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="shortcut icon" href="../static/img/favico.ico">
+    <meta name="description" content="The latest in tech, science and more, In Wait of Tomorrow is futurology - we analyse how advancements may affect our future. Follow @inwaitoftomorrow on Instagram."/>
+    <meta name="keywords" content="inwaitoftomorrow, In Wait of Tomorrow, futurology, Technology, Science, Healthcare, Environment">
+    <meta name="author" content="inwaitoftomorrow">
+    <meta name="robots" content="index, follow">
+    <title>In Wait of Tomorrow - {% for persona in person %}{{ persona.author_name }}{% endfor %}</title>
+</head>
+<body>
+    {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="text-center m-auto p-5 font-weight-normal" style="max-width: 600px">
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+    {% endwith %}
+  <div id="myNav" class="overlay">
+      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+      <div class="overlay-content">
+          <a href="{{ url_for('main.show_blog') }}">Latest articles</a>
+          <div class="dropdown-divider text-center align-self-center m-auto" style="max-width: 600px"></div>
+          {% for category in categories %}
+            {% if category.category_name != "Blog" %}
+                <a href="{{ url_for('main.show_blog_category', category=category.category_name) }}">{{ category.category_name }}</a>
+            {% endif %}
+          {% endfor %}
+      </div>
+  </div>
+    <div class="row">
+        <div class="col-md-12">
+            <nav class="navbar navbar-dark bg-dark container-fluid" itemscope itemtype="https://schema.org/SiteNavigationElement">
+                <a href="{{url_for('main.index')}}"><span class="navbar-brand text-white mb-0 h1 font-weight-normal">In Wait of Tomorrow</span></a>
+                <div class="dropdown dropleft show btn-group">
+                  <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
+                  </button>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <div class="row m-auto" style="max-width: 600px">
+        <div class="col-12 text-center">
+            <h2 class="font-weight-normal mt-5">{% for persona in person %}{{ persona.author_name }}{% endfor %}</h2>
+            <p>Roles: {% for persona in person %}{{ persona.roles }}{% endfor %}</p>
+            <p>{% for persona in person %}{{ persona.description }}{% endfor %} Check out my articles below!</p>
+        </div>
+        <div class="col-12" style="margin-left: 160px"><div class="LI-profile-badge" data-version="v1" data-size="medium" data-locale="en_US" data-type="horizontal" data-theme="dark" data-vanity="{% for persona in person %}{{ persona.linkedin }}{% endfor %}"><a class="LI-simple-link" href='https://uk.linkedin.com/in/{% for persona in person %}{{ persona.linkedin }}{% endfor %}?trk=profile-badge'>{% for persona in person %}{{ persona.author_name }}{% endfor %}</a></div></div>
+    </div>
+    {% if request.MOBILE %}
+    <h3 class="font-weight-normal text-center align-self-center align-content-center">Articles by {% for author in person %}{{ author.author_name }}{% endfor %}</h3>
+    {% if posts|length %}
+        <div class="m-auto" style="max-width: 600px">
+            {% for post in posts %}
+                <link rel="stylesheet" href="../../static/css/hovering.css">
+                <div class="card mb-3 rounded-0" style="width: 100%" itemscope itemtype="https://schema.org/Blog">
+                    <div class="hovereffect">
+                        <picture>
+                            <source style="max-width: 600px; height: auto" class="card-img-top img-fluid" srcset="..{{ post.Image_root }}" type="image/webp">
+                            <img class="card-img-top img-fluid" itemscope itemtype="https://schema.org/ImageObject" src="..{{ post.Image_iphone }}" alt="{{ post.Title }}" style="max-width: 600px; height: auto">
+                        </picture>
+                            <div class="overlay" id="img_overlay">
+                            <p class="text-white" itemprop="description">{{ post.Description }}...<br><a class="h4 text-white" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"> Read more...</a></p>
+                        </div>
+                    </div>
+                  <div class="card-body">
+                      <h6 class="card-subtitle mb-2 text-muted font-weight-normal">{{ post.author }} | {{ post.Date }}</h6>
+                      <a class="h4 mb-2" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"><p class="card-text mb-2" itemprop="name">{{ post.Title }}</p></a>
+                      <p class="card-subtitle mb-2 text-muted font-weight-normal">{{ post.category }} | 4 min read</p>
+                  </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+    <p>Sorry, no posts are available at this time</p>
+    {% endif %}
+
+{% else %}
+    <h3 class="font-weight-normal text-center align-self-center align-content-center mt-5">Articles by {% for author in person %}{{ author.author_name }}{% endfor %}</h3>
+    {% if posts|length %}
+        <div class="row m-2" id="cards">
+        <link rel="stylesheet" href="../../static/css/hovering.css">
+            {% for post in posts %}
+                <div class="col-4">
+                <div class="card mb-3 rounded-0" style="border-color: #dddddd" itemscope itemtype="https://schema.org/Blog">
+                    <div class="hovereffect">
+                        <picture>
+                            <source style="max-width: 600px; height: auto" class="card-img-top img-fluid" srcset="..{{ post.Image_root }}" type="image/webp">
+                            <img class="card-img-top img-fluid" itemscope itemtype="https://schema.org/ImageObject" src="..{{ post.Image_iphone }}" alt="{{ post.Title }}" style="max-width: 600px; height: auto">
+                        </picture>
+                        <div class="overlay" id="img_overlay">
+                            <p class="text-white" itemprop="description">{{ post.Description }}...<br><a class="text-white" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"> Read more...</a></p>
+                        </div>
+                    </div>
+                  <div class="card-body">
+                      <h6 class="card-subtitle mb-2 text-muted font-weight-normal">{{ post.author }} | {{ post.Date }}</h6>
+                      <a class="text-dark font-weight-normal h-5 mb-2" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"><p class="card-text mb-2" itemprop="name">{{ post.Title }}</p></a>
+                      <h6 class="card-subtitle mb-2 text-muted font-weight-normal">{{ post.category }} | 4 min read</h6>
+                  </div>
+                </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+    <p>Sorry, no posts are available at this time</p>
+    {% endif %}
+
+    {% endif %}
+    <script type="text/javascript" src="https://platform.linkedin.com/badges/js/profile.js" async defer></script>
+<script>
+    function openNav() {
+      document.getElementById("myNav").style.width = "100%";
+      document.getElementById("cards").style.visibility = "hidden"
+    }
+
+    function closeNav() {
+      document.getElementById("myNav").style.width = "0%";
+      document.getElementById("cards").style.visibility = "visible"
+    }
+</script>
+</body>
+</html>

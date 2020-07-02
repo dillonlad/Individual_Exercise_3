@@ -7,6 +7,9 @@ from app import db
 class Authors(db.Model):
     author_id = db.Column(db.Integer, nullable=False, primary_key=True)
     author_name = db.Column(db.Text, nullable=False)
+    linkedin = db.Column(db.Text)
+    roles = db.Column(db.Text)
+    description = db.Column(db.Text)
 
 
 class Comments_dg_tmp(db.Model):

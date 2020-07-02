@@ -16,5 +16,5 @@
 {% block article_title %}{% for post in post %}{% if post.series is not none %}<h4 class="text-muted">{{ post.series }}</h4><h1>{{ post.no_series_name }}</h1>{% else %}{{ post.Title | safe }}{% endif %}{% endfor %}{% endblock %}
 {% block main_article_mob %}{% for post in post %}{{ post.Content | safe }}{% endfor %}{% endblock %}
 {% block main_article %}{% for post in post %}{{ post.Content | safe }}{% endfor %}{% endblock %}
-{% block time_and_date %}By {% for post in post %}{{ post.author | safe }}{% endfor %} | {% for post in post %}{{ post.Date | safe }}{% endfor %} | {% endblock %}
+{% block time_and_date %}By <a href="{{ url_for('main.authors', author_id=post_authorid) }}">{% for post in post %}{{ post.author | safe }}{% endfor %}</a> | {% for post in post %}{{ post.Date | safe }}{% endfor %} | {% endblock %}
 {% block comments_fb_share %}{% for post in post %}{{ post.url_ | safe }}{% endfor %}{% endblock %}

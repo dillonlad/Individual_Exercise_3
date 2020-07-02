@@ -355,6 +355,11 @@ def post(Post_ID):
         if Blogs.query.filter(Blogs.Post_ID.contains(Post_ID)).all():
             categories = Categories.query.all()
             post = Blogs.query.filter_by(Post_ID=Post_ID).all()
+            for var in post:
+                p_author = var.author
+            post_author = Authors.query.filter(Authors.author_name.contains(p_author)).all()
+            for var_new in post_author:
+                post_authorid = var_new.author_id
             quiz_of_the_week = render_template('blogs/quiz.html')
             latest_articles = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Post_ID!=Post_ID).limit(5).all()
             if len(post) == 0:
@@ -403,7 +408,7 @@ def post(Post_ID):
                         flash('Thanks for the reply')
                         return redirect(url_for('blogs.post', Post_ID=Post_ID), code=302)
                 else:
-                    return render_template("blogs/post.html", post=post, categories=categories, comments=comments, number_of_comments=number_of_comments, latest_articles=latest_articles, quiz_of_the_week=quiz_of_the_week, form=form)
+                    return render_template("blogs/post.html", post=post, categories=categories, comments=comments, number_of_comments=number_of_comments, latest_articles=latest_articles, quiz_of_the_week=quiz_of_the_week, form=form, post_authorid=post_authorid)
         else:
             flash("The article you tried to find does not exist, at least not with that URL, try using the search box to find what you're looking for")
             return redirect(url_for('main.show_blog'))
@@ -493,3 +498,20 @@ def test_send_newsletter():
         else:
             return render_template('submit_newsletter.html', form=form)
 
+
+@bp_main.route('/author/<author_id>', methods=['POST','GET'])
+def authors(author_id):
+    host = request.host
+    if request.url.startswith('http://') and '127' not in host:
+        url = request.url.replace('http://', 'https://', 1)
+        code = 301
+        return redirect(url, code=code)
+    else:
+        if Authors.query.filter(Authors.author_id.contains(author_id)).all():
+            categories = Categories.query.all()
+            person_name = []
+            person = Authors.query.filter_by(author_id=author_id).all()
+            for geeza in person:
+                person_name.append(geeza.author_name)
+            posts = Blogs.query.filter(Blogs.author.contains(person_name[0])).order_by(desc(Blogs.article_id)).all()
+            return render_template('author.html', categories=categories, person=person, posts=posts)
