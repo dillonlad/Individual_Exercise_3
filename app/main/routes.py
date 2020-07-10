@@ -357,9 +357,12 @@ def post(Post_ID):
             post = Blogs.query.filter_by(Post_ID=Post_ID).all()
             for var in post:
                 p_author = var.author
+                p_date = var.Date
             post_author = Authors.query.filter(Authors.author_name.contains(p_author)).all()
             for var_new in post_author:
                 post_authorid = var_new.author_id
+            date_object = datetime.strptime(p_date, '%Y-%m-%d')
+            new_date = date_object.strftime("%d %b %Y")
             quiz_of_the_week = render_template('blogs/quiz.html')
             latest_articles = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Post_ID!=Post_ID).limit(5).all()
             if len(post) == 0:
@@ -408,7 +411,7 @@ def post(Post_ID):
                         flash('Thanks for the reply')
                         return redirect(url_for('blogs.post', Post_ID=Post_ID), code=302)
                 else:
-                    return render_template("blogs/post.html", post=post, categories=categories, comments=comments, number_of_comments=number_of_comments, latest_articles=latest_articles, quiz_of_the_week=quiz_of_the_week, form=form, post_authorid=post_authorid)
+                    return render_template("blogs/post.html", post=post, categories=categories, comments=comments, number_of_comments=number_of_comments, latest_articles=latest_articles, quiz_of_the_week=quiz_of_the_week, form=form, post_authorid=post_authorid, new_date=new_date)
         else:
             flash("The article you tried to find does not exist, at least not with that URL, try using the search box to find what you're looking for")
             return redirect(url_for('main.show_blog'))

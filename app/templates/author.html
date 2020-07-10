@@ -76,18 +76,19 @@
             </nav>
         </div>
     </div>
-    <div class="row m-auto" style="max-width: 600px">
-        <div class="col-12 text-center">
+    <div class="row mt-5 ml-auto mr-auto mb-auto pb-5 w-100" style="max-width: 600px; background-color: #dddddd">
+        <script type="text/javascript" src="https://platform.linkedin.com/badges/js/profile.js" async defer></script>
+        <div class="col-12 {% if request.MOBILE %}text-left{% else %}text-center{% endif %}">
             <h2 class="font-weight-normal mt-5">{% for persona in person %}{{ persona.author_name }}{% endfor %}</h2>
             <p>Roles: {% for persona in person %}{{ persona.roles }}{% endfor %}</p>
             <p>{% for persona in person %}{{ persona.description }}{% endfor %} Check out my articles below!</p>
         </div>
-        <div class="col-12" style="margin-left: 160px"><div class="LI-profile-badge" data-version="v1" data-size="medium" data-locale="en_US" data-type="horizontal" data-theme="dark" data-vanity="{% for persona in person %}{{ persona.linkedin }}{% endfor %}"><a class="LI-simple-link" href='https://uk.linkedin.com/in/{% for persona in person %}{{ persona.linkedin }}{% endfor %}?trk=profile-badge'>{% for persona in person %}{{ persona.author_name }}{% endfor %}</a></div></div>
+        <div class="col-12" {% if request.MOBILE %}{% else %}style="margin-left: 160px"{% endif %}><div class="LI-profile-badge" data-version="v1" data-size="medium" data-locale="en_US" data-type="horizontal" data-theme="dark" data-vanity="{% for persona in person %}{{ persona.linkedin }}{% endfor %}"><a class="LI-simple-link" href='https://uk.linkedin.com/in/{% for persona in person %}{{ persona.linkedin }}{% endfor %}?trk=profile-badge'>{% for persona in person %}{{ persona.author_name }}{% endfor %}</a></div></div>
     </div>
     {% if request.MOBILE %}
     <h3 class="font-weight-normal text-center align-self-center align-content-center">Articles by {% for author in person %}{{ author.author_name }}{% endfor %}</h3>
     {% if posts|length %}
-        <div class="m-auto" style="max-width: 600px">
+        <div class="row m-auto w-100" style="max-width: 600px">
             {% for post in posts %}
                 <link rel="stylesheet" href="../../static/css/hovering.css">
                 <div class="card mb-3 rounded-0" style="width: 100%" itemscope itemtype="https://schema.org/Blog">
@@ -101,9 +102,9 @@
                         </div>
                     </div>
                   <div class="card-body">
-                      <h6 class="card-subtitle mb-2 text-muted font-weight-normal">{{ post.author }} | {{ post.Date }}</h6>
-                      <a class="h4 mb-2" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"><p class="card-text mb-2" itemprop="name">{{ post.Title }}</p></a>
-                      <p class="card-subtitle mb-2 text-muted font-weight-normal">{{ post.category }} | 4 min read</p>
+                      <h6 class="card-subtitle mb-2 text-muted font-weight-normal ml-0">{{ post.author }} | {{ post.Date }}</h6>
+                      <a class="h4 mb-2 font-weight-normal ml-0" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"><p class="card-text mb-2 font-weight-normal ml-0" itemprop="name">{{ post.Title }}</p></a>
+                      <p class="card-subtitle mb-2 text-muted font-weight-normal ml-0">{{ post.category }} | 4 min read</p>
                   </div>
                 </div>
             {% endfor %}
@@ -143,7 +144,6 @@
     {% endif %}
 
     {% endif %}
-    <script type="text/javascript" src="https://platform.linkedin.com/badges/js/profile.js" async defer></script>
 <script>
     function openNav() {
       document.getElementById("myNav").style.width = "100%";
