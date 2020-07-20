@@ -77,3 +77,8 @@ class SubmitNewsletter(FlaskForm):
     specific_message_two = StringField('Closing message: ', validators=[DataRequired()])
     authenticate = StringField('Admin password: ', validators=[DataRequired()])
     Submit = SubmitField('Send Newsletter')
+
+
+class Newsletter(FlaskForm):
+    user_name = StringField('Name ')
+    user_email = StringField('Email: ')

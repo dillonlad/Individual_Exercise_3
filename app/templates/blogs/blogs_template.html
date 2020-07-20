@@ -44,6 +44,7 @@
     <link rel="shortcut icon" href="../static/img/favico.ico">
 </head>
 <body itemscope itemtype="https://schema.org/WebPage">
+{% if request.MOBILE %}{% else %}<div class="row m-auto pt-3" style="max-width: 1000px">{% endif %}
 <link rel="stylesheet" href="../static/css/newnav.css">
 <div id="myNav" class="overlay">
       <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
@@ -215,7 +216,7 @@
 </div>
 {% if request.MOBILE %}{% else %}
     </div>
-    <div class="col-4 pt-2 mr-0 ml-3" id="articles">
+    <div class="col-4 pt-2 mr-0 ml-0" id="articles">
         {{ quiz_of_the_week | safe }}
         <h3 class="font-weight-normal text-left ml-0">Recent posts {% if article_category|length %}in {{ article_category }}{% endif %}</h3>
     {% if latest_articles|length %}
@@ -252,7 +253,8 @@
 {% endif %}
 
 </div>
-    <footer class="text-center p-5" style="background-color: #dddddd">
+{% if request.MOBILE %}{% else %}</div>{% endif %}
+<footer class="text-center p-5" style="background-color: #dddddd">
         <p>Made in Leicestershire, with love from London.</p>
         <p class="text-muted">&copy; 2020 In Wait of Tomorrow</p>
     </footer>
@@ -282,4 +284,5 @@
     }
 </script>
 </body>
+
 </html>
