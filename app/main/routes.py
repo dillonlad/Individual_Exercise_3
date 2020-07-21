@@ -17,7 +17,7 @@ from flask_sitemap import Sitemap, sitemap_page_needed
 import app
 from app import db
 from app.main.forms import CommentForm, SignupForm, LoginForm, PostForm, BlogEditor, CreateArticle, SearchForm, \
-    SubmitNewsletter
+    SubmitNewsletter, Newsletter
 
 from app.models import Posts_two, Blogs, Profile, Categories, Series, Authors, Comments_dg_tmp, \
     mailing_list
@@ -390,7 +390,7 @@ def post(Post_ID):
             else:
                 if form.is_submitted():
                     form.method ='POST'
-                    if len(form.name.data) > 0 and len(form.comment.data) > 0:
+                    if (len(form.name.data) > 0 and len(form.comment.data) > 0) or (len(form.name.data) > 0 and len(form.email.data) > 0):
                         with app.mail.connect() as conn:
                             time_date = datetime.now()
                             msg = Message('{} - comment'.format(form.name.data), sender=ADMINS[0], recipients=ADMINS)
@@ -411,6 +411,8 @@ def post(Post_ID):
                         flash('Thanks for the reply')
                         return redirect(url_for('blogs.post', Post_ID=Post_ID), code=302)
                 else:
+                    mob_template = render_template("blogs/blogs_template_mobile.html", post=post, categories=categories, comments=comments, number_of_comments=number_of_comments, latest_articles=latest_articles, quiz_of_the_week=quiz_of_the_week, form=form, post_authorid=post_authorid, new_date=new_date)
+                    comp_template = render_template("blogs/blogs_template_not_mobile.html", post=post, categories=categories, comments=comments, number_of_comments=number_of_comments, latest_articles=latest_articles, quiz_of_the_week=quiz_of_the_week, form=form, post_authorid=post_authorid, new_date=new_date)
                     return render_template("blogs/post.html", post=post, categories=categories, comments=comments, number_of_comments=number_of_comments, latest_articles=latest_articles, quiz_of_the_week=quiz_of_the_week, form=form, post_authorid=post_authorid, new_date=new_date)
         else:
             flash("The article you tried to find does not exist, at least not with that URL, try using the search box to find what you're looking for")

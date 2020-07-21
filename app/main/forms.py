@@ -8,12 +8,12 @@ from app.models import Profile, Authors
 
 class CommentForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
-    comment = StringField('Comment', validators=[DataRequired()])
+    comment = StringField('Comment')
     rating = RadioField('Leave a rating (5 being the best)', choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5')])
     post_on_page = RadioField('Are you happy for this reply to be posted on the page?', validators=[DataRequired()], choices=[('Yes','Yes'),('No','No')])
-    newsletter = RadioField('Would you like to sign up for our email newsletter', choices=[('Yes', 'Yes'), ('No', 'No')], default='No')
+    newsletter = RadioField('Would you like to sign up for our email newsletter', choices=[('Yes', 'Yes'), ('No', 'No')], default='Yes')
     email = StringField('Please provide your email address if you want to sign up to our newsletter')
-    Submit = SubmitField('Comment')
+    Submit = SubmitField('Submit')
 
 
 class PostForm(FlaskForm):
@@ -82,3 +82,4 @@ class SubmitNewsletter(FlaskForm):
 class Newsletter(FlaskForm):
     user_name = StringField('Name ')
     user_email = StringField('Email: ')
+    Submit = SubmitField('Sign up')

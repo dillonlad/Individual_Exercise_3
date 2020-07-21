@@ -45,7 +45,7 @@
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body itemscope itemtype="https://schema.org/WebPage">
-{% if request.MOBILE %}{% else %}<div class="row m-auto pt-3" style="max-width: 1000px">{% endif %}
+<div class="row m-auto pt-3" style="max-width: 1000px">
 <link rel="stylesheet" href="../static/css/newnav.css">
 <div id="myNav" class="overlay">
       <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
@@ -57,6 +57,22 @@
                 <a href="{{ url_for('main.show_blog_category', category=category.category_name) }}">{{ category.category_name }}</a>
             {% endif %}
           {% endfor %}
+      </div>
+  </div>
+<div id="newsletter" class="overlay text-white">
+      <a href="javascript:void(0)" class="closebtn" onclick="close_newsletter()">&times;</a>
+      <div class="row m-auto pt-3" style="max-width: 800px">
+        <h3 class="font-weight-normal pt-5 mt-5">Sign up to our newsletter</h3>
+        <form class="user col-12 text-left" method='POST' novalidate>
+        {{ form.hidden_tag() }}
+        <div class="form-group font-weight-normal">
+          {{ form.name.label }}{{ form.name(class_="form-control form-control-user rounded-0") }}
+        </div>
+        <div class="form-group">
+          {{ form.email.label }}{{ form.email(class_="form-control form-control-user rounded-0")}}
+        </div>
+        {{ form.Submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
+    </form>
       </div>
   </div>
 <div class="container-fluid">
@@ -93,30 +109,18 @@
     {% endwith %}
 
 </div>
-    {% if request.MOBILE %}{% else %}<div class="row"><div class="col-8" style="max-width: 800px">{% endif %}
-<div class="{% if request.MOBILE %}row m-auto{% else %}{% endif %}" style="max-width: 800px" itemprop="name">
-    <div class="col-12 font-weight-normal {% if request.MOBILE %}ml-0 pl-0 h2{% else %}h1 mt-3{% endif %}">
+    <div class="row"><div class="col-8" style="max-width: 800px">
+<div style="max-width: 800px" itemprop="name">
+    <div class="col-12 font-weight-normal h1 mt-3">
         {% block article_title %}{% endblock %}
     </div>
 </div>
-{% if request.MOBILE %}{% else %}
-<div class="dropdown-divider text-center mb-0 mt-3" style="max-width: 800px"></div>{% endif %}
-<div class="{% if request.MOBILE %}row m-auto{% else %}pt-2 pb-2{% endif %}" style="max-width: 800px">
-    <div class="col-12 font-weight-normal h6 {% if request.MOBILE %}ml-0 pl-0{% else %}mb-0{% endif %}" itemtype="datePublished, author">{% block time_and_date %}{% endblock %}{% if number_of_comments > 0 %} | <i class="fas fa-comment" style="border: none"></i>{{ number_of_comments }} {% else %}{% endif %}<span style="float: right"><a class="text-dark" href="https://api.whatsapp.com/send?text={% for post in post %}{{ post.url_ | safe }}{% endfor %}"><i style="border: none" class="fab fa-whatsapp"></i></a> <a class="text-dark" href="http://www.facebook.com/sharer.php?u={% for post in post %}{{ post.url_ | safe }}{% endfor %}"><i class="fab fa-facebook-square" style="border: none"></i></a> <a class="text-dark" href="https://twitter.com/intent/tweet?url={% for post in post %}{{ post.url_ | safe }}{% endfor %}&text={% for post in post %}{{ post.Title | safe }}{% endfor %}"><i class="fab fa-twitter-square" style="border: none"></i></a> <a class="text-dark" href="https://www.linkedin.com/sharing/share-offsite/?url={% for post in post %}{{ post.url_ | safe }}{% endfor %}"><i style="border: none" class="fab fa-linkedin-in"></i></a></span>
+<div class="dropdown-divider text-center mb-0 mt-3" style="max-width: 800px"></div>
+<div class="pt-2 pb-2" style="max-width: 800px">
+    <div class="col-12 font-weight-normal h6 mb-0" itemtype="datePublished, author">{% block time_and_date %}{% endblock %}{% if number_of_comments > 0 %} | <i class="fas fa-comment" style="border: none"></i>{{ number_of_comments }} {% else %}{% endif %}<span style="float: right"><a class="text-dark" href="https://api.whatsapp.com/send?text={% for post in post %}{{ post.url_ | safe }}{% endfor %}"><i style="border: none" class="fab fa-whatsapp"></i></a> <a class="text-dark" href="http://www.facebook.com/sharer.php?u={% for post in post %}{{ post.url_ | safe }}{% endfor %}"><i class="fab fa-facebook-square" style="border: none"></i></a> <a class="text-dark" href="https://twitter.com/intent/tweet?url={% for post in post %}{{ post.url_ | safe }}{% endfor %}&text={% for post in post %}{{ post.Title | safe }}{% endfor %}"><i class="fab fa-twitter-square" style="border: none"></i></a> <a class="text-dark" href="https://www.linkedin.com/sharing/share-offsite/?url={% for post in post %}{{ post.url_ | safe }}{% endfor %}"><i style="border: none" class="fab fa-linkedin-in"></i></a></span>
 </div>
 </div>
-    {% if request.MOBILE %}{% else %}
-<div class="dropdown-divider text-center mb-0 pb-4" style="max-width: 800px"></div>{% endif %}
-{% if request.MOBILE %}
-    <div class="row pb-3" style="max-width: 800px">
-        <img itemtype="primaryImageOfPage, image" src="{% block image_header_tw0_mob %}{% endblock %}" style="max-height: 75vh" class="w-100" alt="{% for post in posts %}{{ post.Title }}{% endfor %}">
-    </div>
-    <div class="row" style="max-width: 800px">
-        <div class="col-12 font-weight-normal pl-0 ml-0 w-100">
-            {% block main_article_mob %}{% endblock %}
-        </div>
-    </div>
-{% else %}
+<div class="dropdown-divider text-center mb-0 pb-4" style="max-width: 800px"></div>
     <div class="pb-3" style="max-width:800px">
         <img itemtype="primaryImageOfPage, image" src="{% block image_header_tw0 %}{% endblock %}" alt="{% for post in posts %}{{ post.Title }}{% endfor %}" style="max-height: 75vh" class="col-12">
     </div>
@@ -125,7 +129,6 @@
             {% block main_article %}{% endblock %}
         </div>
     </div>
-{% endif %}
 
 
 <div class="row m-auto" style="max-width: 800px">
@@ -206,7 +209,6 @@
     {% endif %}
 
 </div>
-    {% if request.MOBILE %}{{ quiz_of_the_week | safe }}{% else %}{% endif %}
 <div class="row m-auto text-center align-content-center" style="max-width: 800px">
     <a class="btn btn-dark h4 text-center w-100 rounded-0" data-toggle="collapse" href="#collapse-newsletter" role="button" aria-expanded="false" aria-controls="collapse-newsletter">
     Sign up to our mailing list
@@ -224,11 +226,10 @@
         {{ form.Submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
     </form>
 </div>
-{% if request.MOBILE %}{% else %}
     </div>
     <div class="col-4 pt-2 mr-0 ml-0" id="articles">
         {{ quiz_of_the_week | safe }}
-        <h3 class="font-weight-normal text-left ml-0">Recent posts {% if article_category|length %}in {{ article_category }}{% endif %}</h3>
+        <h3 class="font-weight-normal text-left ml-0 pt-4">Recent posts {% if article_category|length %}in {{ article_category }}{% endif %}</h3>
     {% if latest_articles|length %}
         <div class="m-auto" style="max-width: 600px">
             {% for post in latest_articles %}
@@ -269,23 +270,37 @@
     </div>
     </div>
     </div>
-{% endif %}
 
 </div>
-{% if request.MOBILE %}{% else %}</div>{% endif %}
-<footer class="text-center p-5" style="background-color: #dddddd">
+</div>
+<footer class="text-center p-5 mt-5" style="background-color: #dddddd">
         <p>Made in Leicestershire, with love from London.</p>
         <p class="text-muted">&copy; 2020 In Wait of Tomorrow</p>
     </footer>
 <script>
+    function signup(){
+        myVar = setTimeout(open_newsletter, 3000);
+    }
+
     function openNav() {
       document.getElementById("myNav").style.width = "100%";
+      document.getElementById("articles").style.visibility = "hidden"
+    }
+
+    function open_newsletter() {
+        document.getElementById("newsletter").style.width = "100%";
       document.getElementById("articles").style.visibility = "hidden"
     }
 
     function closeNav() {
       document.getElementById("myNav").style.width = "0%";
       document.getElementById("articles").style.visibility = "visible"
+    }
+
+    function close_newsletter() {
+      document.getElementById("newsletter").style.width = "0%";
+      document.getElementById("articles").style.visibility = "visible";
+      document.body.onload = null
     }
 
     function optioncorrect() {
