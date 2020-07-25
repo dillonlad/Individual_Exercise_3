@@ -2,10 +2,10 @@
 {% block fb_share_url %}{% for post in post %}{{ post.url_ | safe }}{% endfor %}{% endblock %}
 {% block fb_share_title %}{% for post in post %}{{ post.Title | safe }}{% endfor %}{% endblock %}
 {% block fb_share_description %}{% for post in post %}{{ post.Description | safe }}{% endfor %}{% endblock %}
-{% block fb_share_image %}'http://inwaitoftomorrow.appspot.com{% for post in post %}{{ post.Image_root | safe }}{% endfor %}'{% endblock %}
+{% block fb_share_image %}'http://inwaitoftomorrow.appspot.com{% for post in post %}{{ post.Image_iphone | safe }}{% endfor %}'{% endblock %}
 {% block twitter_share_title %}{% for post in post %}{{ post.Title | safe }}{% endfor %}{% endblock %}
 {% block twitter_share_description %}{% for post in post %}{{ post.Description | safe }}{% endfor %}{% endblock %}
-{% block twitter_share_image %}'http://inwaitoftomorrow.appspot.com{% for post in post %}{{ post.Image_root | safe }}{% endfor %}'{% endblock %}
+{% block twitter_share_image %}'http://inwaitoftomorrow.appspot.com{% for post in post %}{{ post.Image_iphone | safe }}{% endfor %}'{% endblock %}
 {% block twitter_share_url %}{% for post in post %}{{ post.url_ | safe }}{% endfor %}{% endblock %}
 {% block meta_description %}{% for post in post %}{{ post.Description | safe }}{% endfor %}{% endblock %}
 {% block meta_keywords %}{% for post in post %}{{ post.keywords | safe }}{% endfor %}{% endblock %}

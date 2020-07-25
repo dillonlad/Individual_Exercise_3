@@ -73,7 +73,6 @@ def create_app():
     app.config["MAIL_DEBUG"] = True
     app.config["MAIL_SUPPRESS_SEND"] = False
 
-
     mobility.init_app(app)
     app.jinja_env.cache = {}
     mail.init_app(app)

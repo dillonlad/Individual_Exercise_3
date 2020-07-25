@@ -44,7 +44,7 @@
     <link rel="shortcut icon" href="../static/img/favico.ico">
     <title>{% block title %}{% endblock %}</title>
 </head>
-<body itemscope itemtype="https://schema.org/WebPage">
+<body itemscope itemtype="https://schema.org/WebPage" onscroll="change_words()" onload="signup()">
 <div class="row m-auto pt-3" style="max-width: 1000px">
 <link rel="stylesheet" href="../static/css/newnav.css">
 <div id="myNav" class="overlay">
@@ -77,10 +77,21 @@
   </div>
 <div class="container-fluid">
 <div class="container-fluid">
-    <div class="row">
+    <div id="nav_one" style="display: block" class="row">
         <div class="col-12">
             <nav class="navbar navbar-dark fixed-top bg-dark" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
-                    <a href="{{url_for('main.index')}}"><span class="navbar-brand text-white navbar-dark mb-0 h1">In Wait of Tomorrow</span></a>
+                    <a id="home_link" href="{{url_for('main.index')}}"><span class="navbar-brand text-white navbar-dark mb-0 h1 font-weight-normal">In Wait of Tomorrow</span></a>
+                    <div class="dropdown dropleft show btn-group">
+                      <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
+                      </button>
+                    </div>
+            </nav>
+        </div>
+    </div>
+    <div id="nav_two" style="display: none" class="row">
+        <div class="col-12">
+            <nav class="navbar navbar-dark fixed-top bg-dark" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
+                    <span id="new_words" class="navbar-brand text-white navbar-dark mb-0">{% for post in post %}{{ post.Title }}{% endfor %}</span>
                     <div class="dropdown dropleft show btn-group">
                       <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
                       </button>
@@ -279,17 +290,29 @@
     </footer>
 <script>
     function signup(){
-        myVar = setTimeout(open_newsletter, 3000);
+        myVar = setTimeout(open_newsletter, 15000);
+    }
+
+    function change_words(){
+        if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+            document.getElementById("nav_one").style.display = "none";
+            document.getElementById("nav_two").style.display = "block";
+        }
+        else
+            if (document.body.scrollTop < 100 || document.documentElement.scrollTop < 100) {
+                document.getElementById("nav_one").style.display = "block";
+                document.getElementById("nav_two").style.display = "none";
+            }
     }
 
     function openNav() {
-      document.getElementById("myNav").style.width = "100%";
-      document.getElementById("articles").style.visibility = "hidden"
+        document.getElementById("myNav").style.width = "100%";
+        document.getElementById("articles").style.visibility = "hidden"
     }
 
     function open_newsletter() {
         document.getElementById("newsletter").style.width = "100%";
-      document.getElementById("articles").style.visibility = "hidden"
+        document.getElementById("articles").style.visibility = "hidden"
     }
 
     function closeNav() {

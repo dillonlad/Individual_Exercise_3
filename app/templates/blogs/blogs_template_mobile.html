@@ -44,7 +44,7 @@
     <link rel="shortcut icon" href="../static/img/favico.ico">
     <title>{% block title %}{% endblock %}</title>
 </head>
-<body itemscope itemtype="https://schema.org/WebPage" onload="signup()">
+<body itemscope itemtype="https://schema.org/WebPage" onscroll="change_words()" onload="signup()">
 <link rel="stylesheet" href="../static/css/newnav.css">
 <div id="myNav" class="overlay">
       <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
@@ -76,10 +76,21 @@
   </div>
 <div class="container-fluid">
 <div class="container-fluid">
-    <div class="row">
+    <div id="nav_one" class="row">
         <div class="col-12">
             <nav class="navbar navbar-dark fixed-top bg-dark" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
                     <a href="{{url_for('main.index')}}"><span class="navbar-brand text-white navbar-dark mb-0 h1">In Wait of Tomorrow</span></a>
+                    <div class="dropdown dropleft show btn-group">
+                      <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
+                      </button>
+                    </div>
+            </nav>
+        </div>
+    </div>
+    <div id="nav_two" style="display: none" class="row">
+        <div class="col-12">
+            <nav class="navbar navbar-dark fixed-top bg-dark" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
+                    <span style="float: left" class="text-white"><i style="border: none" class="fas fa-share-alt"></i> Share | <a class="text-white" href="https://api.whatsapp.com/send?text={% for post in post %}{{ post.url_ | safe }}{% endfor %}"><i style="border: none" class="fab fa-whatsapp"></i></a> <a class="text-white" href="http://www.facebook.com/sharer.php?u={% for post in post %}{{ post.url_ | safe }}{% endfor %}"><i class="fab fa-facebook-square" style="border: none"></i></a> <a class="text-white" href="https://twitter.com/intent/tweet?url={% for post in post %}{{ post.url_ | safe }}{% endfor %}&text={% for post in post %}{{ post.Title | safe }}{% endfor %}"><i class="fab fa-twitter-square" style="border: none"></i></a> <a class="text-white" href="https://www.linkedin.com/sharing/share-offsite/?url={% for post in post %}{{ post.url_ | safe }}{% endfor %}"><i style="border: none" class="fab fa-linkedin-in"></i></a></span>
                     <div class="dropdown dropleft show btn-group">
                       <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
                       </button>
@@ -136,7 +147,7 @@
     Leave a reply
   </a>
 </div>
-<div class="row m-auto text-center collapse" id="collapse-comments" style="max-width: 800px">
+<div class="row m-auto text-center collapse w-100" id="collapse-comments" style="max-width: 800px">
      <form class="user col-12 text-left" method='POST' novalidate>
         {{ form.hidden_tag() }}
         <div class="form-group font-weight-normal">
@@ -231,6 +242,18 @@
 <script>
     function signup(){
         myVar = setTimeout(open_newsletter, 15000);
+    }
+
+    function change_words(){
+        if (document.body.scrollTop > 150 || document.documentElement.scrollTop > 150) {
+            document.getElementById("nav_one").style.display = "none";
+            document.getElementById("nav_two").style.display = "block";
+        }
+        else
+            if (document.body.scrollTop < 150 || document.documentElement.scrollTop < 150) {
+                document.getElementById("nav_one").style.display = "block";
+                document.getElementById("nav_two").style.display = "none";
+            }
     }
 
     function openNav() {
