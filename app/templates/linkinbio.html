@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-159574205-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-159574205-1');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="In Wait of Tomorrow"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="http://inwaitoftomorrow.appspot.com/"/>
+    <meta property="og:description" content="We write futurology - analysis of current trends to predict what the future might be like"/>
+    <meta property="og:image" content='http://inwaitoftomorrow.appspot.com/static/img/logo.jpeg'/>
+    <meta name="twitter:title" content="In Wait of Tomorrow"/>
+    <meta name="twitter:description" content="Who knows what the future might look like"/>
+    <meta name="twitter:image" content='http://inwaitoftomorrow.appspot.com/static/img/logo.jpeg'/>
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:url" content="http://inwaitoftomorrow.appspot.com/"/>
+    <meta name="google-site-verification" content="FXf4fXXrRB8YqX75YWs6DQXLlE3r_CWleoGSjxGSa5s" />
+    <script src="../static/bootstrap-4.0.0/js/tests/vendor/jquery-1.9.1.min.js"></script>
+    <script src="../static/bootstrap-4.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../static/bootstrap-4.0.0/assets/js/vendor/popper.min.js"></script>
+    <link rel="stylesheet" href="../static/css/bootstrapnew.min.css">
+    <link rel="stylesheet" href="../static/css/hovering.min.css">
+
+    <link rel="stylesheet" href="../static/css/newnav.min.css">
+    <link rel="canonical" href="https://inwaitoftomorrow.appspot.com">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+          rel="stylesheet">
+    <link href="../static/css/title.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="shortcut icon" href="../static/img/favico.ico">
+    <meta name="description" content="The latest in tech, science and more, In Wait of Tomorrow is futurology - we analyse how advancements may affect our future. Follow @inwaitoftomorrow on Instagram."/>
+    <meta name="keywords" content="inwaitoftomorrow, In Wait of Tomorrow, futurology, Technology, Science, Healthcare, Environment">
+    <meta name="author" content="inwaitoftomorrow">
+    <meta name="robots" content="index, follow">
+    <title>Latest from Instagram</title>
+</head>
+<body class="w-100">
+    {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="text-center m-auto p-5 font-weight-normal" style="max-width: 600px">
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+    {% endwith %}
+  <div id="myNav" class="overlay">
+      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+      <div class="overlay-content">
+          <a href="{{ url_for('main.show_blog') }}">Latest articles</a>
+          <div class="dropdown-divider text-center align-self-center m-auto" style="max-width: 600px"></div>
+          {% for category in categories %}
+            {% if category.category_name != "Blog" %}
+                <a href="{{ url_for('main.show_blog_category', category=category.category_name) }}">{{ category.category_name }}</a>
+            {% endif %}
+          {% endfor %}
+      </div>
+  </div>
+    <div class="container-fluid">
+    <div style="display: block" class="row">
+        <div class="col-12">
+            <nav class="navbar navbar-dark fixed-top bg-dark" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
+                    <a id="home_link" href="{{url_for('main.index')}}"><span class="navbar-brand text-white navbar-dark mb-0 h1 font-weight-normal">In Wait of Tomorrow</span></a>
+                    <div class="dropdown dropleft show btn-group">
+                      <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
+                      </button>
+                    </div>
+            </nav>
+        </div>
+    </div>
+
+<div class="row m-auto text-center w-100" style="max-width: 600px; position: absolute; top: 50%; left: 50%; -ms-transform: translate(-50%, -50%); transform: translate(-50%, -50%);">
+    <span class="col-12 font-weight-light h5 w-100">Welcome to</span>
+    <span class="col-12 font-weight-bold h3 w-100">In Wait of Tomorrow</span>
+    <div class="col-12 text-center w-100">
+        <picture class="w-100">
+             <source style="max-width: 200px; height: auto" srcset="../static/img/logo.webp" type="image/webp">
+             <img itemscope itemtype="https://schema.org/ImageObject" src="../static/img/logo.jpeg" alt="Logo" style="max-width: 200px; height: auto">
+        </picture>
+    </div>
+    <script src="https://kit.fontawesome.com/7380e39ab3.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <a class="btn w-100 btn-dark text-white rounded-0 ml-3 mr-3 mb-2 pt-3 pb-3" href="{{ url_for('main.show_blog_linkinbio') }}"><i style="border: none" class="fab fa-readme pr-3 text-white bg-dark"></i>Read our latest articles</a>
+    <a class="btn w-100 btn-danger text-white rounded-0 ml-3 mr-3 mb-2 pt-3 pb-3" href="https://www.youtube.com/channel/UCiExUJ3xlv-GngQ8rbBocCQ/?guided_help_flow=5"><i style="border: none;" class="fab fa-youtube text-white bg-danger pr-3"></i>Go to our YouTube</a>
+</div>
+    </div>
+<script src="../static/js/EasePack.min.js"></script>
+<script src="../static/js/TweenLite.min.js"></script>
+<script src="../static/js/demo.js"></script>
+<script src="../static/js/newstyles.min.js"></script>
+<script>
+    function openNav() {
+      document.getElementById("myNav").style.width = "100%";
+      document.getElementById("cards").style.visibility = "hidden"
+    }
+
+    function closeNav() {
+      document.getElementById("myNav").style.width = "0%";
+      document.getElementById("cards").style.visibility = "visible"
+    }
+</script>
+</body>
+</html>

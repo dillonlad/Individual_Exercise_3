@@ -122,9 +122,14 @@ def index():
             return render_template('homepage.html', latest_article=latest_article, posts=posts, form=form, categories=categories, series=series)
 
 
-@bp_main.route('/linkinbio', methods=['POST', 'GET'])
+@bp_main.route('/linkinbio', methods=['GET'])
+def linkinbio():
+    categories = Categories.query.all()
+    return render_template('linkinbio.html', categories=categories)
+
+
+@bp_main.route('/linkinbio/articles', methods=['POST', 'GET'])
 def show_blog_linkinbio():
-    app.track_event(category="Instagram hit", action='Blog read')
     form = SearchForm(request.form)
     categories = Categories.query.all()
     page = request.args.get('page',1,type=int)
