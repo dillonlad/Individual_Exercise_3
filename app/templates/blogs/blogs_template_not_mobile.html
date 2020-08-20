@@ -59,10 +59,10 @@
           {% endfor %}
       </div>
   </div>
-<div id="newsletter" class="overlay text-white">
+<div id="newsletter" class="overlay text-dark bg-white" style="height: 50%">
       <a href="javascript:void(0)" class="closebtn" onclick="close_newsletter()">&times;</a>
       <div class="row m-auto pt-3" style="max-width: 800px">
-        <h3 class="font-weight-normal pt-5 mt-5">Sign up to our newsletter</h3>
+        <h3 class="font-weight-normal">Enjoy what you're reading? Sign up to our newsletter</h3>
         <form class="user col-12 text-left" method='POST' novalidate>
         {{ form.hidden_tag() }}
         <div class="form-group font-weight-normal">
@@ -90,7 +90,7 @@
     </div>
     <div id="nav_two" style="display: none" class="row">
         <div class="col-12">
-            <nav class="navbar navbar-dark fixed-top bg-dark" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
+            <nav id="navbar" class="navbar navbar-dark fixed-top bg-dark" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
                     <span id="new_words" class="navbar-brand text-white navbar-dark mb-0">{% for post in post %}{{ post.Title }}{% endfor %}</span>
                     <div class="dropdown dropleft show btn-group">
                       <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
@@ -312,7 +312,8 @@
 
     function open_newsletter() {
         document.getElementById("newsletter").style.width = "100%";
-        document.getElementById("articles").style.visibility = "hidden"
+        document.getElementById("articles").style.visibility = "hidden";
+        document.getElementById("navbar").style.visibility = "hidden"
     }
 
     function closeNav() {
@@ -323,6 +324,7 @@
     function close_newsletter() {
       document.getElementById("newsletter").style.width = "0%";
       document.getElementById("articles").style.visibility = "visible";
+      document.getElementById("navbar").style.visibility = "visible";
       document.body.onload = null
     }
 
