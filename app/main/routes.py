@@ -104,6 +104,7 @@ def index():
         else:
             app.track_event(category='Homepage', action='Homepage visit')
             form = SearchForm(request.form)
+            homepage = "yes"
             categories = Categories.query.all()
             series = Series.query.all()
             posts = Blogs.query.order_by(desc(Blogs.article_id)).limit(5).all()
@@ -118,8 +119,23 @@ def index():
                     for post in posts_two:
                         if post not in posts:
                             posts.append(post)
-                return render_template('homepage.html', posts=posts, form=form, categories=categories, series=series)
-            return render_template('homepage.html', latest_article=latest_article, posts=posts, form=form, categories=categories, series=series)
+                return render_template('homepage.html', latest_article=latest_article, posts=posts, form=form, categories=categories, series=series, homepage=homepage)
+            else:
+                if form.is_submitted():
+                    form.method = 'POST'
+                    search = form.Search.data
+                    if len(search) == 0:
+                        posts = Blogs.query.order_by(desc(Blogs.article_id)).limit(5).all()
+                    else:
+                        posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Title.contains(search)).all()
+                        posts_two = Blogs.query.order_by(desc(Blogs.article_id)).filter(
+                            Blogs.Content.contains(search)).all()
+                        for post in posts_two:
+                            if post not in posts:
+                                posts.append(post)
+                    return render_template('homepage.html', latest_article=latest_article, posts=posts, form=form,
+                                           categories=categories, series=series, homepage=homepage)
+            return render_template('homepage.html', latest_article=latest_article, posts=posts, form=form, categories=categories, series=series, homepage=homepage)
 
 
 @bp_main.route('/linkinbio', methods=['GET'])
@@ -141,15 +157,32 @@ def show_blog_linkinbio():
     if request.method == 'POST' and form.validate():
         search = form.Search.data
         if len(search) == 0:
-            posts = Blogs.query.order_by(desc(Blogs.article_id)).all()
+            posts = Blogs.query.order_by(desc(Blogs.article_id)).limit(5).all()
         else:
             posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Title.contains(search)).all()
             posts_two = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Content.contains(search)).all()
             for post in posts_two:
                 if post not in posts:
                     posts.append(post)
-        return render_template("mobile/blog_results.html", article_category=search, posts=posts, categories=categories, form=form)
-    return render_template("mobile/blog_results.html", posts=posts.items, categories=categories, form=form, next_url=next_url, prev_url=prev_url)
+        return render_template("mobile/blog_results.html", article_category=search, posts=posts, categories=categories,
+                               form=form)
+    else:
+        if form.is_submitted():
+            form.method = 'POST'
+            search = form.Search.data
+            if len(search) == 0:
+                posts = Blogs.query.order_by(desc(Blogs.article_id)).limit(5).all()
+            else:
+                posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Title.contains(search)).all()
+                posts_two = Blogs.query.order_by(desc(Blogs.article_id)).filter(
+                    Blogs.Content.contains(search)).all()
+                for post in posts_two:
+                    if post not in posts:
+                        posts.append(post)
+            return render_template("mobile/blog_results.html", article_category=search, posts=posts,
+                                   categories=categories, form=form)
+    return render_template("mobile/blog_results.html", posts=posts.items, categories=categories, form=form,
+                           next_url=next_url, prev_url=prev_url)
 
 
 @bp_main.route('/articles', methods=['POST', 'GET'])
@@ -160,7 +193,7 @@ def show_blog():
     if request.method == 'POST' and form.validate():
         search = form.Search.data
         if len(search) == 0:
-            posts = Blogs.query.order_by(desc(Blogs.article_id)).all()
+            posts = Blogs.query.order_by(desc(Blogs.article_id)).limit(5).all()
         else:
             posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Title.contains(search)).all()
             posts_two = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Content.contains(search)).all()
@@ -168,6 +201,20 @@ def show_blog():
                 if post not in posts:
                     posts.append(post)
         return render_template("mobile/blog_results.html", posts=posts, categories=categories, form=form)
+    else:
+        if form.is_submitted():
+            form.method = 'POST'
+            search = form.Search.data
+            if len(search) == 0:
+                posts = Blogs.query.order_by(desc(Blogs.article_id)).limit(5).all()
+            else:
+                posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Title.contains(search)).all()
+                posts_two = Blogs.query.order_by(desc(Blogs.article_id)).filter(
+                    Blogs.Content.contains(search)).all()
+                for post in posts_two:
+                    if post not in posts:
+                        posts.append(post)
+            return render_template("mobile/blog_results.html", posts=posts, categories=categories, form=form)
     return render_template("mobile/blog_results.html", posts=posts, categories=categories, form=form)
 
 
@@ -223,6 +270,7 @@ def login():
         flash('You are logged in')
         return redirect(url_for('main.index'))
     form = LoginForm()
+    homepage = "no"
     if request.method == 'POST' and form.validate():
         user = Profile.query.filter_by(email=form.email.data).first()
         if user is None or not user.check_password(form.password.data):
@@ -251,7 +299,7 @@ def login():
             else:
                 return redirect(url_for('main.login'), code=302)
         else:
-            return render_template('login.html', form=form)
+            return render_template('login.html', form=form, homepage=homepage)
 
 
 @bp_main.route('/logout/')
@@ -272,6 +320,7 @@ def register():
         if current_user.is_authenticated:
             flash('You are logged in')
             return redirect(url_for('main.index'))
+        homepage = "no"
         form = SignupForm(request.form)
         if request.method == 'POST' and form.validate():
             user = Profile(username=form.username.data, email=form.email.data, password=form.password.data)
@@ -291,7 +340,7 @@ def register():
             except OperationalError:
                 db.session.rollback()
                 flash('Register feature not working')
-        return render_template('register.html', form=form)
+        return render_template('register.html', form=form, homepage=homepage)
 
 
 @bp_main.route('/add_post/', methods=['POST', 'GET'])

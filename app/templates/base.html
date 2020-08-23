@@ -103,25 +103,33 @@
     <div class="container-fluid w-100 mainimage opacity-5" style="background-image: url('../static/img/backgroundnew.jpg')">
     <div class="row">
         <div class="col-12">
-            <nav class="navbar navbar-dark bg-transparent container-fluid" itemscope itemtype="https://schema.org/SiteNavigationElement">
-                <a href="{{url_for('main.index')}}"><span class="navbar-brand text-white mb-0 h1 font-weight-normal">In Wait of Tomorrow</span></a>
-                <div class="dropdown dropleft show btn-group">
+            <nav class="navbar bg-transparent container-fluid" itemscope itemtype="https://schema.org/SiteNavigationElement">
+                {% if homepage == "yes" %}
+                    <span style="float: left"><a class="text-white" href="https://www.facebook.com/inwaitoftomorrow"><i class="fab fa-facebook-square" style="border: none"></i></a> <a class="text-white" href="https://twitter.com/InWaitofTomorr1"><i class="fab fa-twitter-square" style="border: none"></i></a> <a href="https://www.instagram.com/inwaitoftomorrow/" class="text-white"><i class="fab fa-instagram" style="background: transparent"></i></a></span>
+                {% else %}
+                    <a href="{{ url_for('main.index') }}" class="text-white">In Wait of Tomorrow</a>
+                {% endif %}
+                <div>
+                    <a href="#aboutUs"><span class="navbar-brand mb-0 h1 font-weight-normal text-white">About</span></a>
+                    <a href="#aboutUs"><span class="navbar-brand mb-0 h1 font-weight-normal text-white">Latest Articles</span></a>
+                </div>
+                <div class="dropdown dropleft show btn-group float-right">
                   <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
                   </button>
                 </div>
             </nav>
         </div>
     </div>
-    <header class="masthead-mob" style="min-height: 40vh">
-        <div class="container h-40">
-            <div class="row h-40 align-items-center p-5">
-                <div class="col-12 text-center" style="padding-top: 0vh">
+    <header class="border-bottom border-top border-white p-5 mh-50" style="height: 50vh">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-12 text-center p-5" style="padding-top: 0vh">
                     <h1 class="font-weight-normal text-white" itemprop="name">In Wait of Tomorrow</h1>
                     <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11"></script>
                     <div id="typed-strings" class="text-white" style="max-width: 600px">
-                        <p class="lead text-white">^1000 Futurology ^1000 - Systematic forecasting of the future ^1000 based on current trends^2000</p>
-                        <p class="font-weight-normal font-italic text-white">"I know not with what weapons World War III will be fought ^1000, but World War IV will be fought with sticks and stones." ~ Albert Einstein ^1000</p></div>
-                    <span id="typed" class="pb-2 font-italic text-white"></span>
+                        <p class="lead">^1000 Futurology ^1000 - Systematic forecasting of the future ^1000 based on current trends^2000</p>
+                        <p class="font-weight-normal font-italic">"I know not with what weapons World War III will be fought ^1000, but World War IV will be fought with sticks and stones." ~ Albert Einstein ^1000</p></div>
+                    <span id="typed" class="pb-5 text-white"></span>
 
                 </div>
             </div>
@@ -129,6 +137,29 @@
     </header>
 
 </div>
+        {% if homepage == "yes" %}
+<div class="text-center text-dark p-2 border-dark border-bottom">
+        {% for category in categories %}
+            {% if category.category_name != "Blog" %}
+                <a class="p-2 text-dark" href="{{ url_for('main.show_blog_category', category=category.category_name) }}">{{ category.category_name }}</a>
+            {% endif %}
+        {% endfor %} <a data-toggle="collapse" class="text-dark" href="#collapseSearch" role="button" aria-expanded="false" aria-controls="collapseExample"><i class="fas fa-search" style="border: none"></i></a>
+
+ <div class="collapse" id="collapseSearch">
+  <div class="row col-12 pl-5 justify-content-center text-center" style="margin-top: 60px">
+        <form class="form-inline" method="POST" action="" novalidate>
+            {{ form.hidden_tag() }}
+            <div class="form-group rounded-0">
+                {{ form.Search.label(class_="pr-2") }}{{ form.Search(class_="form-control form-control-user rounded-0") }}
+            </div>
+            <div class="form-group">
+            {{ form.Submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
+                </div>
+        </form>
+    </div>
+</div>
+    </div>
+                {% else %}{% endif %}
 {% endif %}
 <div id="articles" class="row w-100 m-auto">
     {% block list_of_articles %}{% endblock %}
