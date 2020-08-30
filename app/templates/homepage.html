@@ -147,7 +147,7 @@
 {% else %}
     <div class="row container-fluid" id="cards">
             <script src="https://kit.fontawesome.com/7380e39ab3.js" crossorigin="anonymous"></script>
-                <h4 class="col-12 font-weight-normal text-center p-3">Most recent <i style="border: none" class="fab fa-readme"></i></h4>
+                <h4 class="col-12 font-weight-normal text-center p-3" id="articles-title">Most recent <i style="border: none" class="fab fa-readme"></i></h4>
         <div class="card-group col-12" style="padding-left: 40px">
                 {% for post in posts %}
                       <div class="card rounded-0">
@@ -177,13 +177,13 @@
                       <div class="card rounded-0">
                         <img class="card-img-top" src="..{{ thing.series_image }}" alt="Card image cap">
                         <div class="card-body p-2 text-left">
-                            <h5 class="card-title text-dark"><a class="text-dark font-weight-normal" href="{{ url_for('main.show_blog_series', series_key=thing.series_key) }}">{{ thing.series_name }}</a></h5>
+                            <h5 class="card-title text-dark"><a href="javascript:void(0)" id="new-search-{{ thing.series_key }}" onclick="submit_form_{{ thing.series_id }}()" class="text-dark font-weight-normal">{{ thing.series_name }}</a></h5>
                         </div>
                       </div>
                 {% endfor %}
     </div>
     </div>
-         <div class= "row col-12 justify-content-center">
+         <div class= "row col-12 justify-content-center" id="aboutUs">
             <img src="../static/img/logo.webp" style="max-height: 200px" alt="In Wait of Tomorrow">
         </div>
         <div class="row col-12 justify-content-center text-center text-dark">

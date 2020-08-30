@@ -140,49 +140,61 @@ def index():
 
 @bp_main.route('/linkinbio', methods=['GET'])
 def linkinbio():
-    categories = Categories.query.all()
-    return render_template('linkinbio.html', categories=categories)
+    host = request.host
+    if request.url.startswith('http://') and '127' not in host:
+        url = request.url.replace('http://', 'https://', 1)
+        code = 301
+        return redirect(url, code=code)
+    else:
+        categories = Categories.query.all()
+        return render_template('linkinbio.html', categories=categories)
 
 
 @bp_main.route('/linkinbio/articles', methods=['POST', 'GET'])
 def show_blog_linkinbio():
-    form = SearchForm(request.form)
-    categories = Categories.query.all()
-    page = request.args.get('page',1,type=int)
-    posts = Blogs.query.order_by(desc(Blogs.article_id)).paginate(page,5,False)
-    next_url = url_for('main.show_blog_linkinbio', page=posts.next_num) \
-        if posts.has_next else None
-    prev_url = url_for('main.show_blog_linkinbio', page=posts.prev_num) \
-        if posts.has_prev else None
-    if request.method == 'POST' and form.validate():
-        search = form.Search.data
-        if len(search) == 0:
-            posts = Blogs.query.order_by(desc(Blogs.article_id)).limit(5).all()
-        else:
-            posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Title.contains(search)).all()
-            posts_two = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Content.contains(search)).all()
-            for post in posts_two:
-                if post not in posts:
-                    posts.append(post)
-        return render_template("mobile/blog_results.html", article_category=search, posts=posts, categories=categories,
-                               form=form)
+    host = request.host
+    if request.url.startswith('http://') and '127' not in host:
+        url = request.url.replace('http://', 'https://', 1)
+        code = 301
+        return redirect(url, code=code)
     else:
-        if form.is_submitted():
-            form.method = 'POST'
+        form = SearchForm(request.form)
+        categories = Categories.query.all()
+        page = request.args.get('page',1,type=int)
+        posts = Blogs.query.order_by(desc(Blogs.article_id)).paginate(page,5,False)
+        next_url = url_for('main.show_blog_linkinbio', page=posts.next_num) \
+            if posts.has_next else None
+        prev_url = url_for('main.show_blog_linkinbio', page=posts.prev_num) \
+            if posts.has_prev else None
+        if request.method == 'POST' and form.validate():
             search = form.Search.data
             if len(search) == 0:
                 posts = Blogs.query.order_by(desc(Blogs.article_id)).limit(5).all()
             else:
                 posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Title.contains(search)).all()
-                posts_two = Blogs.query.order_by(desc(Blogs.article_id)).filter(
-                    Blogs.Content.contains(search)).all()
+                posts_two = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Content.contains(search)).all()
                 for post in posts_two:
                     if post not in posts:
                         posts.append(post)
-            return render_template("mobile/blog_results.html", article_category=search, posts=posts,
-                                   categories=categories, form=form)
-    return render_template("mobile/blog_results.html", posts=posts.items, categories=categories, form=form,
-                           next_url=next_url, prev_url=prev_url)
+            return render_template("mobile/blog_results.html", article_category=search, posts=posts, categories=categories,
+                                   form=form)
+        else:
+            if form.is_submitted():
+                form.method = 'POST'
+                search = form.Search.data
+                if len(search) == 0:
+                    posts = Blogs.query.order_by(desc(Blogs.article_id)).limit(5).all()
+                else:
+                    posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Title.contains(search)).all()
+                    posts_two = Blogs.query.order_by(desc(Blogs.article_id)).filter(
+                        Blogs.Content.contains(search)).all()
+                    for post in posts_two:
+                        if post not in posts:
+                            posts.append(post)
+                return render_template("mobile/blog_results.html", article_category=search, posts=posts,
+                                       categories=categories, form=form)
+        return render_template("mobile/blog_results.html", posts=posts.items, categories=categories, form=form,
+                               next_url=next_url, prev_url=prev_url)
 
 
 @bp_main.route('/articles', methods=['POST', 'GET'])
@@ -242,25 +254,20 @@ def show_blog_category(category):
             article_category = category
             return render_template("mobile/blog_results.html", posts=posts, categories=categories,
                                    article_category=article_category, form=form)
-        return redirect(url_for('main.show_blog'), code=404)
 
 
 @bp_main.route('/<series_key>', methods=['POST', 'GET'])
 def show_blog_series(series_key):
     form = SearchForm(request.form)
+    form.Search.data = series_key
+    request.method = 'POST'
     categories = Categories.query.all()
-    if Series.query.filter(Series.series_key.contains(series_key)).all():
-        episode = Series.query.filter(Series.series_key.contains(series_key)).all().split()
-        posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.series.contains(episode.series_name)).all()
-        if request.method == 'POST' and form.validate():
-            search = form.Search.data
-            posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.series.contains(episode.series_name)).filter(Blogs.Title.contains(search)).all()
-            posts_two = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.series.contains(episode.series_name)).filter(Blogs.Content.contains(search)).all()
-            for post in posts_two:
-                if post not in posts:
-                    posts.append(post)
-        article_category = episode.series_name
-        return render_template("mobile/blog_results.html", posts=posts, categories=categories, article_category=article_category, form=form)
+    posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Title.contains(form.Search.data)).all()
+    posts_two = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Content.contains(form.Search.data)).all()
+    for post in posts_two:
+        if post not in posts:
+            posts.append(post)
+    return render_template("mobile/blog_results.html", posts=posts, categories=categories, form=form)
 
 
 
