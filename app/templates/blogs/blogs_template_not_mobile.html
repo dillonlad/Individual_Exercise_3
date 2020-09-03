@@ -76,7 +76,7 @@
       </div>
   </div>
 <div class="container-fluid">
-<div class="container-fluid">
+<div class="container-fluid" id="navigation">
     <div id="nav_one" style="display: block" class="row">
         <div class="col-12">
             <nav class="navbar navbar-dark fixed-top bg-dark" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
@@ -313,7 +313,7 @@
     function open_newsletter() {
         document.getElementById("newsletter").style.width = "100%";
         document.getElementById("articles").style.visibility = "hidden";
-        document.getElementById("navbar").style.visibility = "hidden"
+        document.getElementById("navigation").style.visibility = "hidden"
     }
 
     function closeNav() {
@@ -324,7 +324,7 @@
     function close_newsletter() {
       document.getElementById("newsletter").style.width = "0%";
       document.getElementById("articles").style.visibility = "visible";
-      document.getElementById("navbar").style.visibility = "visible";
+      document.getElementById("navigation").style.visibility = "visible";
       document.body.onload = null
     }
 

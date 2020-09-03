@@ -44,7 +44,7 @@
     <link rel="shortcut icon" href="../static/img/favico.ico">
     <title>{% block title %}{% endblock %}</title>
 </head>
-<body itemscope itemtype="https://schema.org/WebPage" onscroll="change_words()" onload="signup()">
+<body itemscope itemtype="https://schema.org/WebPage" onscroll="change_words()">
 <link rel="stylesheet" href="../static/css/newnav.css">
 <div id="myNav" class="overlay">
       <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
@@ -58,7 +58,7 @@
           {% endfor %}
       </div>
   </div>
-<div id="newsletter" class="overlay text-dark bg-white" style="height: 60%">
+<div id="newsletter" class="overlay text-dark bg-white" style="height: 50%">
       <a href="javascript:void(0)" class="closebtn" onclick="close_newsletter()">&times;</a>
       <div class="row m-auto pt-3" style="max-width: 800px">
         <h3 class="font-weight-normal">Email newsletter</h3>
@@ -75,8 +75,8 @@
       </div>
   </div>
 <div class="container-fluid">
-<div class="container-fluid">
-    <div id="nav_one" class="row">
+<div class="container-fluid" id="navigation">
+    <div id="nav_one" style="display: block" class="row">
         <div class="col-12">
             <nav class="navbar navbar-dark fixed-top bg-dark" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
                     <a href="{{url_for('main.index')}}"><span class="navbar-brand text-white navbar-dark mb-0 h1">In Wait of Tomorrow</span></a>
@@ -263,7 +263,7 @@
 
     function open_newsletter() {
         document.getElementById("newsletter").style.width = "100%";
-        document.getElementById("articles").style.visibility = "hidden"
+        document.getElementById("navigation").style.visibility = "hidden"
     }
 
     function closeNav() {
@@ -273,8 +273,8 @@
 
     function close_newsletter() {
       document.getElementById("newsletter").style.width = "0%";
-      document.getElementById("articles").style.visibility = "visible";
-      document.body.onload = null;
+      document.getElementById("navigation").style.visibility = "visible";
+      document.body.onload = null
     }
 
     function optioncorrect() {
