@@ -374,23 +374,30 @@ def add_post():
 @bp_main.route('/new_post/', methods=['POST', 'GET'])
 @login_required
 def new_post():
-    form = CreateArticle(request.form)
-    authors = Authors.query.all()
-    time_date = datetime.now()
-    if request.method == 'POST' and form.validate():
-        post = Blogs(Title=form.Title.data, Post_ID=form.Post_ID.data, Description=form.Description.data, Image_root=form.Image_root.data, url_=form.url_.data, Content=form.Content.data, Time="{}:{}:{}".format(time_date.strftime("%H"), time_date.strftime("%M"), time_date.strftime("%S")), Date="{}-{}-{}".format(time_date.strftime("%Y"), time_date.strftime("%m"), time_date.strftime("%d")), category=form.category.data, author=form.author.data, keywords=form.keywords.data)
-        try:
-            db.session.add(post)
-            response = make_response(redirect(url_for('main.index')))
-            db.session.commit()
-            return response
-        except IntegrityError:
-            db.session.rollback()
-            flash('did not work')
-        except OperationalError:
-            db.session.rollback()
-            flash('did not work')
-    return render_template("blogs/add_post.html", form=form, authors=authors)
+    host = request.host
+    if '127' not in host:
+        abort(404)
+    else:
+        form = CreateArticle(request.form)
+        authors = Authors.query.all()
+        time_date = datetime.now()
+        if request.method == 'POST' and form.validate():
+            post_url = "https://inwaitoftomorrow.appspot.com/" + form.Post_ID.data
+            post_main_image_root = "/static/img/"+form.Image_root.data
+            post_jpg_image = post_main_image_root.replace(".webp",".jpg")
+            post = Blogs(Title=form.Title.data, Post_ID=form.Post_ID.data, Description=form.Description.data, Image_root=post_main_image_root, url_=post_url, Content=form.Content.data, Time="{}:{}:{}".format(time_date.strftime("%H"), time_date.strftime("%M"), time_date.strftime("%S")), Date="{}-{}-{}".format(time_date.strftime("%Y"), time_date.strftime("%m"), time_date.strftime("%d")), category=form.category.data, author=form.author.data, keywords=form.keywords.data, Image_iphone=post_jpg_image)
+            try:
+                db.session.add(post)
+                response = make_response(redirect(url_for('main.index')))
+                db.session.commit()
+                return response
+            except IntegrityError:
+                db.session.rollback()
+                flash('did not work')
+            except OperationalError:
+                db.session.rollback()
+                flash('did not work')
+        return render_template("blogs/add_post.html", form=form, authors=authors)
 
 
 @bp_main.errorhandler(500)
