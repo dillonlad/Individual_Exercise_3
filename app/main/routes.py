@@ -24,6 +24,7 @@ from app.models import Posts_two, Blogs, Profile, Categories, Series, Authors, C
 
 bp_main = Blueprint('main', __name__)
 bp_blogs = Blueprint('blogs', __name__, url_prefix='/blogs')
+bp_shop = Blueprint('shop', __name__, url_prefix='/shop')
 ext = Sitemap()
 ADMINS = ['inwaitoftomorrow@gmail.com']
 NEWSLETTER_TEST = ['dlad82434@gmail.com']
@@ -588,3 +589,8 @@ def authors(author_id):
                 person_name.append(geeza.author_name)
             posts = Blogs.query.filter(Blogs.author.contains(person_name[0])).order_by(desc(Blogs.article_id)).all()
             return render_template('author.html', categories=categories, person=person, posts=posts)
+
+
+@bp_shop.route('/', methods=['GET'])
+def shop():
+    return "Hello"

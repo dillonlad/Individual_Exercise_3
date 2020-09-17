@@ -52,6 +52,9 @@ def create_app():
     from app.main.routes import bp_main
     app.register_blueprint(bp_main)
 
+    from app.main.routes import bp_shop
+    app.register_blueprint(bp_shop)
+
     from app.main.routes import ext
     app.config['SITEMAP_MAX_URL_COUNT'] = 10000
     app.config['SITEMAP_INCLUDE_RULES_WITHOUT_PARAMS'] = True
