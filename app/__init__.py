@@ -20,8 +20,12 @@ mail = Mail()
 
 
 
-def page_not_found(e):
-    return render_template('404.html'), 404
+def page_not_found_500():
+    return render_template("500.html"), 500
+
+
+def page_not_found_404():
+    return render_template("404.html"), 404
 
 
 def create_app():
@@ -42,18 +46,19 @@ def create_app():
     # from app.models import <add the names of your model classes here>
     # with app.app_context():
         # db.create_all()
-    from app.main.routes import bp_main
-    bp_main.register_error_handler(404, page_not_found)
-    from app.main.routes import bp_blogs
-
-    app.register_blueprint(bp_blogs)
 
     # Register Blueprints
     from app.main.routes import bp_main
     app.register_blueprint(bp_main)
 
-    from app.main.routes import bp_shop
+
+    from app.blogs.routes import bp_blogs
+    app.register_blueprint(bp_blogs)
+
+
+    from app.shop.routes import bp_shop
     app.register_blueprint(bp_shop)
+
 
     from app.main.routes import ext
     app.config['SITEMAP_MAX_URL_COUNT'] = 10000
