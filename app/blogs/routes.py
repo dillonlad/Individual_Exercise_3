@@ -25,6 +25,7 @@ bp_blogs = Blueprint('blogs', __name__, url_prefix='/blogs')
 ADMINS = ['inwaitoftomorrow@gmail.com']
 NEWSLETTER_TEST = ['dlad82434@gmail.com']
 
+
 @bp_blogs.route('/<Post_ID>', methods=['POST', 'GET'])
 def post(Post_ID):
     host = request.host

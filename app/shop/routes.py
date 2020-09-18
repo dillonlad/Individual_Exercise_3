@@ -17,9 +17,11 @@ from flask_sitemap import Sitemap, sitemap_page_needed
 import app
 from app import db
 from app.main.forms import SignupForm, LoginForm, PostForm, BlogEditor, CreateArticle, SearchForm
+from app.main.routes import bp_main
 
 from app.models import Posts_two, Blogs, Profile, Categories, Series, Authors, Comments_dg_tmp, \
     mailing_list
+
 
 bp_shop = Blueprint('shop', __name__, subdomain="shop")
 
