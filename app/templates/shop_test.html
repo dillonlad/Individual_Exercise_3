@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+{% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="text-center m-auto p-5 font-weight-normal" style="max-width: 600px">
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+    {% endwith %}
+<div class="row m-auto" style="max-width: 800px">
+        <div class="col-12">
+                <form class="user col-12 text-left" method='POST' novalidate>
+                    {{ testshopform.hidden_tag() }}
+                    <div class="form-group font-weight-normal">
+                      {{ testshopform.item.label }}{{ testshopform.item(class_="form-control form-control-user rounded-0") }}
+                    </div>
+                    <div class="form-group">
+                      {{ testshopform.price.label }}{{ testshopform.price(class_="form-control form-control-user rounded-0")}}
+                    </div>
+                    <div class="form-group">
+                      {{ testshopform.quantity.label }}{{ testshopform.quantity(class_="form-control form-control-user rounded-0")}}
+                    </div>
+                    {{ testshopform.submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
+                </form>
+        </div>
+</div>
+    <div id="paypal-button"></div>
+
+<script src="https://www.paypalobjects.com/api/checkout.js"></script>
+
+<script>
+    var CREATE_PAYMENT_URL  = 'http://127.0.0.1:5000/shop/payment';
+    var EXECUTE_PAYMENT_URL = 'http://127.0.0.1:5000/shop/execute';
+
+    paypal.Button.render({
+
+        env: 'sandbox', // Or 'sandbox'
+
+        commit: true, // Show a 'Pay Now' button
+
+        payment: function() {
+            return paypal.request.post(CREATE_PAYMENT_URL).then(function(data) {
+                return data.paymentID;
+            });
+        },
+
+        onAuthorize: function(data) {
+            return paypal.request.post(EXECUTE_PAYMENT_URL, {
+                paymentID: data.paymentID,
+                payerID:   data.payerID
+            }).then(function(res) {
+
+                console.log(res.success)
+                // The payment is complete!
+                // You can now show a confirmation message to the customer
+            });
+        }
+
+    }, '#paypal-button');
+</script>
+</body>
+</html>
