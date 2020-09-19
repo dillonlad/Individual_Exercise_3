@@ -15,6 +15,7 @@ class CommentForm(FlaskForm):
     email = StringField('Please provide your email address if you want to sign up to our newsletter')
     Submit = SubmitField('Submit')
 
+
 class SubmitNewsletter(FlaskForm):
     specific_message_one = StringField('Opening message: ', validators=[DataRequired()])
     specific_message_two = StringField('Closing message: ', validators=[DataRequired()])

@@ -6,7 +6,7 @@ from wtforms.validators import DataRequired, EqualTo, Email, Length, ValidationE
 
 
 class testShop(FlaskForm):
-    item = StringField('Item: ')
-    price = StringField('Price: ')
+    size = StringField('Size: ')
+    colour = StringField('Colour: ')
     quantity = StringField('Quantity: ')
     submit = SubmitField('Submit')

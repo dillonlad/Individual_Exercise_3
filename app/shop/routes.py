@@ -2,7 +2,7 @@ from datetime import timedelta, datetime
 from urllib.parse import urlparse, urljoin
 
 from flask import render_template, Blueprint, request, flash, redirect, url_for, Flask, make_response, abort, \
-    render_template_string, jsonify
+    render_template_string, jsonify, session
 from flask_login import login_required, current_user, logout_user, login_user
 from flask_mail import Mail, Message
 from flask_mobility import Mobility
@@ -40,15 +40,34 @@ def shop():
 
 @bp_shop.route('/test', methods=['GET', 'POST'])
 def shop_test():
-    testshopform = testShop()
-    test_shop_cookie_item = make_response(render_template("shop_test.html", testshopform=testshopform))
+    testshopform = testShop(request.form)
     if request.method == 'POST':
-        test_shop_cookie_item.set_cookie('item', testshopform.item.data)
-        test_shop_cookie_item.set_cookie('price', testshopform.price.data)
-        test_shop_cookie_item.set_cookie('quantity', int(testshopform.quantity.data))
-        return render_template("shop_test.html", testshopform=testshopform)
-    else:
-        return test_shop_cookie_item
+        session['size'] = testshopform.size.data
+        session['colour'] = testshopform.colour.data
+        session['quantity'] = int(testshopform.quantity.data)
+    return render_template("shop_test.html", testshopform=testshopform)
+
+
+@bp_shop.route('/test-add-to-cart/<id>', methods=['GET', 'POST'])
+def test_add_to_cart(id):
+    if 'cart' not in session:
+        session['cart'] = []
+    if 'price' not in session:
+        session['price'] = 0
+
+    session['cart'].append(id)
+    session['price'] += 25
+    print(session)
+
+    flash("Successfully added to cart.")
+    return redirect(url_for('shop.shop_test_cart'))
+
+
+@bp_shop.route('/cart-test', methods=['GET', 'POST'])
+def shop_test_cart():
+    items_in_cart = session.get('cart', [])
+    counter = len(items_in_cart)
+    return render_template('cart.html', counter=counter)
 
 
 @bp_shop.route('/payment', methods=['POST'])
@@ -63,15 +82,15 @@ def payment():
         "transactions": [{
             "item_list": {
                 "items": [{
-                    "name": "{}".format(request.cookies.get("item")),
+                    "name": "{}, size: {}, colour: {}".format(session.get('cart',[]),session.get('size'), session.get('colour')),
                     "sku": "12345",
-                    "price": "{}".format(request.cookies.get("price")),
+                    "price": "20",
                     "currency": "USD",
-                    "quantity": request.cookies.get("quantity")}]},
+                    "quantity": 1}]},
             "amount": {
-                "total": "{}".format(request.cookies.get("price")),
+                "total": "20",
                 "currency": "USD"},
-            "description": "This is the payment transaction description."}]})
+            "description": "Size: {}, Colour: {}".format(session.get('size', []), session.get('colour', []))}]})
     if payment.create():
         print('Payment success!')
     else:
