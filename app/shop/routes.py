@@ -7,6 +7,7 @@ from flask_login import login_required, current_user, logout_user, login_user
 from flask_mail import Mail, Message
 from flask_mobility import Mobility
 from flask_mobility.decorators import mobile_template, mobilized
+from markupsafe import Markup
 from sqlalchemy import null, desc
 from sqlalchemy.exc import IntegrityError, OperationalError
 from flask_sqlalchemy import SQLAlchemy
@@ -45,6 +46,9 @@ def shop_test():
         session['size'] = testshopform.size.data
         session['colour'] = testshopform.colour.data
         session['quantity'] = int(testshopform.quantity.data)
+        message = Markup(render_template_string("<!DOCTYPE html><html lang='en'> hoodietest, size: {}, colour: {}, <a href='test-add-to-cart/hoodietest'>Please click to continue</a></html>".format(session.get('size'), session.get('colour'))))
+        flash(message)
+        return render_template("shop_test.html", testshopform=testshopform)
     return render_template("shop_test.html", testshopform=testshopform)
 
 
