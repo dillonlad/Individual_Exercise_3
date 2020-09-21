@@ -34,6 +34,10 @@ paypalrestsdk.configure({
   "client_secret": "EJseVVNIHj6VaU9cRz6vICNnWlgmK4l_aH51iRvOzru99WEF3u2Mujy4r98LWw79aD-PgKC6xNxZgLfj" })
 
 
+def different_items():
+    pass
+
+
 @bp_shop.route('/', methods=['GET'])
 def shop():
     return render_template_string("<h1>Shop coming very soon!</h1> Return <a href='{{ url_for('main.index') }}'>home</a>")
