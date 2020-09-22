@@ -21,7 +21,7 @@ from app.main.forms import SignupForm, LoginForm, PostForm, BlogEditor, CreateAr
 from app.main.routes import bp_main
 
 from app.models import Posts_two, Blogs, Profile, Categories, Series, Authors, Comments_dg_tmp, \
-    mailing_list
+    mailing_list, shop_items
 import paypalrestsdk
 
 from app.shop.forms import testShop
@@ -29,9 +29,9 @@ from app.shop.forms import testShop
 bp_shop = Blueprint('shop', __name__, url_prefix="/shop")
 
 paypalrestsdk.configure({
-  "mode": "sandbox", # sandbox or live
-  "client_id": "AY4ffGjZA7NXzbriohRQzXUhQQ2bB-FHw3G4WD-az18s7JkKvLdHUoitBeG4oPwsUm20EI7FzKxWJySF",
-  "client_secret": "EJseVVNIHj6VaU9cRz6vICNnWlgmK4l_aH51iRvOzru99WEF3u2Mujy4r98LWw79aD-PgKC6xNxZgLfj" })
+  "mode": "live", # sandbox or live
+  "client_id": "AX1xZ5LS2EKdjzXGX5s9pqscRnp_HXF_DYoUarP40589iY4891E4bGL0OwllD8JSBwEQ6AWgkBDPvs5A",
+  "client_secret": "EDdiEGaGzpXfTXIt5zgmDr1VW_-y7K5NzOedZSQ6uEqjjAhyEgEeWSDLpqiJNVt9LagWRB66GobPOwCt" })
 
 
 @bp_shop.route('/', methods=['GET'])
@@ -43,102 +43,108 @@ def shop():
         return render_template_string("<h1>Shop coming very soon!</h1> Return <a href='{{ url_for('main.index') }}'>home</a>")
 
 
-@bp_shop.route('/test', methods=['GET', 'POST'])
-def shop_test():
-    host = request.host
-    if '127' not in host:
-        return 404
-    else:
+@bp_shop.route('/<id>', methods=['GET', 'POST'])
+def shop_item(id):
+    if shop_items.query.filter(shop_items.item_id.contains(id)).all():
+        categories = Categories.query.all()
+        item_on_page = shop_items.query.filter_by(item_id=id).all()
+        for var in item_on_page:
+            item_no = var.item_number
+            item_price = var.price
         testshopform = testShop(request.form)
         if request.method == 'POST':
-            session['size'] = testshopform.size.data
-            session['colour'] = testshopform.colour.data
-            session['quantity'] = int(testshopform.quantity.data)
-            message = Markup(render_template_string("<!DOCTYPE html><html lang='en'> hoodietest, size: {}, colour: {}, <a href='test-add-to-cart/hoodietest'>Please click to continue</a></html>".format(session.get('size'), session.get('colour'))))
+            if 'size' not in session:
+                session['size'] = []
+            if 'quantity' not in session:
+                session['quantity'] = []
+            if 'colour' not in session:
+                session['colour'] = []
+            if 'item_number' not in session:
+                session['item_number'] = []
+            if 'itemprice' not in session:
+                session['itemprice'] = []
+            session['size'].append(testshopform.size.data)
+            session['colour'].append(testshopform.colour.data)
+            session['quantity'].append(int(testshopform.quantity.data))
+            session['item_number'].append(item_no)
+            session['itemprice'].append(int(item_price))
+            message = Markup(render_template_string("<!DOCTYPE html><html lang='en'> hoodietest, size: {}, colour: {}, <a href='add-to-cart/{}'>Please click to continue</a></html>".format(session.get('size'), session.get('colour'), id)))
             flash(message)
-            return render_template("shop_test.html", testshopform=testshopform)
-        return render_template("shop_test.html", testshopform=testshopform)
+            return render_template("item_shop.html", testshopform=testshopform, categories=categories, item_on_page=item_on_page)
+        return render_template("item_shop.html", testshopform=testshopform, categories=categories, item_on_page=item_on_page)
 
 
-@bp_shop.route('/test-add-to-cart/<id>', methods=['GET', 'POST'])
-def test_add_to_cart(id):
-    host = request.host
-    if '127' not in host:
-        return 404
-    else:
-        if 'cart' not in session:
-            session['cart'] = []
-        if 'price' not in session:
-            session['price'] = 0
+@bp_shop.route('/add-to-cart/<id>', methods=['GET', 'POST'])
+def add_to_cart(id):
+    if 'cart' not in session:
+        session['cart'] = []
+    if 'price' not in session:
+        session['price'] = 0
 
-        session['cart'].append(id)
-        session['price'] += 25
-        print(session)
+    session['cart'].append(id)
+    session['price'] += 25
+    print(session)
 
-        flash("Successfully added to cart.")
-        return redirect(url_for('shop.shop_test_cart'))
+    flash("Successfully added to cart.")
+    return redirect(url_for('shop.shop_cart'))
 
 
-@bp_shop.route('/cart-test', methods=['GET', 'POST'])
-def shop_test_cart():
-    host = request.host
-    if '127' not in host:
-        return 404
-    else:
-        items_in_cart = session.get('cart', [])
-        counter = len(items_in_cart)
-        return render_template('cart.html', counter=counter)
+@bp_shop.route('/cart', methods=['GET', 'POST'])
+def shop_cart():
+    items_in_cart = session.get('cart', [])
+    counter = len(items_in_cart)
+    return render_template('cart-live.html', counter=counter)
 
 
 @bp_shop.route('/payment', methods=['POST'])
 def payment():
-    host = request.host
-    if '127' not in host:
-        return 404
+    items_in_cart = session.get('cart', [])
+    counter = len(items_in_cart)
+    items_to_buy = []
+    price_amount_list = []
+    for it in range(counter):
+        item_details = {
+            "name": "{}, size: {}, colour: {}".format(session['cart'][it], session['size'][it],
+                                                      session['colour'][it]),
+            "sku": "12345",
+            "price": "{}".format(session['itemprice'][it]),
+            "currency": "GBP",
+            "quantity": session['quantity'][it]}
+        items_to_buy.append(item_details)
+        price_amount = session['itemprice'][it]*session['quantity'][it]
+        price_amount_list.append(price_amount)
+    price_total_amount = sum(price_amount_list)
+    payment = paypalrestsdk.Payment({
+        "intent": "sale",
+        "payer": {
+            "payment_method": "paypal"},
+        "redirect_urls": {
+            "return_url": "https://inwaitoftomorrow.appspot.com/execute",
+            "cancel_url": "https://inwaitoftomorrow.appspot.com/"},
+        "transactions": [{
+            "item_list": {
+                "items": items_to_buy},
+            "amount": {
+                "total": "{}".format(price_total_amount),
+                "currency": "GBP"},
+            "description": "Size: {}, Colour: {}".format(session.get('size', []), session.get('colour', []))}]})
+    if payment.create():
+        print('Payment success!')
     else:
-        price = 20
-        price_amount = price*session['quantity']
-        payment = paypalrestsdk.Payment({
-            "intent": "sale",
-            "payer": {
-                "payment_method": "paypal"},
-            "redirect_urls": {
-                "return_url": "http://127.0.0.1:5000/execute",
-                "cancel_url": "http://127.0.0.1:5000/"},
-            "transactions": [{
-                "item_list": {
-                    "items": [{
-                        "name": "{}, size: {}, colour: {}".format(session.get('cart',[]),session.get('size'), session.get('colour')),
-                        "sku": "12345",
-                        "price": "{}".format(price),
-                        "currency": "GBP",
-                        "quantity": session['quantity']},
-                    ]},
-                "amount": {
-                    "total": "{}".format(price_amount),
-                    "currency": "GBP"},
-                "description": "Size: {}, Colour: {}".format(session.get('size', []), session.get('colour', []))}]})
-        if payment.create():
-            print('Payment success!')
-        else:
-            print(payment.error)
-        return jsonify({'paymentID' : payment.id})
+        print(payment.error)
+    return jsonify({'paymentID' : payment.id})
 
 
 @bp_shop.route('/execute', methods=['POST'])
 def execute():
-    host = request.host
-    if '127' not in host:
-        return 404
+    success = False
+    payment = paypalrestsdk.Payment.find(request.form['paymentID'])
+    if payment.execute({'payer_id' : request.form['payerID']}):
+        print('Execute success!')
+        success = True
     else:
-        success = False
-        payment = paypalrestsdk.Payment.find(request.form['paymentID'])
-        if payment.execute({'payer_id' : request.form['payerID']}):
-            print('Execute success!')
-            success = True
-        else:
-            print(payment.error)
-        return jsonify({'success' : success})
+        print(payment.error)
+    return jsonify({'success' : success})
 
 
 @bp_shop.errorhandler(404)

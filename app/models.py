@@ -97,3 +97,4 @@ class shop_items(db.Model):
     item_name = db.Column(db.Text)
     item_id = db.Column(db.Text)
     price = db.Column(db.Integer)
+    item_photo = db.Column(db.Text)
