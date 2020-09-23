@@ -71,7 +71,7 @@ def shop_item(id):
             counter = len(items_in_cart)
             message = Markup(render_template_string("<!DOCTYPE html><html lang='en'><span>You have {} item(s) in your cart</span><br><span><a href='add-to-cart/{}'>Please click to continue to checkout</a></span></html>".format(counter, id)))
             flash(message)
-            return render_template("item_shop.html", testshopform=testshopform, categories=categories, item_on_page=item_on_page)
+            return redirect(url_for('shop.shop_item', id=id), code=303)
         else:
             if testshopform.is_submitted():
                 testshopform.method = 'POST'
@@ -96,8 +96,7 @@ def shop_item(id):
                     "<!DOCTYPE html><html lang='en'><span>You have {} item(s) in your cart</span><br><span><a href='add-to-cart/{}'>Please click to continue to checkout</a></span></html>".format(
                         counter, id)))
                 flash(message)
-                return render_template("item_shop.html", testshopform=testshopform, categories=categories,
-                                       item_on_page=item_on_page)
+                return redirect(url_for('shop.shop_item', id=id), code=303)
         return render_template("item_shop.html", testshopform=testshopform, categories=categories, item_on_page=item_on_page)
 
 
