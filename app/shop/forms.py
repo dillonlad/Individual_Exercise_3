@@ -6,7 +6,7 @@ from wtforms.validators import DataRequired, EqualTo, Email, Length, ValidationE
 
 
 class testShop(FlaskForm):
-    size = StringField('Size: ')
-    colour = StringField('Colour: ')
+    size = SelectField('Size: ', choices=[('XS', 'XS'), ('S', 'S'), ('M', 'M'), ('L', 'L'), ('XL', 'XL')])
+    colour = SelectField('Colour: ', choices=[('White', 'White'), ('Black', 'Black')])
     quantity = StringField('Quantity: ')
-    submit = SubmitField('Submit')
+    submit = SubmitField('Add to cart')

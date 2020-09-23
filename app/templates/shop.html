@@ -41,18 +41,18 @@
     <meta name="keywords" content="inwaitoftomorrow, In Wait of Tomorrow, futurology, Technology, Science, Healthcare, Environment">
     <meta name="author" content="inwaitoftomorrow">
     <meta name="robots" content="index, follow">
-    <title>{% for item in item_on_page %}{{ item.item_name }}{% endfor %}</title>
+    <title>Shop</title>
 </head>
 <body>
 {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <div class="text-center m-auto p-5 font-weight-normal" style="max-width: 600px">
-                    {% for message in messages %}
-                        {{ message }}
-                    {% endfor %}
-                </div>
-            {% endif %}
-    {% endwith %}
+        {% if messages %}
+            <div class="text-center m-auto p-5 font-weight-normal" style="max-width: 600px">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endif %}
+{% endwith %}
 <div id="myNav" class="overlay">
       <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
       <div class="overlay-content">
@@ -78,31 +78,25 @@
             </nav>
         </div>
     </div>
-<div class="row m-auto text-center pb-3" style="max-width: 600px">
-    <h1 class="pt-5 font-weight-normal w-100">{% for item in item_on_page %}{{ item.item_name }}{% endfor %}</h1>
-    <span class="w-100 h3 font-weight-normal pb-5">Item price: £{% for item in item_on_page %}{{ item.price }}{% endfor %}</span><br>
-    <picture>
-        <source style="max-width: 600px; height: auto" class="card-img-top img-fluid" srcset="../static/img/iot-small.webp" type="image/webp">
-        <img class="card-img-top img-fluid" src="../static/img/iot-small.jpg" alt="Item" style="max-width: 600px; height: auto">
-    </picture>
+<div class="text-center pb-3">
+    <h1 class="p-5 font-weight-light">Welcome to the In Wait of Tomorrow shop</h1>
 </div>
-<div class="row m-auto" style="max-width: 600px">
-        <div class="col-12">
-                <form class="user col-12 text-left" method="POST" novalidate>
-                    {{ testshopform.hidden_tag() }}
-                    <div class="form-group font-weight-normal">
-                      {{ testshopform.size.label }}{{ testshopform.size(class_="form-control form-control-user rounded-0") }}
+<div class="m-auto" style="max-width: 600px">
+            {% for item in items %}
+                <div class="card mb-3 rounded-0" style="width: 100%">
+                    <div class="hovereffect">
+                        <picture>
+                            <source style="max-width: 600px; height: auto" class="card-img-top img-fluid" srcset="../static/img/iot-small.webp" type="image/webp">
+                            <img class="card-img-top img-fluid" src="../static/img/iot-small.jpg" alt="Item" style="max-width: 600px; height: auto">
+                        </picture>
+                        </div>
                     </div>
-                    <div class="form-group">
-                      {{ testshopform.colour.label }}{{ testshopform.colour(class_="form-control form-control-user rounded-0")}}
-                    </div>
-                    <div class="form-group">
-                      {{ testshopform.quantity.label }}{{ testshopform.quantity(class_="form-control form-control-user rounded-0")}}
-                    </div>
-                    {{ testshopform.submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
-                </form>
+                  <div class="card-body text-center">
+                      <a href="{{ url_for('shop.shop_item', id=item.item_id) }}"><p class="card-text mb-2 ml-0 h3 font-weight-normal" itemprop="name">{{ item.item_name }}</p></a>
+                      <p class="card-subtitle mb-2 text-muted font-weight-normal ml-0">Price: £{{ item.price }}</p>
+                  </div>
+            {% endfor %}
         </div>
-</div>
 </div>
 <script>
     function openNav() {

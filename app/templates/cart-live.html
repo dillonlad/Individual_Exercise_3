@@ -56,9 +56,57 @@
             </div>
         {% endif %}
 {% endwith %}
+<div id="myNav" class="overlay">
+      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+      <div class="overlay-content">
+          <a href="{{ url_for('main.show_blog') }}">Latest articles</a>
+          <div class="dropdown-divider text-center align-self-center m-auto" style="max-width: 600px"></div>
+          {% for category in categories %}
+            {% if category.category_name != "Blog" %}
+                <a href="{{ url_for('main.show_blog_category', category=category.category_name) }}">{{ category.category_name }}</a>
+            {% endif %}
+          {% endfor %}
+      </div>
+  </div>
+<div class="container-fluid">
+<div class="container-fluid" id="navigation">
+    <div id="nav_one" style="display: block" class="row">
+        <div class="col-12">
+            <nav class="navbar navbar-dark fixed-top bg-transparent" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
+                    <a id="home_link" href="{{url_for('main.index')}}"><span class="navbar-brand text-dark navbar-dark mb-0 h1 font-weight-normal">In Wait of Tomorrow</span></a>
+                    <div class="dropdown dropleft show btn-group">
+                      <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
+                      </button>
+                    </div>
+            </nav>
+        </div>
+    </div>
+<div class="text-center row m-auto pb-3 w-100">
+    <h1 class="p-5 font-weight-light">You have {{ counter }} item(s) in the basket</h1>
+    <h3 class="font-weight-normal">Total: £{{ final_cost }}</h3>
+    <div id="paypal-button"></div>
+</div>
+<div class="row m-auto w-100" style="max-width: 600px">
+            {% for cart_item in range(counter) %}
+                <div class="card mb-3 rounded-0" style="width: 100%">
+                    <div class="hovereffect">
+                        <picture>
+                            <source style="max-width: 600px; height: auto" class="card-img-top img-fluid" srcset="../static/img/iot-small.webp" type="image/webp">
+                            <img class="card-img-top img-fluid" src="../static/img/iot-small.jpg" alt="Item" style="max-width: 600px; height: auto">
+                        </picture>
+                        </div>
+                    </div>
+                  <div class="card-body text-center">
+                      <h6 class="card-subtitle mb-2 text-muted font-weight-normal ml-0">Quantity: {{ quantities[cart_item] }}</h6>
+                      <p class="card-text mb-2 ml-0" itemprop="name">{{ items[cart_item] }}</p>
+                      <p class="card-subtitle mb-2 text-muted font-weight-normal ml-0">Size: {{ sizes[cart_item] }}, Colour: {{ colours[cart_item] }}, Price: £{{ prices[cart_item] }}</p>
+                  </div>
+            {% endfor %}
+        </div>
 
-<h1>{{ counter }}</h1>
-<div id="paypal-button"></div>
+    <div class="text-center w-100 pb-5"><a href="{{ url_for('shop.empty_basket') }}">Empty basket</a></div>
+
+</div>
 
 <script src="https://www.paypalobjects.com/api/checkout.js"></script>
 
@@ -90,6 +138,17 @@
         }
 
     }, '#paypal-button');
+</script>
+<script>
+    function openNav() {
+      document.getElementById("myNav").style.width = "100%";
+      document.getElementById("cards").style.visibility = "hidden"
+    }
+
+    function closeNav() {
+      document.getElementById("myNav").style.width = "0%";
+      document.getElementById("cards").style.visibility = "visible"
+    }
 </script>
 </body>
 </html>

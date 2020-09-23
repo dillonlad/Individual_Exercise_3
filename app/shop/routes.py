@@ -36,11 +36,9 @@ paypalrestsdk.configure({
 
 @bp_shop.route('/', methods=['GET'])
 def shop():
-    host = request.host
-    if '127' not in host:
-        return 404
-    else:
-        return render_template_string("<h1>Shop coming very soon!</h1> Return <a href='{{ url_for('main.index') }}'>home</a>")
+    categories = Categories.query.all()
+    items = shop_items.query.all()
+    return render_template('shop.html', items=items, categories=categories)
 
 
 @bp_shop.route('/<id>', methods=['GET', 'POST'])
@@ -49,6 +47,7 @@ def shop_item(id):
         categories = Categories.query.all()
         item_on_page = shop_items.query.filter_by(item_id=id).all()
         for var in item_on_page:
+            item_name = var.item_name
             item_no = var.item_number
             item_price = var.price
         testshopform = testShop(request.form)
@@ -68,7 +67,9 @@ def shop_item(id):
             session['quantity'].append(int(testshopform.quantity.data))
             session['item_number'].append(item_no)
             session['itemprice'].append(int(item_price))
-            message = Markup(render_template_string("<!DOCTYPE html><html lang='en'> hoodietest, size: {}, colour: {}, <a href='add-to-cart/{}'>Please click to continue</a></html>".format(session.get('size'), session.get('colour'), id)))
+            items_in_cart = session.get('itemprice', [])
+            counter = len(items_in_cart)
+            message = Markup(render_template_string("<!DOCTYPE html><html lang='en'><span>You have {} item(s) in your cart</span><br><span><a href='add-to-cart/{}'>Please click to continue to checkout</a></span></html>".format(counter, id)))
             flash(message)
             return render_template("item_shop.html", testshopform=testshopform, categories=categories, item_on_page=item_on_page)
         return render_template("item_shop.html", testshopform=testshopform, categories=categories, item_on_page=item_on_page)
@@ -85,15 +86,24 @@ def add_to_cart(id):
     session['price'] += 25
     print(session)
 
-    flash("Successfully added to cart.")
     return redirect(url_for('shop.shop_cart'))
 
 
 @bp_shop.route('/cart', methods=['GET', 'POST'])
 def shop_cart():
-    items_in_cart = session.get('cart', [])
+    categories = Categories.query.all()
+    items_in_cart = session['cart']
+    colours_in_cart = session['colour']
+    quantities_in_cart = session['quantity']
+    prices_in_cart = session['itemprice']
+    sizes_in_cart = session['size']
     counter = len(items_in_cart)
-    return render_template('cart-live.html', counter=counter)
+    cost_list = []
+    for i in range(counter):
+        cost = quantities_in_cart[i]*prices_in_cart[i]
+        cost_list.append(cost)
+    final_cost = sum(cost_list)
+    return render_template('cart-live.html', categories=categories, final_cost=final_cost, counter=counter, items=items_in_cart, colours=colours_in_cart, quantities=quantities_in_cart, sizes=sizes_in_cart, prices=prices_in_cart)
 
 
 @bp_shop.route('/payment', methods=['POST'])
@@ -145,6 +155,12 @@ def execute():
     else:
         print(payment.error)
     return jsonify({'success' : success})
+
+
+@bp_shop.route('/empty', methods=['GET', 'POST'])
+def empty_basket():
+    session.clear()
+    return redirect(url_for('shop.shop'))
 
 
 @bp_shop.errorhandler(404)
