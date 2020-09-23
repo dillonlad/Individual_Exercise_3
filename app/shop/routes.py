@@ -64,9 +64,9 @@ def shop_item(id):
                 session['itemprice'] = []
             session['size'].append(testshopform.size.data)
             session['colour'].append(testshopform.colour.data)
-            session['quantity'].append(int(testshopform.quantity.data))
+            session['quantity'].append(float(testshopform.quantity.data))
             session['item_number'].append(item_no)
-            session['itemprice'].append(int(item_price))
+            session['itemprice'].append(float(item_price))
             items_in_cart = session.get('itemprice', [])
             counter = len(items_in_cart)
             message = Markup(render_template_string("<!DOCTYPE html><html lang='en'><span>You have {} item(s) in your cart</span><br><span><a href='add-to-cart/{}'>Please click to continue to checkout</a></span></html>".format(counter, id)))
@@ -116,7 +116,7 @@ def payment():
         item_details = {
             "name": "{}, size: {}, colour: {}".format(session['cart'][it], session['size'][it],
                                                       session['colour'][it]),
-            "sku": "12345",
+            "sku": "{}".format(session['item_number'][it]),
             "price": "{}".format(session['itemprice'][it]),
             "currency": "GBP",
             "quantity": session['quantity'][it]}
