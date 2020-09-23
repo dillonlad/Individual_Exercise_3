@@ -72,6 +72,32 @@ def shop_item(id):
             message = Markup(render_template_string("<!DOCTYPE html><html lang='en'><span>You have {} item(s) in your cart</span><br><span><a href='add-to-cart/{}'>Please click to continue to checkout</a></span></html>".format(counter, id)))
             flash(message)
             return render_template("item_shop.html", testshopform=testshopform, categories=categories, item_on_page=item_on_page)
+        else:
+            if testshopform.is_submitted():
+                testshopform.method = 'POST'
+                if 'size' not in session:
+                    session['size'] = []
+                if 'quantity' not in session:
+                    session['quantity'] = []
+                if 'colour' not in session:
+                    session['colour'] = []
+                if 'item_number' not in session:
+                    session['item_number'] = []
+                if 'itemprice' not in session:
+                    session['itemprice'] = []
+                session['size'].append(testshopform.size.data)
+                session['colour'].append(testshopform.colour.data)
+                session['quantity'].append(float(testshopform.quantity.data))
+                session['item_number'].append(item_no)
+                session['itemprice'].append(float(item_price))
+                items_in_cart = session.get('itemprice', [])
+                counter = len(items_in_cart)
+                message = Markup(render_template_string(
+                    "<!DOCTYPE html><html lang='en'><span>You have {} item(s) in your cart</span><br><span><a href='add-to-cart/{}'>Please click to continue to checkout</a></span></html>".format(
+                        counter, id)))
+                flash(message)
+                return render_template("item_shop.html", testshopform=testshopform, categories=categories,
+                                       item_on_page=item_on_page)
         return render_template("item_shop.html", testshopform=testshopform, categories=categories, item_on_page=item_on_page)
 
 
