@@ -81,10 +81,10 @@
             </nav>
         </div>
     </div>
-<div class="text-center row m-auto pb-3 w-100">
-    <h1 class="p-5 font-weight-light">You have {{ counter }} item(s) in the basket</h1>
-    <h3 class="font-weight-normal">Total: £{{ final_cost }}</h3>
-    <div id="paypal-button"></div>
+<div class="text-center row m-auto pb-3" style="max-width: 600px">
+    <h1 class="pt-5 font-weight-light w-100 m-auto">You have {{ counter }} item(s) in the basket</h1>
+    <h3 class="font-weight-normal w-100 pb-5 m-auto">Total: £{{ final_cost }}</h3>
+    <div class="text-center w-100 m-auto" id="paypal-button"></div>
 </div>
 <div class="row m-auto w-100" style="max-width: 600px">
             {% for cart_item in range(counter) %}
@@ -134,6 +134,7 @@
                 console.log(res.success)
                 // The payment is complete!
                 // You can now show a confirmation message to the customer
+                alert('Payment complete! Thanks for shopping with us.')
             });
         }
 
