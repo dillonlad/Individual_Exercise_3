@@ -25,6 +25,9 @@ bp_main = Blueprint('main', __name__)
 ext = Sitemap()
 
 
+def pass_through():
+    pass
+
 
 def is_safe_url(target):
     host_url = urlparse(request.host_url)
