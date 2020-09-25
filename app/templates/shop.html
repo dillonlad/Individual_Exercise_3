@@ -65,25 +65,26 @@
           {% endfor %}
       </div>
   </div>
-<div class="container-fluid">
-<div class="container-fluid" id="navigation">
+<div id="middle" class="container-fluid mainimage h-100 w-100" style="background-image:url('../static/img/greg-rakozy-oMpAz-DN-9I-unsplash.jpg'); background-size: cover; min-height: 100vh">
+<div class="container-fluid h-75" id="navigation">
+            <script src="https://kit.fontawesome.com/7380e39ab3.js" crossorigin="anonymous"></script>
     <div id="nav_one" style="display: block" class="row">
         <div class="col-12">
-            <nav class="navbar navbar-dark fixed-top bg-transparent" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
-                    <a id="home_link" href="{{url_for('main.index')}}"><span class="navbar-brand text-dark navbar-dark mb-0 h1 font-weight-normal">In Wait of Tomorrow</span></a>
-                    <div class="dropdown dropleft show btn-group">
-                      <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
-                      </button>
-                    </div>
+            <nav class="navbar navbar-dark bg-transparent text-white" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
+                    <a id="home_link" href="{{url_for('main.index')}}"><span class="navbar-brand text-white navbar-dark mb-0 h1 font-weight-normal">Home</span></a>
+                    <a href="{{ url_for('shop.shop_cart') }}" class="text-white"><i style="border: none" class="fas fa-shopping-cart"></i></a>
             </nav>
         </div>
     </div>
-<div class="text-center pb-3">
-    <h1 class="p-5 font-weight-light">Welcome to the In Wait of Tomorrow shop</h1>
+<div class="float-left m-auto row" style="max-width: 800px; padding-top: 20vh;">
+    <h1 class="font-weight-normal text-white display-2" style="font-min-size: 20vh;">Welcome to the In Wait of Tomorrow shop</h1>
+    <a href="#collection" class="text-white btn rounded-0 bg-transparent border h3 ml-3 mt-3">VIEW OUR COLLECTION</a>
 </div>
-<div class="m-auto" style="max-width: 600px">
+</div>
+</div>
+<div class="container-fluid text-center" id="collection" style="min-height: 100vh; background-image: url('../static/img/annie-spratt-mzpYBn8ebqs-unsplash.jpg'); background-size: cover">
             {% for item in items %}
-                <div class="card mb-3 rounded-0" style="width: 100%">
+                <div class="card mb-3 rounded-0 ml-auto mr-auto pt-5" style="max-width: 600px; border: none; background: transparent">
                     <div class="hovereffect">
                         <picture>
                             <source style="max-width: 600px; height: auto" class="card-img-top img-fluid" srcset="../static/img/iot-small.webp" type="image/webp">
@@ -91,13 +92,13 @@
                         </picture>
                         </div>
                     </div>
-                  <div class="card-body text-center">
-                      <a href="{{ url_for('shop.shop_item', id=item.item_id) }}"><p class="card-text mb-2 ml-0 h3 font-weight-normal" itemprop="name">{{ item.item_name }}</p></a>
-                      <p class="card-subtitle mb-2 text-muted font-weight-normal ml-0">Price: £{{ item.price }}</p>
+                  <div class="card-body text-center m-auto" style="max-width: 600px;">
+                      <a href="{{ url_for('shop.shop_item', id=item.item_id) }}"><p class="card-text mb-2 h3 font-weight-normal h1 display-3 text-dark" itemprop="name">{{ item.item_name }}</p></a>
+                      <p class="card-subtitle mb-2 font-weight-normal m-auto h3 text-dark">Price: £{{ item.price }}</p>
+                      <a href="{{ url_for('shop.shop_item', id=item.item_id) }}"><p class="h5 m-auto font-weight-normal">Add item to cart</p></a>
                   </div>
             {% endfor %}
         </div>
-</div>
 <script>
     function openNav() {
       document.getElementById("myNav").style.width = "100%";
