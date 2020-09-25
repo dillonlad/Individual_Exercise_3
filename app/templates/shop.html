@@ -65,24 +65,24 @@
           {% endfor %}
       </div>
   </div>
-<div id="middle" class="container-fluid mainimage h-100 w-100" style="background-image:url('../static/img/greg-rakozy-oMpAz-DN-9I-unsplash.jpg'); background-size: cover; min-height: 100vh">
+<div id="middle" class="container-fluid mainimage h-100 w-100" style="{% if request.MOBILE %}background-image:url('../static/img/mahdi-soheili-m-jJ4wLjoIc-unsplash.jpg'){% else %}background-image:url('../static/img/greg-rakozy-oMpAz-DN-9I-unsplash.jpg'){% endif %}; background-size: cover; min-height: 100vh">
 <div class="container-fluid h-75" id="navigation">
             <script src="https://kit.fontawesome.com/7380e39ab3.js" crossorigin="anonymous"></script>
     <div id="nav_one" style="display: block" class="row">
         <div class="col-12">
-            <nav class="navbar navbar-dark bg-transparent text-white" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
-                    <a id="home_link" href="{{url_for('main.index')}}"><span class="navbar-brand text-white navbar-dark mb-0 h1 font-weight-normal">Home</span></a>
-                    <a href="{{ url_for('shop.shop_cart') }}" class="text-white"><i style="border: none" class="fas fa-shopping-cart"></i></a>
+            <nav class="navbar navbar-dark bg-transparent {% if request.MOBILE %}text-dark{% else %}text-white{% endif %}" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
+                    <a id="home_link" href="{{url_for('main.index')}}"><span class="navbar-brand {% if request.MOBILE %}text-dark{% else %}text-white{% endif %} navbar-dark mb-0 h1 font-weight-normal">Home</span></a>
+                    <a href="{{ url_for('shop.shop_cart') }}" class="{% if request.MOBILE %}text-dark{% else %}text-white{% endif %}"><i style="border: none" class="fas fa-shopping-cart"></i></a>
             </nav>
         </div>
     </div>
-<div class="float-left m-auto row" style="max-width: 800px; padding-top: 20vh;">
-    <h1 class="font-weight-normal text-white display-2" style="font-min-size: 20vh;">Welcome to the In Wait of Tomorrow shop</h1>
-    <a href="#collection" class="text-white btn rounded-0 bg-transparent border h3 ml-3 mt-3">VIEW OUR COLLECTION</a>
+<div class="{% if request.MOBILE %}text-center{% else %}float-left{% endif %} m-auto row w-100" style="max-width: 800px; padding-top: 20vh;">
+    <h1 class="font-weight-normal {% if request.MOBILE %}text-dark{% else %}text-white display-2{% endif %}" {% if request.MOBILE %}{% else %}style="font-min-size: 20vh;"{% endif %}>Welcome to the In Wait of Tomorrow shop</h1>
+    <a href="#collection" class="{% if request.MOBILE %}text-dark{% else %}text-white{% endif %} btn rounded-0 bg-transparent border h3 ml-3 mt-3">VIEW OUR COLLECTION</a>
 </div>
 </div>
 </div>
-<div class="container-fluid text-center" id="collection" style="min-height: 100vh; background-image: url('../static/img/annie-spratt-mzpYBn8ebqs-unsplash.jpg'); background-size: cover">
+<div class="container-fluid text-center w-100" id="collection" style="min-height: 100vh; background-image: url('../static/img/annie-spratt-mzpYBn8ebqs-unsplash.jpg'); background-size: cover">
             {% for item in items %}
                 <div class="card mb-3 rounded-0 ml-auto mr-auto pt-5" style="max-width: 600px; border: none; background: transparent">
                     <div class="hovereffect">

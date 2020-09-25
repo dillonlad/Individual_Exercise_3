@@ -71,13 +71,11 @@
 <div class="container-fluid">
 <div class="container-fluid" id="navigation">
     <div id="nav_one" style="display: block" class="row">
+        <script src="https://kit.fontawesome.com/7380e39ab3.js" crossorigin="anonymous"></script>
         <div class="col-12">
             <nav class="navbar navbar-dark fixed-top bg-transparent" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
                     <a id="home_link" href="{{url_for('main.index')}}"><span class="navbar-brand text-dark navbar-dark mb-0 h1 font-weight-normal">In Wait of Tomorrow</span></a>
-                    <div class="dropdown dropleft show btn-group">
-                      <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
-                      </button>
-                    </div>
+                    <a href="{{ url_for('shop.shop_cart') }}" class="text-dark"><i style="border: none" class="fas fa-shopping-cart"></i></a>
             </nav>
         </div>
     </div>
@@ -87,6 +85,7 @@
     <div class="text-center w-100 m-auto" id="paypal-button"></div>
 </div>
 <div class="row m-auto w-100" style="max-width: 600px">
+    {% if counter != 0 %}
             {% for cart_item in range(counter) %}
                 <div class="card mb-3 rounded-0" style="width: 100%">
                     <div class="hovereffect">
@@ -102,9 +101,15 @@
                       <p class="card-subtitle mb-2 text-muted font-weight-normal ml-0">Size: {{ sizes[cart_item] }}, Colour: {{ colours[cart_item] }}, Price: £{{ prices[cart_item] }}</p>
                   </div>
             {% endfor %}
+        {% else %}
+            <h1 class="font-weight-normal display-1 text-center w-100">You have no items in your cart</h1>
+{% endif %}
         </div>
 
-    <div class="text-center w-100 pb-5"><a href="{{ url_for('shop.empty_basket') }}">Empty basket</a></div>
+    <div class="text-center w-100 pb-5 m-auto" style="max-width: 600px">
+        <a href="{{ url_for('shop.empty_basket') }}" class="w-100">Empty basket</a><br>
+        <a href="{{ url_for('shop.shop') }}" class="text-dark w-100"><i class="fas fa-arrow-left" style="border: none"></i> RETURN TO SHOP</a>
+    </div>
 
 </div>
 

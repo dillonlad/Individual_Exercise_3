@@ -49,7 +49,7 @@ def shop_item(id):
         for var in item_on_page:
             item_name = var.item_name
             item_no = var.item_number
-            item_price = var.price
+            item_price = float(var.price)
         testshopform = testShop(request.form)
         if request.method == 'POST':
             if 'size' not in session:
@@ -69,7 +69,9 @@ def shop_item(id):
             session['itemprice'].append(float(item_price))
             items_in_cart = session.get('itemprice', [])
             counter = len(items_in_cart)
-            message = Markup(render_template_string("<!DOCTYPE html><html lang='en'><span>You have {} item(s) in your cart</span><br><span><a href='add-to-cart/{}'>Please click to continue to checkout</a></span></html>".format(counter, id)))
+            message = Markup(render_template_string(
+                "<!DOCTYPE html><html lang='en'><span>You have added an item to your cart</span><br><span><a href='add-to-cart/{}'>Please click to confirm</a></span></html>".format(
+                    id)))
             flash(message)
             return redirect(url_for('shop.shop_item', id=id), code=303)
         else:
@@ -89,12 +91,12 @@ def shop_item(id):
                 session['colour'].append(testshopform.colour.data)
                 session['quantity'].append(float(testshopform.quantity.data))
                 session['item_number'].append(item_no)
-                session['itemprice'].append(float(item_price))
+                session['itemprice'].append(item_price)
                 items_in_cart = session.get('itemprice', [])
                 counter = len(items_in_cart)
                 message = Markup(render_template_string(
-                    "<!DOCTYPE html><html lang='en'><span>You have {} item(s) in your cart</span><br><span><a href='add-to-cart/{}'>Please click to continue to checkout</a></span></html>".format(
-                        counter, id)))
+                    "<!DOCTYPE html><html lang='en'><span>You have added an item to your cart</span><br><span><a href='add-to-cart/{}'>Please click to confirm</a></span></html>".format(
+                        id)))
                 flash(message)
                 return redirect(url_for('shop.shop_item', id=id), code=303)
         return render_template("item_shop.html", testshopform=testshopform, categories=categories, item_on_page=item_on_page)
@@ -117,18 +119,21 @@ def add_to_cart(id):
 @bp_shop.route('/cart', methods=['GET', 'POST'])
 def shop_cart():
     categories = Categories.query.all()
-    items_in_cart = session['cart']
-    colours_in_cart = session['colour']
-    quantities_in_cart = session['quantity']
-    prices_in_cart = session['itemprice']
-    sizes_in_cart = session['size']
-    counter = len(items_in_cart)
-    cost_list = []
-    for i in range(counter):
-        cost = quantities_in_cart[i]*prices_in_cart[i]
-        cost_list.append(cost)
-    final_cost = sum(cost_list)
-    return render_template('cart-live.html', categories=categories, final_cost=final_cost, counter=counter, items=items_in_cart, colours=colours_in_cart, quantities=quantities_in_cart, sizes=sizes_in_cart, prices=prices_in_cart)
+    if 'cart' in session:
+        items_in_cart = session['cart']
+        colours_in_cart = session['colour']
+        quantities_in_cart = session['quantity']
+        prices_in_cart = session['itemprice']
+        sizes_in_cart = session['size']
+        counter = len(items_in_cart)
+        cost_list = []
+        for i in range(counter):
+            cost = quantities_in_cart[i]*prices_in_cart[i]
+            cost_list.append(cost)
+        final_cost = sum(cost_list)
+        return render_template('cart-live.html', categories=categories, final_cost=final_cost, counter=counter, items=items_in_cart, colours=colours_in_cart, quantities=quantities_in_cart, sizes=sizes_in_cart, prices=prices_in_cart)
+    else:
+        return render_template('cart-live.html', categories=categories, final_cost="0.00", counter=0, items=[], colours=[], quantities=[], sizes=[], prices=[])
 
 
 @bp_shop.route('/payment', methods=['POST'])

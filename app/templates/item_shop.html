@@ -46,7 +46,7 @@
 <body>
 {% with messages = get_flashed_messages() %}
             {% if messages %}
-                <div class="text-center m-auto p-5 font-weight-normal h2" style="max-width: 600px; min-height: 50vh">
+                <div class="text-center m-auto font-weight-normal h2" style="max-width: 600px; min-height: 50vh; padding-top: 20vh">
                     {% for message in messages %}
                         {{ message }}
                     {% endfor %}
@@ -71,10 +71,7 @@
         <div class="col-12">
             <nav class="navbar navbar-dark fixed-top bg-transparent" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
                     <a id="home_link" href="{{url_for('main.index')}}"><span class="navbar-brand text-dark navbar-dark mb-0 h1 font-weight-normal">In Wait of Tomorrow</span></a>
-                    <div class="dropdown dropleft show btn-group">
-                      <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
-                      </button>
-                    </div>
+                    <a href="{{ url_for('shop.shop_cart') }}" class="text-dark"><i style="border: none" class="fas fa-shopping-cart"></i></a>
             </nav>
         </div>
     </div>

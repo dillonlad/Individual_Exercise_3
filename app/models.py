@@ -96,5 +96,5 @@ class shop_items(db.Model):
     item_number = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
     item_name = db.Column(db.Text)
     item_id = db.Column(db.Text)
-    price = db.Column(db.Integer)
+    price = db.Column(db.Text)
     item_photo = db.Column(db.Text)
