@@ -130,7 +130,7 @@ def shop_cart():
         for i in range(counter):
             cost = quantities_in_cart[i]*prices_in_cart[i]
             cost_list.append(cost)
-        final_cost = sum(cost_list)
+        final_cost = round(sum(cost_list), 2)
         return render_template('cart-live.html', categories=categories, final_cost=final_cost, counter=counter, items=items_in_cart, colours=colours_in_cart, quantities=quantities_in_cart, sizes=sizes_in_cart, prices=prices_in_cart)
     else:
         return render_template('cart-live.html', categories=categories, final_cost="0.00", counter=0, items=[], colours=[], quantities=[], sizes=[], prices=[])
@@ -153,7 +153,7 @@ def payment():
         items_to_buy.append(item_details)
         price_amount = session['itemprice'][it]*session['quantity'][it]
         price_amount_list.append(price_amount)
-    price_total_amount = sum(price_amount_list)
+    price_total_amount = round(sum(price_amount_list), 2)
     payment = paypalrestsdk.Payment({
         "intent": "sale",
         "payer": {

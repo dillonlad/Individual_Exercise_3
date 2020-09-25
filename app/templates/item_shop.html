@@ -67,17 +67,18 @@
   </div>
 <div class="container-fluid" style="background-image: url('../static/img/annie-spratt-mzpYBn8ebqs-unsplash.jpg'); background-size: cover; min-height: 100vh">
 <div class="container-fluid" id="navigation">
+            <script src="https://kit.fontawesome.com/7380e39ab3.js" crossorigin="anonymous"></script>
     <div id="nav_one" style="display: block" class="row">
         <div class="col-12">
-            <nav class="navbar navbar-dark fixed-top bg-transparent" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
+            <nav class="navbar navbar-dark {% if request.MOBILE %}{% else %}fixed-top{% endif %} bg-transparent" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
                     <a id="home_link" href="{{url_for('main.index')}}"><span class="navbar-brand text-dark navbar-dark mb-0 h1 font-weight-normal">In Wait of Tomorrow</span></a>
                     <a href="{{ url_for('shop.shop_cart') }}" class="text-dark"><i style="border: none" class="fas fa-shopping-cart"></i></a>
             </nav>
         </div>
     </div>
 <div class="row m-auto text-center pb-3" style="max-width: 600px">
-    <h1 class="pt-5 font-weight-normal w-100">{% for item in item_on_page %}{{ item.item_name }}{% endfor %}</h1>
-    <span class="w-100 h3 font-weight-normal pb-5">Item price: £{% for item in item_on_page %}{{ item.price }}{% endfor %}</span><br>
+    <h1 class="pt-5 font-weight-normal w-100 m-auto">{% for item in item_on_page %}{{ item.item_name }}{% endfor %}</h1>
+    <span class="w-100 h3 font-weight-normal pb-5 m-auto">Item price: £{% for item in item_on_page %}{{ item.price }}{% endfor %}</span><br>
     <picture>
         <source style="max-width: 600px; height: auto" class="card-img-top img-fluid" srcset="../static/img/iot-small.webp" type="image/webp">
         <img class="card-img-top img-fluid" src="../static/img/iot-small.jpg" alt="Item" style="max-width: 600px; height: auto">

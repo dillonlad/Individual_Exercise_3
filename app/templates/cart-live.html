@@ -73,7 +73,7 @@
     <div id="nav_one" style="display: block" class="row">
         <script src="https://kit.fontawesome.com/7380e39ab3.js" crossorigin="anonymous"></script>
         <div class="col-12">
-            <nav class="navbar navbar-dark fixed-top bg-transparent" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
+            <nav class="navbar navbar-dark {% if request.MOBILE %}{% else %}fixed-top{% endif %} bg-transparent" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
                     <a id="home_link" href="{{url_for('main.index')}}"><span class="navbar-brand text-dark navbar-dark mb-0 h1 font-weight-normal">In Wait of Tomorrow</span></a>
                     <a href="{{ url_for('shop.shop_cart') }}" class="text-dark"><i style="border: none" class="fas fa-shopping-cart"></i></a>
             </nav>
