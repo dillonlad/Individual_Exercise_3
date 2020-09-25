@@ -142,6 +142,7 @@ def payment():
     counter = len(items_in_cart)
     items_to_buy = []
     price_amount_list = []
+    shipping_cost = 4.10
     for it in range(counter):
         item_details = {
             "name": "{}, size: {}, colour: {}".format(session['cart'][it], session['size'][it],
@@ -154,6 +155,7 @@ def payment():
         price_amount = session['itemprice'][it]*session['quantity'][it]
         price_amount_list.append(price_amount)
     price_total_amount = round(sum(price_amount_list), 2)
+    inc_shipping = round(price_total_amount + shipping_cost, 2)
     payment = paypalrestsdk.Payment({
         "intent": "sale",
         "payer": {
@@ -165,8 +167,13 @@ def payment():
             "item_list": {
                 "items": items_to_buy},
             "amount": {
-                "total": "{}".format(price_total_amount),
-                "currency": "GBP"},
+                "total": "{}".format(inc_shipping),
+                "currency": "GBP",
+                "details": {
+                    "subtotal": "{}".format(price_total_amount),
+                    "shipping": "{}".format(shipping_cost)
+                }
+            },
             "description": "Size: {}, Colour: {}".format(session.get('size', []), session.get('colour', []))}]})
     if payment.create():
         print('Payment success!')
