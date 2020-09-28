@@ -45,7 +45,7 @@
 </head>
 <body>
 <script
-    src="https://www.paypal.com/sdk/js?client-id=AX1xZ5LS2EKdjzXGX5s9pqscRnp_HXF_DYoUarP40589iY4891E4bGL0OwllD8JSBwEQ6AWgkBDPvs5A&currency=GBP">
+    src="https://www.paypal.com/sdk/js?client-id=AX1xZ5LS2EKdjzXGX5s9pqscRnp_HXF_DYoUarP40589iY4891E4bGL0OwllD8JSBwEQ6AWgkBDPvs5A">
 </script>
 {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -82,7 +82,54 @@
 <div class="text-center row m-auto pb-3" style="max-width: 600px">
     <h1 class="pt-5 font-weight-light w-100 m-auto">You have {{ counter }} item(s) in the basket</h1>
     <h3 class="font-weight-normal w-100 pb-5 m-auto">Total: £{{ final_cost }}</h3>
-    <div class="w-100" id="paypal-button-container"></div>
+    <div class="row m-auto" style="max-width: 800px">
+        <div class="col-12">
+             <form class="user" method="POST" action="" novalidate>
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                  {{ form.first_name.label }}{{ form.first_name(class_="form-control form-control-user") }}
+                </div>
+                <div class="form-group">
+                  {{ form.last_name.label }}{{ form.last_name(class_="form-control form-control-user")}}
+                </div>
+                <div class="form-group row">
+                  <div class="col-sm-6 mb-3 mb-sm-0">
+                    {{ form.line1.label }}{{ form.line1(class_="form-control form-control-user")}}
+                  </div>
+                  <div class="col-sm-6">
+                    {{ form.city.label }}{{ form.city(class_="form-control form-control-user")}}
+                  </div>
+                    <div class="col-sm-6">
+                    {{ form.state.label }}{{ form.state(class_="form-control form-control-user")}}
+                  </div>
+                    <div class="col-sm-6">
+                    {{ form.postal_code.label }}{{ form.postal_code(class_="form-control form-control-user")}}
+                  </div>
+                    <div class="col-sm-6">
+                    {{ form.country_code.label }}{{ form.country_code(class_="form-control form-control-user")}}
+                  </div>
+                <div class="form-group">
+                  {{ form.type.label }}{{ form.type(class_="form-control form-control-user") }}
+                </div>
+                <div class="form-group">
+                  {{ form.number.label }}{{ form.number(class_="form-control form-control-user")}}
+                </div>
+                <div class="form-group row">
+                  <div class="col-sm-6 mb-3 mb-sm-0">
+                    {{ form.expire_month.label }}{{ form.expire_month(class_="form-control form-control-user")}}
+                  </div>
+                  <div class="col-sm-6">
+                    {{ form.expire_year.label }}{{ form.expire_year(class_="form-control form-control-user")}}
+                  </div>
+                    <div class="col-sm-6">
+                    {{ form.cvv2.label }}{{ form.cvv2(class_="form-control form-control-user")}}
+                  </div>
+                </div>
+                {{ form.submit(class_="btn btn-primary btn-user btn-block") }}
+            </form>
+        </div>
+    </div>
+    <div class="text-center w-100 m-auto" id="paypal-button-container"></div>
 </div>
 <div class="row m-auto w-100" style="max-width: 600px">
     {% if counter != 0 %}
@@ -112,40 +159,37 @@
     </div>
 
 </div>
+<script src="https://www.paypalobjects.com/api/checkout.js"></script>
 
 <script>
+    var CREATE_PAYMENT_URL_NEW  = 'https://inwaitoftomorrow.appspot.com/shop/card-payment';
+    var EXECUTE_PAYMENT_URL_NEW = 'https://inwaitoftomorrow.appspot.com/shop/execute';
 
-      paypal.Buttons({
+    paypal.Button.render({
 
-        createOrder: function() {
-          return fetch('/shop/card-payment', {
-            method: 'post',
-            headers: {
-              'content-type': 'application/json'
-            }
-          }).then(function(res) {
-            return res.json();
-          }).then(function(data) {
-            return data.orderID; // Use the same key name for order ID on the client and server
-          });
+
+        commit: true, // Show a 'Pay Now' button
+
+        payment: function() {
+            return paypal.request.post(CREATE_PAYMENT_URL_NEW).then(function(data) {
+                return data.paymentID;
+            });
         },
 
-        onApprove: function(data) {
-          return fetch('/shop/card-execute', {
-            method: 'post',
-            headers: {
-              'content-type': 'application/json'
-            },
-            body: JSON.stringify({
-              orderID: data.orderID
-            })
-          }).then(function(res) {
-            return res.json();
-          }).then(function(details) {
-            alert('Transaction funds captured from ' + details.payer_given_name);
-          });
-        },
-      }).render('#paypal-button-container'); // Display payment options on your web page
+        onAuthorize: function(data) {
+            return paypal.request.post(EXECUTE_PAYMENT_URL_NEW, {
+                paymentID: data.paymentID,
+                payerID:   data.payerID
+            }).then(function(res) {
+
+                console.log(res.success)
+                // The payment is complete!
+                // You can now show a confirmation message to the customer
+                alert('Payment complete! Thanks for shopping with us.')
+            });
+        }
+
+    }, '#paypal-button-container');
 </script>
 
 <script>

@@ -22,5 +22,6 @@ flask-mobility==1.0.0
 flask-mail==0.9.1
 urlfetch==1.2.1
 paypalrestsdk==1.13.1
+paypal-checkout-serversdk
 
 
