@@ -51,47 +51,38 @@ client = PayPalHttpClient(environment)
 
 @bp_shop.route('/', methods=['GET'])
 def shop():
-    categories = Categories.query.all()
-    items = shop_items.query.all()
-    return render_template('shop.html', items=items, categories=categories)
+    host = request.host
+    if "www" in host:
+        return redirect('https://inwaitoftomorrow.appspot.com/shop/', code=301)
+    elif "inwaitoftomorrow.com" in host:
+        return redirect('https://inwaitoftomorrow.appspot.com/shop/', code=301)
+    elif request.url.startswith('http://') and '127' not in host:
+        url = request.url.replace('http://', 'https://', 1)
+        code = 301
+        return redirect(url, code=code)
+    else:
+        categories = Categories.query.all()
+        items = shop_items.query.all()
+        return render_template('shop.html', items=items, categories=categories)
 
 
 @bp_shop.route('/<id>', methods=['GET', 'POST'])
 def shop_item(id):
-    if shop_items.query.filter(shop_items.item_id.contains(id)).all():
-        categories = Categories.query.all()
-        item_on_page = shop_items.query.filter_by(item_id=id).all()
-        for var in item_on_page:
-            item_name = var.item_name
-            item_no = var.item_number
-            item_price = float(var.price)
-        testshopform = testShop(request.form)
-        if request.method == 'POST':
-            if 'size' not in session:
-                session['size'] = []
-            if 'quantity' not in session:
-                session['quantity'] = []
-            if 'colour' not in session:
-                session['colour'] = []
-            if 'item_number' not in session:
-                session['item_number'] = []
-            if 'itemprice' not in session:
-                session['itemprice'] = []
-            session['size'].append(testshopform.size.data)
-            session['colour'].append(testshopform.colour.data)
-            session['quantity'].append(float(testshopform.quantity.data))
-            session['item_number'].append(item_no)
-            session['itemprice'].append(float(item_price))
-            items_in_cart = session.get('itemprice', [])
-            counter = len(items_in_cart)
-            message = Markup(render_template_string(
-                "<!DOCTYPE html><html lang='en'><span>You have added an item to your cart</span><br><span><a href='add-to-cart/{}'>Please click to confirm</a></span></html>".format(
-                    id)))
-            flash(message)
-            return redirect(url_for('shop.shop_item', id=id), code=303)
-        else:
-            if testshopform.is_submitted():
-                testshopform.method = 'POST'
+    host = request.host
+    if request.url.startswith('http://') and '127' not in host:
+        url = request.url.replace('http://', 'https://', 1)
+        code = 301
+        return redirect(url, code=code)
+    else:
+        if shop_items.query.filter(shop_items.item_id.contains(id)).all():
+            categories = Categories.query.all()
+            item_on_page = shop_items.query.filter_by(item_id=id).all()
+            for var in item_on_page:
+                item_name = var.item_name
+                item_no = var.item_number
+                item_price = float(var.price)
+            testshopform = testShop(request.form)
+            if request.method == 'POST':
                 if 'size' not in session:
                     session['size'] = []
                 if 'quantity' not in session:
@@ -106,7 +97,7 @@ def shop_item(id):
                 session['colour'].append(testshopform.colour.data)
                 session['quantity'].append(float(testshopform.quantity.data))
                 session['item_number'].append(item_no)
-                session['itemprice'].append(item_price)
+                session['itemprice'].append(float(item_price))
                 items_in_cart = session.get('itemprice', [])
                 counter = len(items_in_cart)
                 message = Markup(render_template_string(
@@ -114,7 +105,32 @@ def shop_item(id):
                         id)))
                 flash(message)
                 return redirect(url_for('shop.shop_item', id=id), code=303)
-        return render_template("item_shop.html", testshopform=testshopform, categories=categories, item_on_page=item_on_page)
+            else:
+                if testshopform.is_submitted():
+                    testshopform.method = 'POST'
+                    if 'size' not in session:
+                        session['size'] = []
+                    if 'quantity' not in session:
+                        session['quantity'] = []
+                    if 'colour' not in session:
+                        session['colour'] = []
+                    if 'item_number' not in session:
+                        session['item_number'] = []
+                    if 'itemprice' not in session:
+                        session['itemprice'] = []
+                    session['size'].append(testshopform.size.data)
+                    session['colour'].append(testshopform.colour.data)
+                    session['quantity'].append(float(testshopform.quantity.data))
+                    session['item_number'].append(item_no)
+                    session['itemprice'].append(item_price)
+                    items_in_cart = session.get('itemprice', [])
+                    counter = len(items_in_cart)
+                    message = Markup(render_template_string(
+                        "<!DOCTYPE html><html lang='en'><span>You have added an item to your cart</span><br><span><a href='add-to-cart/{}'>Please click to confirm</a></span></html>".format(
+                            id)))
+                    flash(message)
+                    return redirect(url_for('shop.shop_item', id=id), code=303)
+            return render_template("item_shop.html", testshopform=testshopform, categories=categories, item_on_page=item_on_page)
 
 
 @bp_shop.route('/add-to-cart/<id>', methods=['GET', 'POST'])
@@ -142,94 +158,18 @@ def shop_cart():
         sizes_in_cart = session['size']
         counter = len(items_in_cart)
         cost_list = []
+        new_quantities = []
         for i in range(counter):
             cost = quantities_in_cart[i]*prices_in_cart[i]
             cost_list.append(cost)
+            new_quantity = int(quantities_in_cart[i])
+            new_quantities.append(new_quantity)
         final_cost = round(sum(cost_list), 2)
-        return render_template('cart-live.html', categories=categories, final_cost=final_cost, counter=counter, items=items_in_cart, colours=colours_in_cart, quantities=quantities_in_cart, sizes=sizes_in_cart, prices=prices_in_cart)
+        final_with_shipping = round(final_cost + 4.10, 2)
+        return render_template('cart-live.html', categories=categories, final_cost=final_cost, counter=counter, items=items_in_cart, colours=colours_in_cart, quantities=new_quantities, sizes=sizes_in_cart, prices=prices_in_cart, cost_list=cost_list, final_with_shipping=final_with_shipping)
     else:
-        return render_template('cart-live.html', categories=categories, final_cost="0.00", counter=0, items=[], colours=[], quantities=[], sizes=[], prices=[])
-
-
-@bp_shop.route('/pay-by-card', methods=['GET', 'POST'])
-def pay_by_card():
-    categories = Categories.query.all()
-    form = CreditCardPayment(request.form)
-    if 'cart' in session:
-        items_in_cart = session['cart']
-        colours_in_cart = session['colour']
-        quantities_in_cart = session['quantity']
-        prices_in_cart = session['itemprice']
-        sizes_in_cart = session['size']
-        counter = len(items_in_cart)
-        cost_list = []
-        for i in range(counter):
-            cost = quantities_in_cart[i]*prices_in_cart[i]
-            cost_list.append(cost)
-        final_cost = round(sum(cost_list), 2)
-    if request.method == "POST" and form.validate():
-        session['first_name'] = form.first_name.data
-        session['last_name'] = form.last_name.data
-        session['line1'] = form.line1.data
-        session['city'] = form.city.data
-        session['state'] = form.state.data
-        session['country_code'] = "UK"
-        session['postal_code'] = form.postal_code.data
-        session['type'] = form.type.data
-        session['number'] = form.number.data
-        session['expire_month'] = form.expire_month.data
-        session['expire_year'] = form.expire_year.data
-        session['cvv2'] = form.cvv2.data
-        return render_template('pay_by_card.html', categories=categories, form=form, final_cost=final_cost, counter=counter, items=items_in_cart, colours=colours_in_cart, quantities=quantities_in_cart, sizes=sizes_in_cart, prices=prices_in_cart)
-    return render_template('pay_by_card.html', categories=categories, form=form, final_cost=final_cost, counter=counter,
-                           items=items_in_cart, colours=colours_in_cart, quantities=quantities_in_cart,
-                           sizes=sizes_in_cart, prices=prices_in_cart)
-
-
-@bp_shop.route('/payment', methods=['POST'])
-def payment():
-    items_in_cart = session.get('cart', [])
-    counter = len(items_in_cart)
-    items_to_buy = []
-    price_amount_list = []
-    shipping_cost = 4.10
-    for it in range(counter):
-        item_details = {
-            "name": "{}, size: {}, colour: {}".format(session['cart'][it], session['size'][it],
-                                                      session['colour'][it]),
-            "sku": "{}".format(session['item_number'][it]),
-            "price": "{}".format(session['itemprice'][it]),
-            "currency": "GBP",
-            "quantity": session['quantity'][it]}
-        items_to_buy.append(item_details)
-        price_amount = session['itemprice'][it]*session['quantity'][it]
-        price_amount_list.append(price_amount)
-    price_total_amount = round(sum(price_amount_list), 2)
-    inc_shipping = round(price_total_amount + shipping_cost, 2)
-    payment = paypalrestsdk.Payment({
-        "intent": "sale",
-        "payer": {
-            "payment_method": "paypal"},
-        "redirect_urls": {
-            "return_url": "https://inwaitoftomorrow.appspot.com/execute",
-            "cancel_url": "https://inwaitoftomorrow.appspot.com/"},
-        "transactions": [{
-            "item_list": {
-                "items": items_to_buy},
-            "amount": {
-                "total": "{}".format(inc_shipping),
-                "currency": "GBP",
-                "details": {
-                    "subtotal": "{}".format(price_total_amount),
-                    "shipping": "{}".format(shipping_cost)
-                }
-            },
-            "description": "Size: {}, Colour: {}".format(session.get('size', []), session.get('colour', []))}]})
-    if payment.create():
-        print('Payment success!')
-    else:
-        print(payment.error)
-    return jsonify({'paymentID' : payment.id})
+        flash('You have no items in your cart')
+        return redirect(url_for('shop.shop'))
 
 
 @bp_shop.route('/card-payment', methods=['GET', 'POST'])
@@ -278,18 +218,6 @@ def card_payment():
     order_creation = create_order(pay_body, debug=True)
     print(order_creation)
     return order_creation
-
-
-@bp_shop.route('/execute', methods=['POST'])
-def execute():
-    success = False
-    payment = paypalrestsdk.Payment.find(request.form['paymentID'])
-    if payment.execute({'payer_id' : request.form['payerID']}):
-        print('Execute success!')
-        success = True
-    else:
-        print(payment.error)
-    return jsonify({'success' : success})
 
 
 @bp_shop.route('/card-execute', methods=['GET', 'POST'])

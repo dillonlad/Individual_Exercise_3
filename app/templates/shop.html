@@ -15,14 +15,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta property="og:title" content="In Wait of Tomorrow"/>
     <meta property="og:type" content="website"/>
-    <meta property="og:url" content="http://inwaitoftomorrow.appspot.com/"/>
-    <meta property="og:description" content="We write futurology - analysis of current trends to predict what the future might be like"/>
+    <meta property="og:url" content="https://inwaitoftomorrow.appspot.com/shop"/>
+    <meta property="og:description" content="Fashion for science and technology lovers!"/>
     <meta property="og:image" content='http://inwaitoftomorrow.appspot.com/static/img/logo.jpeg'/>
     <meta name="twitter:title" content="In Wait of Tomorrow"/>
-    <meta name="twitter:description" content="Who knows what the future might look like"/>
+    <meta name="twitter:description" content="Fashion for science and technology lovers!"/>
     <meta name="twitter:image" content='http://inwaitoftomorrow.appspot.com/static/img/logo.jpeg'/>
     <meta name="twitter:card" content="summary_large_image"/>
-    <meta name="twitter:url" content="http://inwaitoftomorrow.appspot.com/"/>
+    <meta name="twitter:url" content="https://inwaitoftomorrow.appspot.com/shop"/>
     <meta name="google-site-verification" content="FXf4fXXrRB8YqX75YWs6DQXLlE3r_CWleoGSjxGSa5s" />
     <script src="../static/bootstrap-4.0.0/js/tests/vendor/jquery-1.9.1.min.js"></script>
     <script src="../static/bootstrap-4.0.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -31,19 +31,20 @@
     <link rel="stylesheet" href="../static/css/hovering.min.css">
 
     <link rel="stylesheet" href="../static/css/newnav.min.css">
-    <link rel="canonical" href="https://inwaitoftomorrow.appspot.com">
+    <link rel="canonical" href="https://inwaitoftomorrow.appspot.com/shop">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
           rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pridi:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="../static/css/title.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="shortcut icon" href="../static/img/favico.ico">
-    <meta name="description" content="The latest in tech, science and more, In Wait of Tomorrow is futurology - we analyse how advancements may affect our future. Follow @inwaitoftomorrow on Instagram."/>
+    <meta name="description" content="Fashion for science and technology lovers! Have a look at our latest hoodie designs!"/>
     <meta name="keywords" content="inwaitoftomorrow, In Wait of Tomorrow, futurology, Technology, Science, Healthcare, Environment">
     <meta name="author" content="inwaitoftomorrow">
     <meta name="robots" content="index, follow">
     <title>Shop</title>
 </head>
-<body>
+<body style="font-family: 'Pridi', serif;">
 {% with messages = get_flashed_messages() %}
         {% if messages %}
             <div class="text-center m-auto p-5 font-weight-normal" style="max-width: 600px">
@@ -78,6 +79,7 @@
     </div>
 <div class="{% if request.MOBILE %}text-center{% else %}float-left{% endif %} m-auto row w-100" style="max-width: 800px; padding-top: 20vh;">
     <h1 class="font-weight-normal {% if request.MOBILE %}text-dark m-auto{% else %}text-white display-2{% endif %}" {% if request.MOBILE %}{% else %}style="font-min-size: 20vh;"{% endif %}>Welcome to the In Wait of Tomorrow shop</h1>
+    <span class="font-weight-normal w-100 {% if request.MOBILE %}text-dark m-auto{% else %}text-white ml-3{% endif %}">Our collection is inspired by science, technology and the future.</span><span class="font-weight-normal w-100 {% if request.MOBILE %}text-dark m-auto{% else %}text-white ml-3{% endif %}">We believe you should be too.</span>
     <a href="#collection" class="{% if request.MOBILE %}text-dark text-center m-auto border-dark{% else %}text-white ml-3 border-white{% endif %} btn rounded-0 bg-transparent h3 mt-3">VIEW OUR COLLECTION</a>
 </div>
 </div>
@@ -93,9 +95,9 @@
                         </div>
                     </div>
                   <div class="card-body text-center m-auto" style="max-width: 600px;">
-                      <a href="{{ url_for('shop.shop_item', id=item.item_id) }}"><p class="card-text mb-2 h3 font-weight-normal h1 display-3 text-dark" itemprop="name">{{ item.item_name }}</p></a>
+                      <a href="{{ url_for('shop.shop_item', id=item.item_id) }}"><p class="card-text mb-2 h3 font-weight-normal h1 {% if request.MOBILE %}{% else %}display-3{% endif %} text-dark" itemprop="name">{{ item.item_name }}</p></a>
                       <p class="card-subtitle mb-2 font-weight-normal m-auto h3 text-dark">Price: £{{ item.price }}</p>
-                      <a href="{{ url_for('shop.shop_item', id=item.item_id) }}"><p class="h5 m-auto font-weight-normal">Add item to cart</p></a>
+                      <a href="{{ url_for('shop.shop_item', id=item.item_id) }}"><p class="h5 m-auto font-weight-normal pt-2">Add item to cart</p></a>
                   </div>
             {% endfor %}
         </div>
