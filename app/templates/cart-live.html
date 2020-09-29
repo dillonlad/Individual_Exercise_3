@@ -112,6 +112,10 @@
             <span style="float: right"><a href="{{ url_for('shop.empty_basket') }}">EMPTY BASKET</a></span>
         </div>
     </div>
+    <div class="pb-5 w-100" style="max-width: 600px">
+        <a data-toggle="collapse" class="pt-2 pb-2 mb-2" href="#collapseSearch" role="button" aria-expanded="false" aria-controls="collapseExample">By clicking the below checkout buttons, you agree to have read and understood our privacy terms and cookie usage</a>
+        {{ privacy_policy | safe }}
+    </div>
     <div class="w-100" id="paypal-button-container"></div>
 </div>
 <div class="row m-auto w-100" style="max-width: 600px">

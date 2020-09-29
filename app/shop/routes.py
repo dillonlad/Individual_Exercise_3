@@ -77,6 +77,7 @@ def shop_item(id):
         if shop_items.query.filter(shop_items.item_id.contains(id)).all():
             categories = Categories.query.all()
             item_on_page = shop_items.query.filter_by(item_id=id).all()
+            privacy_policy = render_template('privacy_statement.html')
             for var in item_on_page:
                 item_name = var.item_name
                 item_no = var.item_number
@@ -130,7 +131,7 @@ def shop_item(id):
                             id)))
                     flash(message)
                     return redirect(url_for('shop.shop_item', id=id), code=303)
-            return render_template("item_shop.html", testshopform=testshopform, categories=categories, item_on_page=item_on_page)
+            return render_template("item_shop.html", testshopform=testshopform, categories=categories, item_on_page=item_on_page, privacy_policy=privacy_policy)
 
 
 @bp_shop.route('/add-to-cart/<id>', methods=['GET', 'POST'])
@@ -150,6 +151,7 @@ def add_to_cart(id):
 @bp_shop.route('/cart', methods=['GET', 'POST'])
 def shop_cart():
     categories = Categories.query.all()
+    privacy_policy = render_template('privacy_statement.html')
     if 'cart' in session:
         items_in_cart = session['cart']
         colours_in_cart = session['colour']
@@ -166,7 +168,7 @@ def shop_cart():
             new_quantities.append(new_quantity)
         final_cost = round(sum(cost_list), 2)
         final_with_shipping = round(final_cost + 4.10, 2)
-        return render_template('cart-live.html', categories=categories, final_cost=final_cost, counter=counter, items=items_in_cart, colours=colours_in_cart, quantities=new_quantities, sizes=sizes_in_cart, prices=prices_in_cart, cost_list=cost_list, final_with_shipping=final_with_shipping)
+        return render_template('cart-live.html', categories=categories, final_cost=final_cost, counter=counter, items=items_in_cart, colours=colours_in_cart, quantities=new_quantities, sizes=sizes_in_cart, prices=prices_in_cart, cost_list=cost_list, final_with_shipping=final_with_shipping, privacy_policy=privacy_policy)
     else:
         flash('You have no items in your cart')
         return redirect(url_for('shop.shop'))
@@ -174,56 +176,64 @@ def shop_cart():
 
 @bp_shop.route('/card-payment', methods=['GET', 'POST'])
 def card_payment():
-    items_in_cart = session.get('cart', [])
-    counter = len(items_in_cart)
-    items_to_buy = []
-    price_amount_list = []
-    shipping_cost = 4.10
-    for it in range(counter):
-        item_details = {
-            "name": "{}, size: {}, colour: {}".format(session['cart'][it], session['size'][it],
-                                                      session['colour'][it]),
-            "sku": "{}".format(session['item_number'][it]),
-            "unit_amount": {
-                "currency_code": "GBP",
-                "value": "{}".format(session['itemprice'][it])},
-            "quantity": int(session['quantity'][it])}
-        items_to_buy.append(item_details)
-        price_amount = session['itemprice'][it] * session['quantity'][it]
-        price_amount_list.append(price_amount)
-    price_total_amount = round(sum(price_amount_list), 2)
-    inc_shipping = round(price_total_amount + shipping_cost, 2)
-    request = OrdersCreateRequest()
-
-    request.prefer('return=representation')
-
-    pay_body = \
-        {
-            "intent": "CAPTURE",
-            "purchase_units": [{
-                "amount": {
+    if 'cart' in session:
+        items_in_cart = session.get('cart', [])
+        counter = len(items_in_cart)
+        items_to_buy = []
+        price_amount_list = []
+        shipping_cost = 4.10
+        for it in range(counter):
+            item_details = {
+                "name": "{}, size: {}, colour: {}".format(session['cart'][it], session['size'][it],
+                                                          session['colour'][it]),
+                "sku": "{}".format(session['item_number'][it]),
+                "unit_amount": {
                     "currency_code": "GBP",
-                    "value": "{}".format(inc_shipping),
-                    "breakdown": {
-                        "item_total": {
-                            "currency_code": "GBP",
-                             "value": "{}".format(price_total_amount)},
-                        "shipping": {
-                            "currency_code": "GBP",
-                            "value": "{}".format(shipping_cost)}
-                    }
-                },
-                "items": items_to_buy}]
-        }
-    order_creation = create_order(pay_body, debug=True)
-    print(order_creation)
-    return order_creation
+                    "value": "{}".format(session['itemprice'][it])},
+                "quantity": int(session['quantity'][it])}
+            items_to_buy.append(item_details)
+            price_amount = session['itemprice'][it] * session['quantity'][it]
+            price_amount_list.append(price_amount)
+        price_total_amount = round(sum(price_amount_list), 2)
+        inc_shipping = round(price_total_amount + shipping_cost, 2)
+        request = OrdersCreateRequest()
+
+        request.prefer('return=representation')
+
+        pay_body = \
+            {
+                "intent": "CAPTURE",
+                "purchase_units": [{
+                    "amount": {
+                        "currency_code": "GBP",
+                        "value": "{}".format(inc_shipping),
+                        "breakdown": {
+                            "item_total": {
+                                "currency_code": "GBP",
+                                 "value": "{}".format(price_total_amount)},
+                            "shipping": {
+                                "currency_code": "GBP",
+                                "value": "{}".format(shipping_cost)}
+                        }
+                    },
+                    "items": items_to_buy}]
+            }
+        order_creation = create_order(pay_body, debug=True)
+        print(order_creation)
+        return order_creation
+    else:
+        flash('You have no items in your cart')
+        return redirect(url_for('shop.shop'))
 
 
 @bp_shop.route('/card-execute', methods=['GET', 'POST'])
 def card_execute():
-    order_id = session['order_id']
-    return capture_order(order_id, debug=True)
+    if 'cart' in session:
+        order_id = session['order_id']
+        return capture_order(order_id, debug=True)
+    else:
+        flash('You have no items in your cart')
+        return redirect(url_for('shop.shop'))
 
 
 @bp_shop.route('/empty', methods=['GET', 'POST'])

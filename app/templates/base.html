@@ -43,7 +43,7 @@
     <meta name="robots" content="index, follow">
     <title>{% block title %}{{ title }}{% endblock %}</title>
 </head>
-<body itemscope itemtype="https://schema.org/WebPage" onscroll="fixed_top()">
+<body itemscope itemtype="https://schema.org/WebPage" class="w-100" onscroll="fixed_top()">
     {% with messages = get_flashed_messages() %}
             {% if messages %}
                 <div class="text-center m-auto p-5 font-weight-normal" style="max-width: 600px">
@@ -90,9 +90,8 @@
                     <span id="typed" class="pb-2 font-italic"></span>
 
                 </div>
-                <div class="col-12">
-                    <div class="text-center font-weight-normal col-12"><a class="font-weight-normal text-dark" href="#articles">Check out our latest articles</a></div>
-                    <div class="text-center font-weight-normal col-12"><a class="font-weight-normal text-dark" href="#articles"><i class="arrow down"></i></a></div>
+               <div class="text-center m-auto row w-100" style="max-width: 800px">
+                    <a href="#articles" class="text-dark text-center m-auto border-dark btn rounded-0 bg-transparent h3 mt-3" style="border-width: medium">CHECK OUT OUR LATEST ARTICLES</a>
                 </div>
             </div>
         </div>
@@ -100,45 +99,45 @@
 
 </div>
     {% else %}
-    <div class="container-fluid w-100 mainimage opacity-5" style="background-image: url('../static/img/backgroundnew.jpg')">
-    <div class="row">
-        <div class="col-12">
-            <nav class="navbar bg-transparent container-fluid" itemscope itemtype="https://schema.org/SiteNavigationElement">
-                {% if homepage == "yes" %}
-                    <span style="float: left"><a class="text-white" href="https://www.facebook.com/inwaitoftomorrow"><i class="fab fa-facebook-square" style="border: none"></i></a> <a class="text-white" href="https://twitter.com/InWaitofTomorr1"><i class="fab fa-twitter-square" style="border: none"></i></a> <a href="https://www.instagram.com/inwaitoftomorrow/" class="text-white"><i class="fab fa-instagram" style="background: transparent"></i></a></span>
-                {% else %}
-                    <a href="{{ url_for('main.index') }}" class="text-white">In Wait of Tomorrow</a>
-                {% endif %}
-                <div>
-                    <a href="#aboutUs"><span class="navbar-brand mb-0 h1 font-weight-normal text-white">About</span></a>
-                    <a href="{{ url_for('main.show_blog') }}"><span class="navbar-brand mb-0 h1 font-weight-normal text-white">Latest Articles</span></a>
-                </div>
-                <div class="dropdown dropleft show btn-group float-right">
-                  <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
-                  </button>
-                </div>
-            </nav>
-        </div>
-    </div>
-    <header class="border-bottom border-top border-white p-5 mh-50" style="height: 50vh">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-12 text-center p-5" style="padding-top: 0vh">
-                    <h1 class="font-weight-normal text-white" id="main-title" itemprop="name">In Wait of Tomorrow</h1>
-                    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11"></script>
-                    <div id="typed-strings" class="text-white" style="max-width: 600px">
-                        <p class="lead">^1000 Futurology ^1000 - Systematic forecasting of the future ^1000 based on current trends^2000</p>
-                        <p class="font-weight-normal font-italic">"I know not with what weapons World War III will be fought ^1000, but World War IV will be fought with sticks and stones." ~ Albert Einstein ^1000</p></div>
-                    <span id="typed" class="pb-5 text-white"></span>
-
+    <div class="container-fluid w-100 h-100 opacity-5 mainimage" style="background-image: url('../static/img/backgroundnew.jpg'); background-size: cover; min-height: 100vh">
+        <div class="container-fluid">
+            <div id="nav_one" style="display: block" class="row">
+                <div class="col-12">
+                    <nav class="navbar border-bottom border-white bg-transparent container-fluid w-100" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
+                        {% if homepage == "yes" %}
+                            <span style="float: left"><a class="text-white" href="https://www.facebook.com/inwaitoftomorrow"><i class="fab fa-facebook-square" style="border: none"></i></a> <a class="text-white" href="https://twitter.com/InWaitofTomorr1"><i class="fab fa-twitter-square" style="border: none"></i></a> <a href="https://www.instagram.com/inwaitoftomorrow/" class="text-white"><i class="fab fa-instagram" style="background: transparent"></i></a></span>
+                        {% else %}
+                            <a href="{{ url_for('main.index') }}" class="text-white">In Wait of Tomorrow</a>
+                        {% endif %}
+                        <div>
+                            <a href="#aboutUs"><span class="navbar-brand mb-0 h1 font-weight-normal text-white">About</span></a>
+                            <a href="{{ url_for('main.show_blog') }}"><span class="navbar-brand mb-0 h1 font-weight-normal text-white">Latest Articles</span></a>
+                        </div>
+                        <div class="dropdown dropleft show btn-group float-right">
+                          <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
+                          </button>
+                        </div>
+                    </nav>
                 </div>
             </div>
         </div>
-    </header>
+
+    <div class="w-100 container-fluid mr-auto ml-0 mt-auto mb-auto row" style="max-width: 50vw">
+                    <h1 class="font-weight-normal text-white display-1 text-left ml-5 w-100" id="main-title" style="padding-top: 25vh" itemprop="name">In Wait of Tomorrow</h1>
+                    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11"></script>
+                    <div id="typed-strings" class="text-white" style="max-width: 600px">
+                        <p class="lead">^1000 Futurology ^1000 - Systematic forecasting of the future ^1000 based on current trends^2000</p>
+                        <p class="font-weight-normal font-italic">"I know not with what weapons World War III will be fought ^1000, but World War IV will be fought with sticks and stones." ~ Albert Einstein ^1000</p>
+                    </div>
+                    <span id="typed" class="pb-5 text-white ml-5 w-100"></span>
+        <div class="w-100">
+                    <a href="#cards" class="text-white ml-5 border-white font-weight-bold btn rounded-0 bg-transparent h3" style="border-width: medium">CHECK OUT OUR LATEST ARTICLES</a>
+            </div>
+    </div>
 
 </div>
         {% if homepage == "yes" %}
-<div class="text-center text-dark p-2 border-dark border-bottom" id="homepagefixedtop">
+<div class="text-center text-dark p-2 border-dark border-bottom w-100 container-fluid" id="homepagefixedtop">
         {% for category in categories %}
             {% if category.category_name != "Blog" %}
                 <a class="p-2 text-dark" href="{{ url_for('main.show_blog_category', category=category.category_name) }}">{{ category.category_name }}</a>
@@ -161,7 +160,7 @@
     </div>
                 {% else %}{% endif %}
 {% endif %}
-<div id="articles" class="row w-100 m-auto">
+<div id="articles" class="row w-100 m-auto container-fluid">
     {% block list_of_articles %}{% endblock %}
 </div>
     <footer class="text-center p-5 w-100" style="background-color: #dddddd">

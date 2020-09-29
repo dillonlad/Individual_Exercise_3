@@ -98,6 +98,10 @@
                     <div class="form-group">
                       {{ testshopform.quantity.label }}{{ testshopform.quantity(class_="form-control form-control-user rounded-0")}}
                     </div>
+                    <div class="form-group">
+                        <a data-toggle="collapse" class="pt-2 pb-2 mb-2" href="#collapseSearch" role="button" aria-expanded="false" aria-controls="collapseExample">Before your proceed, click here learn how we use cookies for your checkout experience</a>
+                        {{ privacy_policy | safe }}
+                    </div>
                     {{ testshopform.submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
                 </form>
         </div>
