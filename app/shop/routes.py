@@ -174,10 +174,12 @@ def shop_cart():
         final_cost = round(sum(cost_list), 2)
         if 'abroad_delivery' in session:
             shipping_cost = 9.85
+            shipping_msg = "Intl"
         else:
             shipping_cost = 4.10
+            shipping_msg = "UK"
         final_with_shipping = round(final_cost + shipping_cost, 2)
-        return render_template('cart-live.html', categories=categories, final_cost=final_cost, counter=counter, items=items_in_cart, colours=colours_in_cart, quantities=new_quantities, sizes=sizes_in_cart, prices=prices_in_cart, cost_list=cost_list, final_with_shipping=final_with_shipping, privacy_policy=privacy_policy, shipping_cost=shipping_cost, navigation_page=navigation_page)
+        return render_template('cart-live.html', categories=categories, final_cost=final_cost, counter=counter, items=items_in_cart, colours=colours_in_cart, quantities=new_quantities, sizes=sizes_in_cart, prices=prices_in_cart, cost_list=cost_list, final_with_shipping=final_with_shipping, privacy_policy=privacy_policy, shipping_cost=shipping_cost, navigation_page=navigation_page, shipping_msg=shipping_msg)
     else:
         flash('You have no items in your cart')
         return redirect(url_for('shop.shop'))

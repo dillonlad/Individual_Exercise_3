@@ -71,7 +71,7 @@
     </div>
 <div class="text-center row m-auto pb-3" style="max-width: 600px">
     <h1 class="pt-5 font-weight-light w-100 m-auto">You have {{ counter }} item(s) in the basket</h1>
-    <table class="w-100 mt-5 mb-5 text-left">
+    <table class="w-100 mt-5 text-left">
         <tr class="row">
             <th class="col-8">ITEM ID</th>
             <th class="col-2">QTY</th>
@@ -85,23 +85,20 @@
             </tr>
         {% endfor %}
         <tr class="row border-top border-dark border-bottom pt-2 pb-2">
-            <td class="col-8">Shipping</td>
+            <td class="col-8">Shipping ({{ shipping_msg }}) <br><a href="{{ url_for('shop.abroad_delivery') }}">*For delivery outside the UK, click here for the appropriate shipping costs</a></td>
             <td class="col-2"></td>
             <td class="col-2">{{ shipping_cost }}</td>
         </tr>
-    <tr class="row pt-2 pb-2">
+        <tr class="row pt-2 pb-1">
             <td class="col-8">Total</td>
             <td class="col-2"></td>
             <td class="col-2">{{ final_with_shipping }}</td>
         </tr>
     </table>
-    <div class="pb-2 w-100" style="max-width: 600px">
-        <a href="{{ url_for('shop.abroad_delivery') }}">*For delivery outside the UK, click here for the appropriate shipping costs</a>
-    </div>
-    <div class="pb-2 w-100" style="max-width: 600px">
+    <div class="pb-4 w-100 m-auto" style="max-width: 600px">
         <div class="col-12">
-            <a href="{{ url_for('shop.shop') }}" class="text-dark text-left float-left"><i class="fas fa-arrow-left" style="border: none"></i> RETURN TO SHOP</a>
-            <span style="float: right"><a href="{{ url_for('shop.empty_basket') }}">EMPTY BASKET</a></span>
+            <a href="{{ url_for('shop.shop') }}" class="text-dark text-left pr-2"><span><i class="fas fa-arrow-left" style="border: none"></i> RETURN TO SHOP</span></a>
+            <a href="{{ url_for('shop.empty_basket') }}"><span>EMPTY BASKET</span></a>
         </div>
     </div>
     <div class="pb-2 w-100" style="max-width: 600px">
