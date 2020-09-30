@@ -27,7 +27,7 @@ from app.models import Posts_two, Blogs, Profile, Categories, Series, Authors, C
 import paypalrestsdk
 
 from app.paypal_api_call import CreateOrder
-from app.shop.forms import testShop, CreditCardPayment
+from app.shop.forms import testShop, CreditCardPayment, EnquiryForm
 from app.new_paypal import PayPalClient
 from paypalcheckoutsdk.orders import OrdersCreateRequest, OrdersCaptureRequest
 from paypalcheckoutsdk.core import PayPalHttpClient, SandboxEnvironment, LiveEnvironment
@@ -35,6 +35,8 @@ from paypalcheckoutsdk.core import PayPalHttpClient, SandboxEnvironment, LiveEnv
 
 
 bp_shop = Blueprint('shop', __name__, url_prefix="/shop")
+ADMINS = ['inwaitoftomorrow@gmail.com']
+
 
 paypalrestsdk.configure({
   "mode": "live", # sandbox or live
@@ -62,8 +64,9 @@ def shop():
         return redirect(url, code=code)
     else:
         categories = Categories.query.all()
+        navigation_page = render_template('navigation.html', categories=categories)
         items = shop_items.query.all()
-        return render_template('shop.html', items=items, categories=categories)
+        return render_template('shop.html', items=items, categories=categories, navigation_page=navigation_page)
 
 
 @bp_shop.route('/<id>', methods=['GET', 'POST'])
@@ -76,6 +79,7 @@ def shop_item(id):
     else:
         if shop_items.query.filter(shop_items.item_id.contains(id)).all():
             categories = Categories.query.all()
+            navigation_page = render_template('navigation.html', categories=categories)
             item_on_page = shop_items.query.filter_by(item_id=id).all()
             privacy_policy = render_template('privacy_statement.html')
             for var in item_on_page:
@@ -131,7 +135,7 @@ def shop_item(id):
                             id)))
                     flash(message)
                     return redirect(url_for('shop.shop_item', id=id), code=303)
-            return render_template("item_shop.html", testshopform=testshopform, categories=categories, item_on_page=item_on_page, privacy_policy=privacy_policy)
+            return render_template("item_shop.html", testshopform=testshopform, categories=categories, item_on_page=item_on_page, privacy_policy=privacy_policy, navigation_page=navigation_page)
 
 
 @bp_shop.route('/add-to-cart/<id>', methods=['GET', 'POST'])
@@ -151,6 +155,7 @@ def add_to_cart(id):
 @bp_shop.route('/cart', methods=['GET', 'POST'])
 def shop_cart():
     categories = Categories.query.all()
+    navigation_page = render_template('navigation.html', categories=categories)
     privacy_policy = render_template('privacy_statement.html')
     if 'cart' in session:
         items_in_cart = session['cart']
@@ -167,8 +172,12 @@ def shop_cart():
             new_quantity = int(quantities_in_cart[i])
             new_quantities.append(new_quantity)
         final_cost = round(sum(cost_list), 2)
-        final_with_shipping = round(final_cost + 4.10, 2)
-        return render_template('cart-live.html', categories=categories, final_cost=final_cost, counter=counter, items=items_in_cart, colours=colours_in_cart, quantities=new_quantities, sizes=sizes_in_cart, prices=prices_in_cart, cost_list=cost_list, final_with_shipping=final_with_shipping, privacy_policy=privacy_policy)
+        if 'abroad_delivery' in session:
+            shipping_cost = 9.85
+        else:
+            shipping_cost = 4.10
+        final_with_shipping = round(final_cost + shipping_cost, 2)
+        return render_template('cart-live.html', categories=categories, final_cost=final_cost, counter=counter, items=items_in_cart, colours=colours_in_cart, quantities=new_quantities, sizes=sizes_in_cart, prices=prices_in_cart, cost_list=cost_list, final_with_shipping=final_with_shipping, privacy_policy=privacy_policy, shipping_cost=shipping_cost, navigation_page=navigation_page)
     else:
         flash('You have no items in your cart')
         return redirect(url_for('shop.shop'))
@@ -181,7 +190,10 @@ def card_payment():
         counter = len(items_in_cart)
         items_to_buy = []
         price_amount_list = []
-        shipping_cost = 4.10
+        if 'abroad_delivery' in session:
+            shipping_cost = 9.85
+        else:
+            shipping_cost = 4.10
         for it in range(counter):
             item_details = {
                 "name": "{}, size: {}, colour: {}".format(session['cart'][it], session['size'][it],
@@ -242,6 +254,50 @@ def empty_basket():
     return redirect(url_for('shop.shop'))
 
 
+@bp_shop.route('/enquiry', methods=['GET', 'POST'])
+def enquiry():
+    form = EnquiryForm(request.form)
+    if request.method == 'POST' and form.validate():
+        with app.mail.connect() as conn:
+            msg = Message('{} - comment'.format(form.name.data), sender=ADMINS[0], recipients=ADMINS)
+            msg.body = '{}'.format(form.message.data)
+            user_email = form.email.data
+            if user_email == "":
+                user_email = "not provided"
+            msg.html = '<b>{}</b> says {}. Email: {}'.format(
+                form.name.data, form.message.data, user_email)
+            conn.send(msg)
+        flash('Thanks for the reply! We will get back to you as soon as possible!')
+        return redirect(url_for('shop.shop'), code=303)
+    else:
+        if form.is_submitted():
+            form.method = 'POST'
+            if (len(form.name.data) > 0 and len(form.comment.data) > 0) or (
+                    len(form.name.data) > 0 and len(form.email.data) > 0):
+                with app.mail.connect() as conn:
+                    msg = Message('{} - comment'.format(form.name.data), sender=ADMINS[0], recipients=ADMINS)
+                    msg.body = '{}'.format(form.message.data)
+                    user_email = form.email.data
+                    if user_email == "":
+                        user_email = "not provided"
+                    msg.html = '<b>{}</b> says {}. Email: {}'.format(
+                        form.name.data, form.message.data, user_email)
+                    conn.send(msg)
+                flash('Thanks for the reply! We will get back to you as soon as possible!')
+                return redirect(url_for('shop.shop'), code=303)
+            else:
+                flash('Thanks for the reply! We will get back to you as soon as possible!')
+                return redirect(url_for('shop.shop'), code=303)
+        else:
+            return render_template('enquiry_page.html', form=form)
+
+
+@bp_shop.route('/abroad-delivery')
+def abroad_delivery():
+    session['abroad_delivery'] = "Yes"
+    return redirect(url_for('shop.shop_cart'))
+
+
 @bp_shop.errorhandler(404)
 def pnf_404(error):
     return render_template("404.html"), 404
@@ -295,7 +351,9 @@ def capture_order(order_id, debug=False):
             for capture in purchase_unit.payments.captures:
               print('\t', capture.id)
         print("Buyer:")
-        print("\tEmail Address: {}\n\tName: {}\n\tPhone Number: {}".format(response.result.payer.email_address,
-                response.result.payer.name.given_name + " " + response.result.payer.name.surname,
-                response.result.payer.phone.phone_number.national_number))
-    return response
+        print("\tEmail Address: {}\n\tName: {}\n\t".format(response.result.payer.email_address,
+                response.result.payer.name.given_name + " " + response.result.payer.name.surname))
+        flash('Transaction completed!')
+    return jsonify(status_code=response.status_code,
+                   status=response.result.status,
+                   orderID=response.result.id)

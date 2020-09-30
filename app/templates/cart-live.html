@@ -57,18 +57,7 @@
             </div>
         {% endif %}
 {% endwith %}
-<div id="myNav" class="overlay">
-      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-      <div class="overlay-content">
-          <a href="{{ url_for('main.show_blog') }}">Latest articles</a>
-          <div class="dropdown-divider text-center align-self-center m-auto" style="max-width: 600px"></div>
-          {% for category in categories %}
-            {% if category.category_name != "Blog" %}
-                <a href="{{ url_for('main.show_blog_category', category=category.category_name) }}">{{ category.category_name }}</a>
-            {% endif %}
-          {% endfor %}
-      </div>
-  </div>
+{{ navigation_page | safe }}
 <div class="container-fluid">
 <div class="container-fluid" id="navigation">
     <div id="nav_one" style="display: block" class="row">
@@ -82,11 +71,11 @@
     </div>
 <div class="text-center row m-auto pb-3" style="max-width: 600px">
     <h1 class="pt-5 font-weight-light w-100 m-auto">You have {{ counter }} item(s) in the basket</h1>
-    <table class="w-100 mt-5 mb-5 text-left pb-5">
+    <table class="w-100 mt-5 mb-5 text-left">
         <tr class="row">
             <th class="col-8">ITEM ID</th>
             <th class="col-2">QTY</th>
-            <th class="col-2">PRICE</th>
+            <th class="col-2">PRICE (GBP)</th>
         </tr>
         {% for i in range(counter) %}
             <tr class="row pt-2 pb-2">
@@ -98,7 +87,7 @@
         <tr class="row border-top border-dark border-bottom pt-2 pb-2">
             <td class="col-8">Shipping</td>
             <td class="col-2"></td>
-            <td class="col-2">4.10</td>
+            <td class="col-2">{{ shipping_cost }}</td>
         </tr>
     <tr class="row pt-2 pb-2">
             <td class="col-8">Total</td>
@@ -106,13 +95,16 @@
             <td class="col-2">{{ final_with_shipping }}</td>
         </tr>
     </table>
-    <div class="pb-5 w-100" style="max-width: 600px">
+    <div class="pb-2 w-100" style="max-width: 600px">
+        <a href="{{ url_for('shop.abroad_delivery') }}">*For delivery outside the UK, click here for the appropriate shipping costs</a>
+    </div>
+    <div class="pb-2 w-100" style="max-width: 600px">
         <div class="col-12">
             <a href="{{ url_for('shop.shop') }}" class="text-dark text-left float-left"><i class="fas fa-arrow-left" style="border: none"></i> RETURN TO SHOP</a>
             <span style="float: right"><a href="{{ url_for('shop.empty_basket') }}">EMPTY BASKET</a></span>
         </div>
     </div>
-    <div class="pb-5 w-100" style="max-width: 600px">
+    <div class="pb-2 w-100" style="max-width: 600px">
         <a data-toggle="collapse" class="pt-2 pb-2 mb-2" href="#collapseSearch" role="button" aria-expanded="false" aria-controls="collapseExample">By clicking the below checkout buttons, you agree to have read and understood our privacy terms and cookie usage</a>
         {{ privacy_policy | safe }}
     </div>
@@ -173,7 +165,7 @@
           }).then(function(res) {
             return res.json();
           }).then(function(details) {
-            alert('Transaction funds captured from ' + details.payer_given_name);
+            alert('Transaction completed! You will receive confirmation to your email! You can now leave the page');
           });
         },
       }).render('#paypal-button-container'); // Display payment options on your web page

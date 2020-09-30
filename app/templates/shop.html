@@ -54,18 +54,7 @@
             </div>
         {% endif %}
 {% endwith %}
-<div id="myNav" class="overlay">
-      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-      <div class="overlay-content">
-          <a href="{{ url_for('main.show_blog') }}">Latest articles</a>
-          <div class="dropdown-divider text-center align-self-center m-auto" style="max-width: 600px"></div>
-          {% for category in categories %}
-            {% if category.category_name != "Blog" %}
-                <a href="{{ url_for('main.show_blog_category', category=category.category_name) }}">{{ category.category_name }}</a>
-            {% endif %}
-          {% endfor %}
-      </div>
-  </div>
+{{ navigation_page | safe }}
 <div id="middle" class="container-fluid mainimage h-100 w-100" style="{% if request.MOBILE %}background-image:url('../static/img/mahdi-soheili-m-jJ4wLjoIc-unsplash.jpg'){% else %}background-image:url('../static/img/greg-rakozy-oMpAz-DN-9I-unsplash.jpg'){% endif %}; background-size: cover; min-height: 100vh">
 <div class="container-fluid h-75" id="navigation">
             <script src="https://kit.fontawesome.com/7380e39ab3.js" crossorigin="anonymous"></script>
@@ -79,8 +68,8 @@
     </div>
 <div class="{% if request.MOBILE %}text-center{% else %}float-left{% endif %} m-auto row w-100" style="max-width: 800px; padding-top: 20vh;">
     <h1 class="font-weight-normal {% if request.MOBILE %}text-dark m-auto{% else %}text-white display-2{% endif %}" {% if request.MOBILE %}{% else %}style="font-min-size: 20vh;"{% endif %}>Welcome to the In Wait of Tomorrow shop</h1>
-    <span class="font-weight-normal w-100 {% if request.MOBILE %}text-dark m-auto font-weight-bold{% else %}text-white ml-3{% endif %}">Our collection is inspired by science, technology and the future.</span><span class="font-weight-normal w-100 {% if request.MOBILE %}text-dark m-auto font-weight-bold{% else %}text-white ml-3{% endif %}">We believe you should be too.</span>
-    <a href="#collection" class="{% if request.MOBILE %}text-dark text-center m-auto border-dark{% else %}text-white ml-3 border-white{% endif %} btn rounded-0 bg-transparent h3 mt-3" style="border-width: medium">VIEW OUR COLLECTION</a>
+    <span class="font-weight-normal w-100 {% if request.MOBILE %}text-dark m-auto font-weight-bold pt-2 pb-2{% else %}text-white ml-3{% endif %}">Our collection is inspired by science, technology and the future.</span><span class="font-weight-normal w-100 {% if request.MOBILE %}text-dark m-auto font-weight-bold{% else %}text-white ml-3{% endif %}">We believe you should be too.</span>
+    <a href="#collection" class="{% if request.MOBILE %}text-dark text-center m-auto border-dark pb-2{% else %}text-white ml-3 border-white{% endif %} btn rounded-0 bg-transparent h3 mt-3" style="border-width: medium">VIEW OUR COLLECTION</a>
 </div>
 </div>
 </div>

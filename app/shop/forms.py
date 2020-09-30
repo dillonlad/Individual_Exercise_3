@@ -6,10 +6,17 @@ from wtforms.validators import DataRequired, EqualTo, Email, Length, ValidationE
 
 
 class testShop(FlaskForm):
-    size = SelectField('Size: ', choices=[('XS', 'XS'), ('S', 'S'), ('M', 'M'), ('L', 'L'), ('XL', 'XL')])
+    size = SelectField('Size: ', choices=[('XS - Not available', 'XS - Not available'), ('S', 'S'), ('M', 'M'), ('L', 'L'), ('XL - Not available', 'XL - Not available')])
     colour = SelectField('Colour: ', choices=[('White', 'White'), ('Black', 'Black')])
     quantity = SelectField('Quantity: ', choices=[('1','1'),('2','2'),('3','3'),('4','4'),('5','5')])
     submit = SubmitField('Add to cart')
+
+
+class EnquiryForm(FlaskForm):
+    name = StringField('Name: ', validators=[DataRequired()])
+    email = StringField('Email address: ', validators=[DataRequired(), Email()])
+    message = TextAreaField('Message: ', validators=[DataRequired()])
+    submit = SubmitField('Send')
 
 
 class CreditCardPayment(FlaskForm):

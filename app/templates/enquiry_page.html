@@ -66,35 +66,20 @@
             </nav>
         </div>
     </div>
-<div class="row m-auto text-center pb-3" style="max-width: 600px">
-    <h1 class="pt-5 font-weight-normal w-100 m-auto">{% for item in item_on_page %}{{ item.item_name }}{% endfor %}</h1>
-    <span class="w-100 h3 font-weight-normal pb-5 m-auto">Item price: £{% for item in item_on_page %}{{ item.price }}{% endfor %}</span><br>
-    <picture>
-        <source style="max-width: 600px; height: auto" class="card-img-top img-fluid" srcset="../static/img/iot-small.webp" type="image/webp">
-        <img class="card-img-top img-fluid" src="../static/img/iot-small.jpg" alt="Item" style="max-width: 600px; height: auto">
-    </picture>
-</div>
-<div class="row m-auto pb-5 bg-transparent" style="max-width: 600px">
+<div class="row m-auto pb-5 bg-transparent" style="max-width: 600px; padding-top: 10vh">
         <div class="col-12">
                 <form class="user col-12 text-left" method="POST" novalidate>
-                    {{ testshopform.hidden_tag() }}
+                    {{ form.hidden_tag() }}
                     <div class="form-group font-weight-normal">
-                      {{ testshopform.size.label }}{{ testshopform.size(class_="form-control form-control-user rounded-0") }}
+                      {{ form.name.label }}{{ form.name(class_="form-control form-control-user rounded-0") }}
                     </div>
                     <div class="form-group">
-                        <a href="{{ url_for('shop.enquiry') }}">Your size not available? Click here to let us know and we can order one for you, just put your size in the message</a>
+                      {{ form.email.label }}{{ form.email(class_="form-control form-control-user rounded-0")}}
                     </div>
                     <div class="form-group">
-                      {{ testshopform.colour.label }}{{ testshopform.colour(class_="form-control form-control-user rounded-0")}}
+                      {{ form.message.label }}{{ form.message(class_="form-control form-control-user rounded-0", style_="min-height: 50vh;")}}
                     </div>
-                    <div class="form-group">
-                      {{ testshopform.quantity.label }}{{ testshopform.quantity(class_="form-control form-control-user rounded-0")}}
-                    </div>
-                    <div class="form-group">
-                        <a data-toggle="collapse" class="pt-2 pb-2 mb-2" href="#collapseSearch" role="button" aria-expanded="false" aria-controls="collapseExample">Before you proceed, click here to learn how we use cookies for your checkout experience</a>
-                        {{ privacy_policy | safe }}
-                    </div>
-                    {{ testshopform.submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
+                    {{ form.submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
                 </form>
         </div>
 </div>

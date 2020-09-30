@@ -38,6 +38,7 @@ def post(Post_ID):
     else:
         if Blogs.query.filter(Blogs.Post_ID.contains(Post_ID)).all():
             categories = Categories.query.all()
+            navigation_page = render_template('navigation.html', categories=categories)
             post = Blogs.query.filter_by(Post_ID=Post_ID).all()
             for var in post:
                 p_author = var.author
@@ -97,7 +98,7 @@ def post(Post_ID):
                 else:
                     mob_template = render_template("blogs/blogs_template_mobile.html", post=post, categories=categories, comments=comments, number_of_comments=number_of_comments, latest_articles=latest_articles, quiz_of_the_week=quiz_of_the_week, form=form, post_authorid=post_authorid, new_date=new_date)
                     comp_template = render_template("blogs/blogs_template_not_mobile.html", post=post, categories=categories, comments=comments, number_of_comments=number_of_comments, latest_articles=latest_articles, quiz_of_the_week=quiz_of_the_week, form=form, post_authorid=post_authorid, new_date=new_date)
-                    return render_template("blogs/post.html", post=post, categories=categories, comments=comments, number_of_comments=number_of_comments, latest_articles=latest_articles, quiz_of_the_week=quiz_of_the_week, form=form, post_authorid=post_authorid, new_date=new_date)
+                    return render_template("blogs/post.html", post=post, categories=categories, comments=comments, number_of_comments=number_of_comments, latest_articles=latest_articles, quiz_of_the_week=quiz_of_the_week, form=form, post_authorid=post_authorid, new_date=new_date, navigation_page=navigation_page)
         else:
             flash("The article you tried to find does not exist, at least not with that URL, try using the search box to find what you're looking for")
             return redirect(url_for('main.show_blog'))

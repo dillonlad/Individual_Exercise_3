@@ -108,6 +108,7 @@ def index():
             series = Series.query.all()
             posts = Blogs.query.order_by(desc(Blogs.article_id)).limit(5).all()
             latest_article = Blogs.query.order_by(desc(Blogs.article_id)).limit(1).all()
+            navigation_page = render_template('navigation.html', categories=categories)
             if request.method == 'POST' and form.validate():
                 search = form.Search.data
                 if len(search) == 0:
@@ -118,7 +119,7 @@ def index():
                     for post in posts_two:
                         if post not in posts:
                             posts.append(post)
-                return render_template('homepage.html', latest_article=latest_article, posts=posts, form=form, categories=categories, series=series, homepage=homepage)
+                return render_template('homepage.html', latest_article=latest_article, posts=posts, form=form, categories=categories, series=series, homepage=homepage, navigation_page=navigation_page)
             else:
                 if form.is_submitted():
                     form.method = 'POST'
@@ -133,8 +134,8 @@ def index():
                             if post not in posts:
                                 posts.append(post)
                     return render_template('homepage.html', latest_article=latest_article, posts=posts, form=form,
-                                           categories=categories, series=series, homepage=homepage)
-            return render_template('homepage.html', latest_article=latest_article, posts=posts, form=form, categories=categories, series=series, homepage=homepage)
+                                           categories=categories, series=series, homepage=homepage, navigation_page=navigation_page)
+            return render_template('homepage.html', latest_article=latest_article, posts=posts, form=form, categories=categories, series=series, homepage=homepage, navigation_page=navigation_page)
 
 
 @bp_main.route('/linkinbio', methods=['GET'])
@@ -146,7 +147,8 @@ def linkinbio():
         return redirect(url, code=code)
     else:
         categories = Categories.query.all()
-        return render_template('linkinbio.html', categories=categories)
+        navigation_page = render_template('navigation.html', categories=categories)
+        return render_template('linkinbio.html', categories=categories, navigation_page=navigation_page)
 
 
 @bp_main.route('/linkinbio/articles', methods=['POST', 'GET'])
@@ -161,6 +163,7 @@ def show_blog_linkinbio():
         categories = Categories.query.all()
         page = request.args.get('page',1,type=int)
         posts = Blogs.query.order_by(desc(Blogs.article_id)).paginate(page,5,False)
+        navigation_page = render_template('navigation.html', categories=categories)
         next_url = url_for('main.show_blog_linkinbio', page=posts.next_num) \
             if posts.has_next else None
         prev_url = url_for('main.show_blog_linkinbio', page=posts.prev_num) \
@@ -176,7 +179,7 @@ def show_blog_linkinbio():
                     if post not in posts:
                         posts.append(post)
             return render_template("mobile/blog_results.html", article_category=search, posts=posts, categories=categories,
-                                   form=form)
+                                   form=form, navigation_page=navigation_page)
         else:
             if form.is_submitted():
                 form.method = 'POST'
@@ -191,9 +194,9 @@ def show_blog_linkinbio():
                         if post not in posts:
                             posts.append(post)
                 return render_template("mobile/blog_results.html", article_category=search, posts=posts,
-                                       categories=categories, form=form)
+                                       categories=categories, form=form, navigation_page=navigation_page)
         return render_template("mobile/blog_results.html", posts=posts.items, categories=categories, form=form,
-                               next_url=next_url, prev_url=prev_url)
+                               next_url=next_url, prev_url=prev_url, navigation_page=navigation_page)
 
 
 @bp_main.route('/articles', methods=['POST', 'GET'])
@@ -201,6 +204,7 @@ def show_blog():
     form = SearchForm(request.form)
     categories = Categories.query.all()
     posts = Blogs.query.order_by(desc(Blogs.article_id)).all()
+    navigation_page = render_template('navigation.html', categories=categories)
     if request.method == 'POST' and form.validate():
         search = form.Search.data
         if len(search) == 0:
@@ -211,7 +215,7 @@ def show_blog():
             for post in posts_two:
                 if post not in posts:
                     posts.append(post)
-        return render_template("mobile/blog_results.html", posts=posts, categories=categories, form=form)
+        return render_template("mobile/blog_results.html", posts=posts, categories=categories, form=form, navigation_page=navigation_page)
     else:
         if form.is_submitted():
             form.method = 'POST'
@@ -226,13 +230,14 @@ def show_blog():
                     if post not in posts:
                         posts.append(post)
             return render_template("mobile/blog_results.html", posts=posts, categories=categories, form=form)
-    return render_template("mobile/blog_results.html", posts=posts, categories=categories, form=form)
+    return render_template("mobile/blog_results.html", posts=posts, categories=categories, form=form, navigation_page=navigation_page)
 
 
 @bp_main.route('/<category>', methods=['POST', 'GET'])
 def show_blog_category(category):
         form = SearchForm(request.form)
         categories = Categories.query.all()
+        navigation_page = render_template('navigation.html', categories=categories)
         if Categories.query.filter(Categories.category_name.contains(category)).all():
             posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.category.contains(category)).all()
             if request.method == 'POST' and form.validate():
@@ -249,10 +254,10 @@ def show_blog_category(category):
                             posts.append(post)
                 article_category = category
                 return render_template("mobile/blog_results.html", posts=posts, categories=categories,
-                                       article_category=article_category, form=form)
+                                       article_category=article_category, form=form, navigation_page=navigation_page)
             article_category = category
             return render_template("mobile/blog_results.html", posts=posts, categories=categories,
-                                   article_category=article_category, form=form)
+                                   article_category=article_category, form=form, navigation_page=navigation_page)
 
 
 @bp_main.route('/<series_key>', methods=['POST', 'GET'])
@@ -261,12 +266,13 @@ def show_blog_series(series_key):
     form.Search.data = series_key
     request.method = 'POST'
     categories = Categories.query.all()
+    navigation_page = render_template('navigation.html', categories=categories)
     posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Title.contains(form.Search.data)).all()
     posts_two = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Content.contains(form.Search.data)).all()
     for post in posts_two:
         if post not in posts:
             posts.append(post)
-    return render_template("mobile/blog_results.html", posts=posts, categories=categories, form=form)
+    return render_template("mobile/blog_results.html", posts=posts, categories=categories, form=form, navigation_page=navigation_page)
 
 
 
@@ -409,12 +415,13 @@ def authors(author_id):
     else:
         if Authors.query.filter(Authors.author_id.contains(author_id)).all():
             categories = Categories.query.all()
+            navigation_page = render_template('navigation.html', categories=categories)
             person_name = []
             person = Authors.query.filter_by(author_id=author_id).all()
             for geeza in person:
                 person_name.append(geeza.author_name)
             posts = Blogs.query.filter(Blogs.author.contains(person_name[0])).order_by(desc(Blogs.article_id)).all()
-            return render_template('author.html', categories=categories, person=person, posts=posts)
+            return render_template('author.html', categories=categories, person=person, posts=posts, navigation_page=navigation_page)
 
 
 @bp_main.errorhandler(404)
