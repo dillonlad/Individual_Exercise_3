@@ -69,10 +69,9 @@
 <div class="row m-auto text-center pb-3" style="max-width: 600px">
     <h1 class="pt-5 font-weight-normal w-100 m-auto">{% for item in item_on_page %}{{ item.item_name }}{% endfor %}</h1>
     <span class="w-100 h3 font-weight-normal pb-5 m-auto">Item price: £{% for item in item_on_page %}{{ item.price }}{% endfor %}</span><br>
-    <picture>
-        <source style="max-width: 600px; height: auto" class="card-img-top img-fluid" srcset="../static/img/iot-small.webp" type="image/webp">
-        <img class="card-img-top img-fluid" src="../static/img/iot-small.jpg" alt="Item" style="max-width: 600px; height: auto">
-    </picture>
+    <div class="hovereffect">
+        {% for item in item_on_page %}{{ item.item_photo | safe }}{% endfor %}
+    </div>
 </div>
 <div class="row m-auto pb-5 bg-transparent" style="max-width: 600px">
         <div class="col-12">
