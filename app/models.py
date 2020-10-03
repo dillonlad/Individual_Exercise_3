@@ -98,3 +98,11 @@ class shop_items(db.Model):
     item_id = db.Column(db.Text)
     price = db.Column(db.Text)
     item_photo = db.Column(db.Text)
+
+
+class main_stock_list(db.Model):
+    stock_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    item_number = db.Column(db.Integer, db.ForeignKey(shop_items.item_number))
+    Colour = db.Column(db.Text)
+    Size = db.Column(db.Text)
+    stock = db.Column(db.Integer)

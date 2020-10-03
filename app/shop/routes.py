@@ -23,7 +23,7 @@ from app.main.forms import SignupForm, LoginForm, PostForm, BlogEditor, CreateAr
 from app.main.routes import bp_main
 
 from app.models import Posts_two, Blogs, Profile, Categories, Series, Authors, Comments_dg_tmp, \
-    mailing_list, shop_items
+    mailing_list, shop_items, main_stock_list
 import paypalrestsdk
 
 from app.paypal_api_call import CreateOrder
@@ -88,31 +88,13 @@ def shop_item(id):
                 item_price = float(var.price)
             testshopform = testShop(request.form)
             if request.method == 'POST':
-                if 'size' not in session:
-                    session['size'] = []
-                if 'quantity' not in session:
-                    session['quantity'] = []
-                if 'colour' not in session:
-                    session['colour'] = []
-                if 'item_number' not in session:
-                    session['item_number'] = []
-                if 'itemprice' not in session:
-                    session['itemprice'] = []
-                session['size'].append(testshopform.size.data)
-                session['colour'].append(testshopform.colour.data)
-                session['quantity'].append(float(testshopform.quantity.data))
-                session['item_number'].append(item_no)
-                session['itemprice'].append(float(item_price))
-                items_in_cart = session.get('itemprice', [])
-                counter = len(items_in_cart)
-                message = Markup(render_template_string(
-                    "<!DOCTYPE html><html lang='en'><span>You have added an item to your cart</span><br><span><a href='add-to-cart/{}'>Please click to confirm</a></span></html>".format(
-                        id)))
-                flash(message)
-                return redirect(url_for('shop.shop_item', id=id), code=303)
-            else:
-                if testshopform.is_submitted():
-                    testshopform.method = 'POST'
+                if testshopform.colour.data == "Please select":
+                    flash('Invalid colour request')
+                    return redirect(url_for('shop.shop_item', id=id))
+                elif testshopform.size.data == "Please select":
+                    flash('Invalid size request')
+                    return redirect(url_for('shop.shop_item', id=id))
+                else:
                     if 'size' not in session:
                         session['size'] = []
                     if 'quantity' not in session:
@@ -127,7 +109,7 @@ def shop_item(id):
                     session['colour'].append(testshopform.colour.data)
                     session['quantity'].append(float(testshopform.quantity.data))
                     session['item_number'].append(item_no)
-                    session['itemprice'].append(item_price)
+                    session['itemprice'].append(float(item_price))
                     items_in_cart = session.get('itemprice', [])
                     counter = len(items_in_cart)
                     message = Markup(render_template_string(
@@ -135,6 +117,38 @@ def shop_item(id):
                             id)))
                     flash(message)
                     return redirect(url_for('shop.shop_item', id=id), code=303)
+            else:
+                if testshopform.is_submitted():
+                    if testshopform.colour.data == "Please select":
+                        flash('Invalid colour request')
+                        return redirect(url_for('shop.shop_item', id=id))
+                    elif testshopform.size.data == "Please select":
+                        flash('Invalid size request')
+                        return redirect(url_for('shop.shop_item', id=id))
+                    else:
+                        testshopform.method = 'POST'
+                        if 'size' not in session:
+                            session['size'] = []
+                        if 'quantity' not in session:
+                            session['quantity'] = []
+                        if 'colour' not in session:
+                            session['colour'] = []
+                        if 'item_number' not in session:
+                            session['item_number'] = []
+                        if 'itemprice' not in session:
+                            session['itemprice'] = []
+                        session['size'].append(testshopform.size.data)
+                        session['colour'].append(testshopform.colour.data)
+                        session['quantity'].append(float(testshopform.quantity.data))
+                        session['item_number'].append(item_no)
+                        session['itemprice'].append(item_price)
+                        items_in_cart = session.get('itemprice', [])
+                        counter = len(items_in_cart)
+                        message = Markup(render_template_string(
+                            "<!DOCTYPE html><html lang='en'><span>You have added an item to your cart</span><br><span><a href='add-to-cart/{}'>Please click to confirm</a></span></html>".format(
+                                id)))
+                        flash(message)
+                        return redirect(url_for('shop.shop_item', id=id), code=303)
             return render_template("item_shop.html", testshopform=testshopform, categories=categories, item_on_page=item_on_page, privacy_policy=privacy_policy, navigation_page=navigation_page)
 
 
@@ -298,6 +312,19 @@ def enquiry():
 def abroad_delivery():
     session['abroad_delivery'] = "Yes"
     return redirect(url_for('shop.shop_cart'))
+
+
+@bp_shop.route('/stock/<id>/<item_number>/<Colour>/<Size>', methods=['GET', 'POST'])
+def stock_checker(id, item_number, Colour, Size):
+    if main_stock_list.query.filter(main_stock_list.item_number.contains(item_number)).filter(main_stock_list.Size.contains(Size)).filter(main_stock_list.Colour.contains(Colour)).all():
+        stock_item = main_stock_list.query.filter_by(item_number=item_number).filter_by(Size=Size).filter_by(Colour=Colour).all()
+        for var in stock_item:
+            stock_number = var.stock
+        if stock_number == 0:
+            status = "Unfortunately, this item is OUT OF STOCK in this size, please enquire below if you'd like one so that we know"
+        else:
+            status = "In stock"
+        return jsonify(stock_status=status)
 
 
 @bp_shop.errorhandler(404)

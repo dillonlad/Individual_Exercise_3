@@ -74,17 +74,21 @@
     </div>
 </div>
 <div class="row m-auto pb-5 bg-transparent" style="max-width: 600px">
-        <div class="col-12">
+        <div class="col-12"></div>
                 <form class="user col-12 text-left" method="POST" novalidate>
+                    {% from "_formhelpers.html" import render_field %}
                     {{ testshopform.hidden_tag() }}
                     <div class="form-group font-weight-normal">
-                      {{ testshopform.size.label }}{{ testshopform.size(class_="form-control form-control-user rounded-0") }}
+                        {{ render_field(testshopform.colour, class='form-control form-control-user rounded-0 font-weight-normal', id="colour") }}
+                    </div>
+                    <div class="form-group font-weight-normal">
+                        {{ render_field(testshopform.size, class='form-control form-control-user rounded-0 font-weight-normal', id="size", onchange="stock_check()") }}
+                    </div>
+                    <div class="form-group font-weight-normal">
+                        <p id="statusStock"></p>
                     </div>
                     <div class="form-group">
                         <a href="{{ url_for('shop.enquiry') }}">Your size not available? Click here to let us know and we can order one for you, just put your size in the message</a>
-                    </div>
-                    <div class="form-group">
-                      {{ testshopform.colour.label }}{{ testshopform.colour(class_="form-control form-control-user rounded-0")}}
                     </div>
                     <div class="form-group">
                       {{ testshopform.quantity.label }}{{ testshopform.quantity(class_="form-control form-control-user rounded-0")}}
@@ -98,6 +102,7 @@
         </div>
 </div>
 </div>
+</div>
 <script>
     function openNav() {
       document.getElementById("myNav").style.width = "100%";
@@ -107,6 +112,30 @@
     function closeNav() {
       document.getElementById("myNav").style.width = "0%";
       document.getElementById("cards").style.visibility = "visible"
+    }
+</script>
+<script>
+    function stock_check() {
+        var itemid = {% for item in item_on_page %}{{ item.item_id | tojson }}{% endfor %}
+        var item_number = {% for item in item_on_page %}{{ item.item_number | tojson }}{% endfor %}
+        var form_colour = document.getElementById("colour").value
+        var form_size = document.getElementById("size").value
+        getStatus()
+
+
+         function getStatus(){
+          return fetch("/shop/stock/" + itemid + "/" + item_number + "/" + form_colour + "/" + form_size, {
+            method: 'post',
+            headers: {
+              'content-type': 'application/json'
+            }
+          }).then(function(res) {
+            return res.json();
+          }).then(function(data) {
+            document.getElementById("statusStock").innerHTML = data.stock_status;
+          });
+        }
+
     }
 </script>
 </body>
