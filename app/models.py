@@ -98,6 +98,7 @@ class shop_items(db.Model):
     item_id = db.Column(db.Text)
     price = db.Column(db.Text)
     item_photo = db.Column(db.Text)
+    item_description = db.Column(db.Text)
 
 
 class main_stock_list(db.Model):

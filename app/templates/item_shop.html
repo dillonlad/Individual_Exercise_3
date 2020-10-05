@@ -73,6 +73,9 @@
         {% for item in item_on_page %}{{ item.item_photo | safe }}{% endfor %}
     </div>
 </div>
+<div class="row m-auto w-100 pb-3" style="max-width: 600px">
+        {% for item in item_on_page %}{{ item.item_description | safe }}{% endfor %}
+</div>
 <div class="row m-auto pb-5 bg-transparent" style="max-width: 600px">
         <div class="col-12"></div>
                 <form class="user col-12 text-left" method="POST" novalidate>
