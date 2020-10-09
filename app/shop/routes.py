@@ -330,6 +330,8 @@ def stock_checker(id, item_number, Colour, Size):
             stock_number = var.stock
         if stock_number == 0:
             status = "Unfortunately, this item is OUT OF STOCK in this size, please enquire below if you'd like one so that we know"
+        elif stock_number == 1:
+            status = "Only 1 left in stock"
         else:
             status = "In stock"
         return jsonify(stock_status=status)
