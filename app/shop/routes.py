@@ -198,8 +198,8 @@ def shop_cart():
             shipping_cost = 9.85
             shipping_msg = "Intl"
         else:
-            shipping_cost = 4.10
-            shipping_msg = "UK"
+            shipping_cost = 0.00
+            shipping_msg = "Free UK Delivery"
         final_with_shipping = round(final_cost + shipping_cost, 2)
         return render_template('cart-live.html', categories=categories, final_cost=final_cost, counter=counter, items=items_in_cart, colours=colours_in_cart, quantities=new_quantities, sizes=sizes_in_cart, prices=prices_in_cart, cost_list=cost_list, final_with_shipping=final_with_shipping, privacy_policy=privacy_policy, shipping_cost=shipping_cost, navigation_page=navigation_page, shipping_msg=shipping_msg)
     else:
@@ -217,7 +217,7 @@ def card_payment():
         if 'abroad_delivery' in session:
             shipping_cost = 9.85
         else:
-            shipping_cost = 4.10
+            shipping_cost = 0.00
         for it in range(counter):
             item_details = {
                 "name": "{}, size: {}, colour: {}".format(session['cart'][it], session['size'][it],

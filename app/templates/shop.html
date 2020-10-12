@@ -82,6 +82,7 @@
                   <div class="card-body text-center m-auto" style="max-width: 600px;">
                       <a href="{{ url_for('shop.shop_item', id=item.item_id) }}"><p class="card-text mb-2 h3 font-weight-normal h1 {% if request.MOBILE %}{% else %}display-3{% endif %} text-dark" itemprop="name">{{ item.item_name }}</p></a>
                       <p class="card-subtitle mb-2 font-weight-normal m-auto h3 text-dark">Price: £{{ item.price }}</p>
+                      <p class="card-subtitle mb-2 font-weight-normal m-auto text-dark pt-2 pb-2">FREE UK DELIVERY <i style="border: none" class="fas fa-truck"></i></p>
                       <a href="{{ url_for('shop.shop_item', id=item.item_id) }}"><p class="h5 m-auto font-weight-normal pt-2">Add item to cart</p></a>
                   </div>
             {% endfor %}

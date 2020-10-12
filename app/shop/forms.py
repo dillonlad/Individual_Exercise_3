@@ -2,15 +2,20 @@ from flask_wtf import FlaskForm
 from flask_wysiwyg.wysiwyg import WysiwygField
 from wtforms import SubmitField, StringField, PasswordField, RadioField, BooleanField, TextAreaField, SelectField, \
     IntegerField
-from wtforms.validators import DataRequired, EqualTo, Email, Length, ValidationError, AnyOf
+from wtforms.validators import DataRequired, EqualTo, Email, Length, ValidationError, AnyOf, NoneOf
 
+
+def validating_input(form, field):
+    if 'Please' in field.data:
+        return ValidationError("Please select a colour")
 
 
 class testShop(FlaskForm):
-    colour = SelectField('Colour: ', choices=[('Please select', 'Please select'), ('White', 'White'), ('Grey', 'Grey')])
-    size = SelectField('Size: ', choices=[('Please select', 'Please select'), ('XS', 'XS - Not available'), ('S', 'S'), ('M', 'M'), ('L', 'L'), ('XL', 'XL - Not available')])
+    colour = SelectField('Colour: ', choices=[('Please select', 'Please select'), ('White', 'White'), ('Grey', 'Grey')], validators=[NoneOf(values=['Please select'], message="Please select a colour")])
+    size = SelectField('Size: ', choices=[('Please select', 'Please select'), ('XS', 'XS - Not available'), ('S', 'S'), ('M', 'M'), ('L', 'L'), ('XL', 'XL - Not available')], validators=[NoneOf(values=['Please select'], message="Please select a colour")])
     quantity = SelectField('Quantity: ', choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5')])
     submit = SubmitField('Add to cart')
+
 
 
 class EnquiryForm(FlaskForm):

@@ -68,7 +68,8 @@
     </div>
 <div class="row m-auto text-center pb-3" style="max-width: 600px">
     <h1 class="pt-5 font-weight-normal w-100 m-auto">{% for item in item_on_page %}{{ item.item_name }}{% endfor %}</h1>
-    <span class="w-100 h3 font-weight-normal pb-5 m-auto">Item price: £{% for item in item_on_page %}{{ item.price }}{% endfor %}</span><br>
+    <span class="w-100 h3 font-weight-normal m-auto">Item price: £{% for item in item_on_page %}{{ item.price }}{% endfor %}</span><br>
+    <p class="card-subtitle mb-2 font-weight-normal m-auto text-dark pt-2 pb-5">FREE UK DELIVERY <i style="border: none" class="fas fa-truck"></i></p>
     <div class="hovereffect">
         {% for item in item_on_page %}{{ item.item_photo | safe }}{% endfor %}
     </div>
@@ -100,7 +101,7 @@
                         <a data-toggle="collapse" class="pt-2 pb-2 mb-2" href="#collapseSearch" role="button" aria-expanded="false" aria-controls="collapseExample">Before you proceed, click here to learn how we use cookies for your checkout experience</a>
                         {{ privacy_policy | safe }}
                     </div>
-                    {{ render_field(testshopform.submit, class="btn btn-dark btn-user btn-block rounded-0", id="submitButton") }}
+                    {{ render_field(testshopform.submit, class="btn btn-dark btn-user btn-block rounded-0", id="submitButton", value="Finish") }}
                 </form>
         </div>
 </div>
