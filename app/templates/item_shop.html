@@ -100,7 +100,7 @@
                         <a data-toggle="collapse" class="pt-2 pb-2 mb-2" href="#collapseSearch" role="button" aria-expanded="false" aria-controls="collapseExample">Before you proceed, click here to learn how we use cookies for your checkout experience</a>
                         {{ privacy_policy | safe }}
                     </div>
-                    {{ testshopform.submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
+                    {{ render_field(testshopform.submit, class="btn btn-dark btn-user btn-block rounded-0", id="submitButton") }}
                 </form>
         </div>
 </div>
@@ -116,6 +116,7 @@
       document.getElementById("myNav").style.width = "0%";
       document.getElementById("cards").style.visibility = "visible"
     }
+
 </script>
 <script>
     function stock_check() {

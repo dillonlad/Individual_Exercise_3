@@ -58,7 +58,7 @@
 <div id="middle" class="container-fluid mainimage h-100 w-100" style="{% if request.MOBILE %}background-image:url('../static/img/mahdi-soheili-m-jJ4wLjoIc-unsplash.jpg'){% else %}background-image:url('../static/img/greg-rakozy-oMpAz-DN-9I-unsplash.jpg'){% endif %}; background-size: cover; min-height: 100vh">
 <div class="container-fluid h-75" id="navigation">
             <script src="https://kit.fontawesome.com/7380e39ab3.js" crossorigin="anonymous"></script>
-    <div id="nav_one" style="display: block" class="row">
+    <div id="nav_one" style="display: block" class="row" itemscope itemtype="https://schema.org/SiteNavigationElement">
         <div class="col-12">
             <nav class="navbar navbar-dark bg-transparent {% if request.MOBILE %}text-dark{% else %}text-white{% endif %}" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
                     <a id="home_link" href="{{url_for('main.index')}}"><span class="navbar-brand {% if request.MOBILE %}text-dark{% else %}text-white{% endif %} navbar-dark mb-0 h1 font-weight-normal">Home</span></a>
