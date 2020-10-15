@@ -59,8 +59,8 @@ environment = SandboxEnvironment(client_id=client_id, client_secret=client_secre
 client = PayPalHttpClient(environment)
 
 
-@login_required
 @bp_shoptest.route('/', methods=['GET'])
+@login_required
 def test_shop():
     host = request.host
     if "www" in host:
@@ -78,8 +78,8 @@ def test_shop():
         return render_template('shop.html', items=items, categories=categories, navigation_page=navigation_page)
 
 
-@login_required
 @bp_shoptest.route('/<id>', methods=['GET', 'POST'])
+@login_required
 def test_shop_item(id):
     host = request.host
     if request.url.startswith('http://') and '127' not in host:
@@ -162,8 +162,8 @@ def test_shop_item(id):
             return render_template("item_shop.html", testshopform=testshopform, categories=categories, item_on_page=item_on_page, privacy_policy=privacy_policy, navigation_page=navigation_page)
 
 
-@login_required
 @bp_shoptest.route('/add-to-cart/<id>', methods=['GET', 'POST'])
+@login_required
 def test_add_to_cart(id):
     if 'cart' not in session:
         session['cart'] = []
@@ -177,8 +177,8 @@ def test_add_to_cart(id):
     return redirect(url_for('shoptest.test_shop_cart'))
 
 
-@login_required
 @bp_shoptest.route('/cart', methods=['GET', 'POST'])
+@login_required
 def test_shop_cart():
     categories = Categories.query.all()
     navigation_page = render_template('navigation.html', categories=categories)
@@ -211,8 +211,8 @@ def test_shop_cart():
         return redirect(url_for('shoptest.test_shop'))
 
 
-@login_required
 @bp_shoptest.route('/card-payment', methods=['GET', 'POST'])
+@login_required
 def test_card_payment():
     if 'cart' in session:
         items_in_cart = session.get('cart', [])
@@ -267,8 +267,8 @@ def test_card_payment():
         return redirect(url_for('shoptest.test_shop'))
 
 
-@login_required
 @bp_shoptest.route('/card-execute', methods=['GET', 'POST'])
+@login_required
 def test_card_execute():
     if 'cart' in session:
         order_id = session['order_id']
@@ -278,15 +278,15 @@ def test_card_execute():
         return redirect(url_for('shoptest.test_shop'))
 
 
-@login_required
 @bp_shoptest.route('/empty', methods=['GET', 'POST'])
+@login_required
 def test_empty_basket():
     session.clear()
     return redirect(url_for('shoptest.test_shop'))
 
 
-@login_required
 @bp_shoptest.route('/enquiry', methods=['GET', 'POST'])
+@login_required
 def test_enquiry():
     form = EnquiryForm(request.form)
     if request.method == 'POST' and form.validate():
@@ -324,15 +324,15 @@ def test_enquiry():
             return render_template('enquiry_page.html', form=form)
 
 
-@login_required
 @bp_shoptest.route('/abroad-delivery')
+@login_required
 def test_abroad_delivery():
     session['abroad_delivery'] = "Yes"
     return redirect(url_for('shoptest.test_shop_cart'))
 
 
-@login_required
 @bp_shoptest.route('/stock/<id>/<item_number>/<Colour>/<Size>', methods=['GET', 'POST'])
+@login_required
 def test_stock_checker(id, item_number, Colour, Size):
     if main_stock_list.query.filter(main_stock_list.item_number.contains(item_number)).filter(main_stock_list.Size.contains(Size)).filter(main_stock_list.Colour.contains(Colour)).all():
         stock_item = main_stock_list.query.filter_by(item_number=item_number).filter_by(Size=Size).filter_by(Colour=Colour).all()
@@ -347,14 +347,14 @@ def test_stock_checker(id, item_number, Colour, Size):
         return jsonify(stock_status=status)
 
 
-@login_required
 @bp_shoptest.errorhandler(404)
+@login_required
 def test_pnf_404(error):
     return render_template("404.html"), 404
 
 
-@login_required
 @bp_shoptest.errorhandler(500)
+@login_required
 def test_pnf_500(error):
     return render_template("500.html"), 500
 
