@@ -58,7 +58,7 @@
         {% endif %}
 {% endwith %}
 {{ navigation_page | safe }}
-<div class="container-fluid">
+<div class="container-fluid" style="background-image: url('../static/img/annie-spratt-mzpYBn8ebqs-unsplash.jpg'); background-size: cover; min-height: 100vh">
 <div class="container-fluid" id="navigation">
     <div id="nav_one" style="display: block" class="row">
         <script src="https://kit.fontawesome.com/7380e39ab3.js" crossorigin="anonymous"></script>
@@ -107,31 +107,14 @@
     </div>
     <div class="w-100" id="paypal-button-container"></div>
 </div>
-<div class="row m-auto w-100" style="max-width: 600px">
-    {% if counter != 0 %}
-            {% for cart_item in range(counter) %}
-                <div class="card mb-3 rounded-0" style="width: 100%">
-                    <div class="hovereffect">
-                        <picture>
-                            <source style="max-width: 600px; height: auto" class="card-img-top img-fluid" srcset="../static/img/iot-small.webp" type="image/webp">
-                            <img class="card-img-top img-fluid" src="../static/img/iot-small.jpg" alt="Item" style="max-width: 600px; height: auto">
-                        </picture>
-                        </div>
-                    </div>
-                  <div class="card-body text-center">
-                      <h6 class="card-subtitle mb-2 text-muted font-weight-normal ml-0">Quantity: {{ quantities[cart_item] }}</h6>
-                      <p class="card-text mb-2 ml-0" itemprop="name">{{ items[cart_item] }}</p>
-                      <p class="card-subtitle mb-2 text-muted font-weight-normal ml-0">Size: {{ sizes[cart_item] }}, Colour: {{ colours[cart_item] }}, Price: £{{ prices[cart_item] }}</p>
-                  </div>
-            {% endfor %}
-        {% else %}
-            <h1 class="font-weight-normal display-1 text-center w-100">You have no items in your cart</h1>
-{% endif %}
-        </div>
 
 
 
 </div>
+<footer class="text-center p-5 mt-5" style="background-color: #dddddd">
+        <p>Made in Leicestershire, with love from London.</p>
+        <p class="text-muted">&copy; 2020 In Wait of Tomorrow</p>
+</footer>
 
 <script>
 
