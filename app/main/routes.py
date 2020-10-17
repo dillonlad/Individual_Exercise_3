@@ -85,6 +85,11 @@ def articles_sitemap():
     return render_template('sitemap_blogs.xml', categories=categories, articles=articles)
 
 
+@bp_main.route('/e2signi7jnwn91lzisnqiix5uvmc3v.html', methods=['GET'])
+def facebook_verify():
+    return render_template('e2signi7jnwn91lzisnqiix5uvmc3v.html')
+
+
 @bp_main.route('/', methods=['POST', 'GET'])
 def index():
     host = request.host

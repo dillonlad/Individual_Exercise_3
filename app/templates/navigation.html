@@ -8,7 +8,7 @@
               <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
               <div class="overlay-content mt-0">
                   <a href="{{ url_for('main.show_blog') }}">Latest articles</a>
-                    <a href="{{ url_for('shop.shop') }}">SHOP - coming very soon!</a>
+                    <a href="{{ url_for('shop.shop') }}">SHOP</a>
                   <div class="dropdown-divider text-center align-self-center m-auto" style="max-width: 600px"></div>
                   {% for category in categories %}
                     {% if category.category_name != "Blog" %}
