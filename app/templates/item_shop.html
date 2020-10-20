@@ -38,13 +38,13 @@
     <link href="../static/css/title.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="shortcut icon" href="../static/img/favico.ico">
-    <meta name="description" content="Fashion for science and technology lovers! Have a look at our latest hoodie designs!"/>
+    <meta name="description" content="Fashion for science and technology lovers! Have a look at the latest in our though provoking, futuristic collection: {% for item in item_on_page %}{{ item.item_name }}{% endfor %}"/>
     <meta name="keywords" content="inwaitoftomorrow, In Wait of Tomorrow, futurology, Technology, Science, Healthcare, Environment">
     <meta name="author" content="inwaitoftomorrow">
     <meta name="robots" content="index, follow">
     <title>{% for item in item_on_page %}{{ item.item_name }}{% endfor %}</title>
 </head>
-<body style="font-family: 'Pridi', serif;">
+<body style="font-family: 'Pridi', serif;" itemscope itemtype="https://schema.org/Product">
 {% with messages = get_flashed_messages() %}
             {% if messages %}
                 <div class="text-center m-auto font-weight-normal h2" style="max-width: 600px; min-height: 50vh; padding-top: 20vh">
@@ -67,10 +67,10 @@
         </div>
     </div>
 <div class="row m-auto text-center pb-3" style="max-width: 600px">
-    <h1 class="pt-5 font-weight-normal w-100 m-auto">{% for item in item_on_page %}{{ item.item_name }}{% endfor %}</h1>
-    <span class="w-100 h3 font-weight-normal m-auto">Item price: £{% for item in item_on_page %}{{ item.price }}{% endfor %}</span><br>
-    <p class="card-subtitle mb-2 font-weight-normal m-auto text-dark pt-2 pb-5">FREE UK DELIVERY <i style="border: none" class="fas fa-truck"></i></p>
-    <div class="hovereffect">
+    <h1 class="pt-5 font-weight-normal w-100 m-auto" itemprop="name">{% for item in item_on_page %}{{ item.item_name }}{% endfor %}</h1>
+    <span class="w-100 h3 font-weight-normal m-auto" itemprop="price">Item price: £{% for item in item_on_page %}{{ item.price }}{% endfor %}</span><br>
+    <p class="card-subtitle mb-2 font-weight-normal m-auto text-dark pt-2 pb-5" itemprop="offers" itemscope itemtype="https://schema.org/Offer">FREE UK DELIVERY <i style="border: none" class="fas fa-truck"></i></p>
+    <div class="hovereffect" itemprop="image">
         {% for item in item_on_page %}{{ item.item_photo | safe }}{% endfor %}
     </div>
 </div>
@@ -83,7 +83,7 @@
                     {% from "_formhelpers.html" import render_field %}
                     {{ testshopform.hidden_tag() }}
                     <div class="form-group font-weight-normal">
-                        {{ render_field(testshopform.colour, class='form-control form-control-user rounded-0 font-weight-normal', id="colour") }}
+                        {{ render_field(testshopform.colour, class='form-control form-control-user rounded-0 font-weight-normal', id="colour", onchange="stock_check()") }}
                     </div>
                     <div class="form-group font-weight-normal">
                         {{ render_field(testshopform.size, class='form-control form-control-user rounded-0 font-weight-normal', id="size", onchange="stock_check()") }}
@@ -146,6 +146,13 @@
         }
 
     }
+</script>
+<script type="application/ld+json">
+  {
+    "sameAs": [
+      "https://shop.inwaitoftomorrow.appspot.com/shop/{% for item in item_on_page %}{{ item.item_id }}{% endfor %}"
+    ]
+  }
 </script>
 </body>
 </html>
