@@ -14,7 +14,7 @@ class testShop(FlaskForm):
     colour = SelectField('Colour: ', choices=[('Please select', 'Please select'), ('White', 'White'), ('Grey', 'Grey')], validators=[NoneOf(values=['Please select'], message="Please select a colour")])
     size = SelectField('Size: ', choices=[('Please select', 'Please select'), ('XS', 'XS - Not available'), ('S', 'S'), ('M', 'M'), ('L', 'L'), ('XL', 'XL - Not available')], validators=[NoneOf(values=['Please select'], message="Please select a colour")])
     quantity = SelectField('Quantity: ', choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5')])
-    submit = SubmitField('Add to cart')
+    submit = SubmitField('ADD TO CART')
 
 
 

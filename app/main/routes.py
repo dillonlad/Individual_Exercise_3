@@ -19,7 +19,7 @@ from app import db
 from app.main.forms import SignupForm, LoginForm, PostForm, BlogEditor, CreateArticle, SearchForm
 
 from app.models import Posts_two, Blogs, Profile, Categories, Series, Authors, Comments_dg_tmp, \
-    mailing_list
+    mailing_list, shop_items
 
 bp_main = Blueprint('main', __name__)
 ext = Sitemap()
@@ -83,6 +83,12 @@ def articles_sitemap():
     categories = Categories.query.all()
     articles = Blogs.query.all()
     return render_template('sitemap_blogs.xml', categories=categories, articles=articles)
+
+
+@bp_main.route('/products-sitemap.xml', methods=['GET'])
+def products_sitemap():
+    products = shop_items.query.all()
+    return render_template('sitemap_products.xml', products=products)
 
 
 @bp_main.route('/e2signi7jnwn91lzisnqiix5uvmc3v.html', methods=['GET'])

@@ -296,7 +296,7 @@ def enquiry():
     else:
         if form.is_submitted():
             form.method = 'POST'
-            if (len(form.name.data) > 0 and len(form.comment.data) > 0) or (
+            if (len(form.name.data) > 0 and len(form.message.data) > 0) or (
                     len(form.name.data) > 0 and len(form.email.data) > 0):
                 with app.mail.connect() as conn:
                     msg = Message('{} - comment'.format(form.name.data), sender=ADMINS[0], recipients=ADMINS)

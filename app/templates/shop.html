@@ -38,8 +38,8 @@
     <link href="../static/css/title.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="shortcut icon" href="../static/img/favico.ico">
-    <meta name="description" content="Fashion for science and technology lovers! Have a look at our latest hoodie designs!"/>
-    <meta name="keywords" content="inwaitoftomorrow, In Wait of Tomorrow, futurology, Technology, Science, Healthcare, Environment">
+    <meta name="description" content="Fashion for science and technology lovers! Have a look at our latest hoodie collection: What Next Bro?!"/>
+    <meta name="keywords" content="inwaitoftomorrow, Science, Technology, Shop, Hoodie">
     <meta name="author" content="inwaitoftomorrow">
     <meta name="robots" content="index, follow">
     <title>Shop</title>
@@ -83,16 +83,16 @@
                   <div class="card-body text-center m-auto" style="max-width: 600px;">
                       <a href="{{ url_for('shop.shop_item', id=item.item_id) }}"><p class="card-text mb-2 h3 font-weight-normal h1 {% if request.MOBILE %}{% else %}display-3{% endif %} text-dark" itemprop="name">{{ item.item_name }}</p></a>
                       <p class="card-subtitle mb-2 font-weight-normal m-auto h3 text-dark" itemprop="price" itemprop="priceCurrency" content="GBP">Price: £{{ item.price }}</p>
-                      <p class="card-subtitle mb-2 font-weight-normal m-auto text-dark pt-2 pb-2">FREE UK DELIVERY <i style="border: none" class="fas fa-truck"></i></p>
+                      <p class="card-subtitle mb-2 font-weight-normal m-auto text-dark pt-2 pb-2">FREE UK DELIVERY (limited time only!) <i style="border: none" class="fas fa-truck"></i></p>
                       <a href="{{ url_for('shop.shop_item', id=item.item_id) }}"><p class="h5 m-auto font-weight-normal pt-2">Add item to cart</p></a>
                   </div>
             {% endfor %}
         </div>
 
-<div class= "row col-12 justify-content-center w-100" id="aboutUs">
+<div class= "row col-12 justify-content-center w-100 text-center m-auto" style="max-width: 800px" id="aboutUs">
             <img src="../static/img/logo.webp" style="max-height: 200px" alt="In Wait of Tomorrow">
         </div>
-        <div class="row col-12 justify-content-center text-center text-dark w-100">
+        <div class="row col-12 m-auto justify-content-center text-center text-dark w-100" style="max-width: 800px">
             <a href="https://www.facebook.com/inwaitoftomorrow/" class="fa fa-facebook"></a>
             <a href="https://www.instagram.com/inwaitoftomorrow/" class="fa fa-twitter"></a>
             <a href="https://twitter.com/InWaitofTomorr1" class="fa fa-instagram"></a>

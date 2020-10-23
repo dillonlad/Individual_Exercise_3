@@ -39,7 +39,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="shortcut icon" href="../static/img/favico.ico">
     <meta name="description" content="Fashion for science and technology lovers! Have a look at the latest in our though provoking, futuristic collection: {% for item in item_on_page %}{{ item.item_name }}{% endfor %}"/>
-    <meta name="keywords" content="inwaitoftomorrow, In Wait of Tomorrow, futurology, Technology, Science, Healthcare, Environment">
+    <meta name="keywords" content="In Wait of Tomorrow, Hoodie, Science Hoodie, Science, {% for item in item_on_page %}{{ item.item_name }}{% endfor %}">
     <meta name="author" content="inwaitoftomorrow">
     <meta name="robots" content="index, follow">
     <title>{% for item in item_on_page %}{{ item.item_name }}{% endfor %}</title>
@@ -61,32 +61,32 @@
     <div id="nav_one" style="display: block" class="row">
         <div class="col-12">
             <nav class="navbar navbar-dark {% if request.MOBILE %}{% else %}fixed-top{% endif %} bg-transparent" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
-                    <a id="home_link" href="{{url_for('main.index')}}"><span class="navbar-brand text-dark navbar-dark mb-0 h1 font-weight-normal">In Wait of Tomorrow</span></a>
+                    <a id="home_link" href="{{url_for('shop.shop')}}"><span class="navbar-brand text-dark navbar-dark mb-0 h1 font-weight-normal">Shop Homepage</span></a>
                     <a href="{{ url_for('shop.shop_cart') }}" class="text-dark"><i style="border: none" class="fas fa-shopping-cart"></i></a>
             </nav>
         </div>
     </div>
-<div class="row m-auto text-center pb-3" style="max-width: 600px">
-    <h1 class="pt-5 font-weight-normal w-100 m-auto" itemprop="name">{% for item in item_on_page %}{{ item.item_name }}{% endfor %}</h1>
-    <span class="w-100 h3 font-weight-normal m-auto" itemprop="price">Item price: £{% for item in item_on_page %}{{ item.price }}{% endfor %}</span><br>
-    <p class="card-subtitle mb-2 font-weight-normal m-auto text-dark pt-2 pb-5" itemprop="offers" itemscope itemtype="https://schema.org/Offer">FREE UK DELIVERY <i style="border: none" class="fas fa-truck"></i></p>
-    <div class="hovereffect" itemprop="image">
+{% if request.MOBILE %}{% else %}<div class="row m-auto pb-3 pt-5" style="max-width: 1200px; min-height: 100vh">{% endif %}
+<div {% if request.MOBILE %}class="row m-auto text-center pb-1 pt-3" style="max-width: 600px"{% else %}class="col-6"{% endif %}>
+    <div class="hovereffect" {% if request.MOBILE %}{% else %}style="padding-top: 10vh"{% endif %} itemprop="image">
         {% for item in item_on_page %}{{ item.item_photo | safe }}{% endfor %}
     </div>
 </div>
-<div class="row m-auto w-100 pb-3" style="max-width: 600px">
-        {% for item in item_on_page %}{{ item.item_description | safe }}{% endfor %}
-</div>
-<div class="row m-auto pb-5 bg-transparent" style="max-width: 600px">
+<div {% if request.MOBILE %}class="row m-auto text-center pb-1" style="max-width: 600px"{% else %}class="col-6"{% endif %}>
+    <h1 class="{% if request.MOBILE %}pt-1{% else %}pt-5{% endif %} font-weight-normal w-100 m-auto text-center" itemprop="name">{% for item in item_on_page %}{{ item.item_name }}{% endfor %}</h1>
+    <p class="w-100 h3 font-weight-normal m-auto text-center" itemprop="price">Item price: £{% for item in item_on_page %}{{ item.price }}{% endfor %}</p><br>
+    <p class="card-subtitle mb-2 font-weight-normal m-auto text-dark pt-2 {% if request.MOBILE %}pb-1{% else %}pb-5{% endif %} text-center" itemprop="offers" itemscope itemtype="https://schema.org/Offer">FREE UK DELIVERY (limited time only!) <i style="border: none" class="fas fa-truck"></i></p>
+    {% if request.MOBILE %}{% else %}
+        <div class="pb-3 bg-transparent border-bottom border-dark">
         <div class="col-12"></div>
                 <form class="user col-12 text-left" method="POST" novalidate>
                     {% from "_formhelpers.html" import render_field %}
                     {{ testshopform.hidden_tag() }}
                     <div class="form-group font-weight-normal">
-                        {{ render_field(testshopform.colour, class='form-control form-control-user rounded-0 font-weight-normal', id="colour", onchange="stock_check()") }}
+                        {{ testshopform.colour.label }}{{ render_field(testshopform.colour, class='form-control form-control-user rounded-0 font-weight-normal', id="colour", onchange="stock_check()") }}
                     </div>
                     <div class="form-group font-weight-normal">
-                        {{ render_field(testshopform.size, class='form-control form-control-user rounded-0 font-weight-normal', id="size", onchange="stock_check()") }}
+                        {{ testshopform.size.label }}{{ render_field(testshopform.size, class='form-control form-control-user rounded-0 font-weight-normal', id="size", onchange="stock_check()") }}
                     </div>
                     <div class="form-group font-weight-normal">
                         <p id="statusStock"></p>
@@ -101,12 +101,67 @@
                         <a data-toggle="collapse" class="pt-2 pb-2 mb-2" href="#collapseSearch" role="button" aria-expanded="false" aria-controls="collapseExample">Before you proceed, click here to learn how we use cookies for your checkout experience</a>
                         {{ privacy_policy | safe }}
                     </div>
-                    {{ render_field(testshopform.submit, class="btn btn-dark btn-user btn-block rounded-0", id="submitButton", value="Finish") }}
+                    {{ render_field(testshopform.submit, class="btn btn-dark btn-user btn-block rounded-0", id="submitButton", value="ADD TO CART") }}
                 </form>
         </div>
+        <div class="w-100 m-auto pb-3 pt-2">
+        <h4 class="font-weight-normal">PRODUCT DESCRIPTION AND CARE</h4>
+                {% for item in item_on_page %}{{ item.item_description | safe }}{% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% if request.MOBILE %}
+    <div class="row m-auto pb-2 bg-transparent" style="max-width: 600px">
+        <div class="col-12"></div>
+                <form class="user col-12 text-left" method="POST" novalidate>
+                    {% from "_formhelpers.html" import render_field %}
+                    {{ testshopform.hidden_tag() }}
+                    <div class="form-group font-weight-normal">
+                        {{ testshopform.colour.label }}{{ render_field(testshopform.colour, class='form-control form-control-user rounded-0 font-weight-normal', id="colour", onchange="stock_check()") }}
+                    </div>
+                    <div class="form-group font-weight-normal">
+                        {{ testshopform.size.label }}{{ render_field(testshopform.size, class='form-control form-control-user rounded-0 font-weight-normal', id="size", onchange="stock_check()") }}
+                    </div>
+                    <div class="form-group font-weight-normal">
+                        <p id="statusStock"></p>
+                    </div>
+                    <div class="form-group">
+                        <a href="{{ url_for('shop.enquiry') }}">Your size not available? Click here to let us know and we can order one for you, just put your size in the message</a>
+                    </div>
+                    <div class="form-group">
+                      {{ testshopform.quantity.label }}{{ testshopform.quantity(class_="form-control form-control-user rounded-0")}}
+                    </div>
+                    <div class="form-group">
+                        <a data-toggle="collapse" class="pt-2 pb-2 mb-2" href="#collapseSearch" role="button" aria-expanded="false" aria-controls="collapseExample">Before you proceed, click here to learn how we use cookies for your checkout experience</a>
+                        {{ privacy_policy | safe }}
+                    </div>
+                    {{ render_field(testshopform.submit, class="btn btn-dark btn-user btn-block rounded-0", id="submitButton", value="ADD TO CART") }}
+                </form>
+        </div>
+<div class="row m-auto w-100 pb-3" style="max-width: 600px">
+<h4 class="font-weight-normal">PDODUCT DESCRIPTION AND CARE</h4>
+        {% for item in item_on_page %}{{ item.item_description | safe }}{% endfor %}
+</div>
+
+{% else %}{% endif %}
+{% if request.MOBILE %}{% else %}</div>{% endif %}
 </div>
 </div>
 </div>
+<div class= "row col-12 justify-content-center w-100 text-center m-auto" style="max-width: 800px" id="aboutUs">
+            <img src="../static/img/logo.webp" style="max-height: 200px" alt="In Wait of Tomorrow">
+        </div>
+        <div class="row col-12 m-auto justify-content-center text-center text-dark w-100" style="max-width: 800px">
+            <a href="https://www.facebook.com/inwaitoftomorrow/" class="fa fa-facebook"></a>
+            <a href="https://www.instagram.com/inwaitoftomorrow/" class="fa fa-twitter"></a>
+            <a href="https://twitter.com/InWaitofTomorr1" class="fa fa-instagram"></a>
+            <a href="https://www.reddit.com/user/inwaitoftomorrow" class="fa fa-reddit"></a>
+        </div>
+        <div class="p-3 row container-fluid m-auto w-100" style="max-width: 600px" itemscope itemtype="https://schema.org/AboutPage">
+            <h4 class="col-12 h4 font-weight-normal text-dark text-left">About our shop</h4>
+            <p class="col-12 font-weight-normal text-dark text-left">Our designs fuse fashion with science and technology like never before. Our hoodies are fashionable and comfortable, with artwork guaranteed to make you think and ask questions.</p>
+            <p class="col-12 font-weight-normal text-dark text-left">For any questions or issues, please email us at <a href="mailto:info@inwaitoftomorrow.com">info@inwaitoftomorrow.com</a></p>
+        </div>
 <footer class="text-center p-5" style="background-color: #dddddd">
         <p>Made in Leicestershire, with love from London.</p>
         <p class="text-muted">&copy; 2020 In Wait of Tomorrow</p>
