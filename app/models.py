@@ -99,6 +99,8 @@ class shop_items(db.Model):
     price = db.Column(db.Text)
     item_photo = db.Column(db.Text)
     item_description = db.Column(db.Text)
+    meta_description = db.Column(db.Text)
+    meta_image = db.Column(db.Text)
 
 
 class main_stock_list(db.Model):

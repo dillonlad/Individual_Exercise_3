@@ -13,14 +13,14 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta property="og:title" content="In Wait of Tomorrow"/>
+    <meta property="og:title" content="In Wait of Tomorrow Shop"/>
     <meta property="og:type" content="website"/>
     <meta property="og:url" content="https://inwaitoftomorrow.appspot.com/shop/{% for item in item_on_page %}{{ item.item_id }}{% endfor %}"/>
-    <meta property="og:description" content="Fashion for science and technology lovers! Have a look at our latest hoodie designs!"/>
-    <meta property="og:image" content='http://inwaitoftomorrow.appspot.com/static/img/logo.jpeg'/>
-    <meta name="twitter:title" content="In Wait of Tomorrow"/>
-    <meta name="twitter:description" content="Fashion for science and technology lovers! Have a look at our latest hoodie designs!"/>
-    <meta name="twitter:image" content='http://inwaitoftomorrow.appspot.com/static/img/logo.jpeg'/>
+    <meta property="og:description" content="{% for item in item_on_page %}{{ item.meta_description }}{% endfor %}"/>
+    <meta property="og:image" content='{% for item in item_on_page %}{{ item.meta_image }}{% endfor %}'/>
+    <meta name="twitter:title" content="In Wait of Tomorrow Shop"/>
+    <meta name="twitter:description" content="{% for item in item_on_page %}{{ item.meta_description }}{% endfor %}"/>
+    <meta name="twitter:image" content='{% for item in item_on_page %}{{ item.meta_image }}{% endfor %}'/>
     <meta name="twitter:card" content="summary_large_image"/>
     <meta name="twitter:url" content="https://inwaitoftomorrow.appspot.com/shop/{% for item in item_on_page %}{{ item.item_id }}{% endfor %}"/>
     <meta name="google-site-verification" content="FXf4fXXrRB8YqX75YWs6DQXLlE3r_CWleoGSjxGSa5s" />
@@ -38,7 +38,7 @@
     <link href="../static/css/title.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="shortcut icon" href="../static/img/favico.ico">
-    <meta name="description" content="Fashion for science and technology lovers! Have a look at the latest in our though provoking, futuristic collection: {% for item in item_on_page %}{{ item.item_name }}{% endfor %}"/>
+    <meta name="description" content="{% for item in item_on_page %}{{ item.meta_description }}{% endfor %}"/>
     <meta name="keywords" content="In Wait of Tomorrow, Hoodie, Science Hoodie, Science, {% for item in item_on_page %}{{ item.item_name }}{% endfor %}">
     <meta name="author" content="inwaitoftomorrow">
     <meta name="robots" content="index, follow">
@@ -68,7 +68,7 @@
     </div>
 {% if request.MOBILE %}{% else %}<div class="row m-auto pb-3 pt-5" style="max-width: 1200px; min-height: 100vh">{% endif %}
 <div {% if request.MOBILE %}class="row m-auto text-center pb-1 pt-3" style="max-width: 600px"{% else %}class="col-6"{% endif %}>
-    <div class="hovereffect" {% if request.MOBILE %}{% else %}style="padding-top: 10vh"{% endif %} itemprop="image">
+    <div class="hovereffect" {% if request.MOBILE %}{% else %}style="padding-top: 10vh"{% endif %}>
         {% for item in item_on_page %}{{ item.item_photo | safe }}{% endfor %}
     </div>
 </div>
@@ -111,7 +111,7 @@
     {% endif %}
 </div>
 {% if request.MOBILE %}
-    <div class="row m-auto pb-2 bg-transparent" style="max-width: 600px">
+    <div class="row m-auto pb-2 bg-transparent border-top border-dark" style="max-width: 600px">
         <div class="col-12"></div>
                 <form class="user col-12 text-left" method="POST" novalidate>
                     {% from "_formhelpers.html" import render_field %}
@@ -138,7 +138,7 @@
                     {{ render_field(testshopform.submit, class="btn btn-dark btn-user btn-block rounded-0", id="submitButton", value="ADD TO CART") }}
                 </form>
         </div>
-<div class="row m-auto w-100 pb-3" style="max-width: 600px">
+<div class="row m-auto w-100 pb-3 pt-2 border-dark border-top" style="max-width: 600px">
 <h4 class="font-weight-normal">PDODUCT DESCRIPTION AND CARE</h4>
         {% for item in item_on_page %}{{ item.item_description | safe }}{% endfor %}
 </div>
@@ -201,13 +201,6 @@
         }
 
     }
-</script>
-<script type="application/ld+json">
-  {
-    "sameAs": [
-      "https://shop.inwaitoftomorrow.appspot.com/shop/{% for item in item_on_page %}{{ item.item_id }}{% endfor %}"
-    ]
-  }
 </script>
 </body>
 </html>

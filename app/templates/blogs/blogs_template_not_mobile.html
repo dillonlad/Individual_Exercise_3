@@ -50,7 +50,11 @@
 {{ navigation_page | safe }}
 <div id="newsletter" class="overlay text-dark bg-white" style="height: 50%">
       <a href="javascript:void(0)" class="closebtn" onclick="close_newsletter()">&times;</a>
-      <div class="row m-auto pt-3" style="max-width: 800px">
+    <div class="row m-auto pt-3" style="max-width: 600px">
+        <img href="{{ url_for('shop.shop_item', id="what-next-bro-light") }}" src="../static/img/whatnextbro11.jpeg" class="col-6" style="max-width: 300px; height: auto" alt="What Next bro?">
+        <a href="{{ url_for('shop.shop') }}" class="col-6 p-1"><p>Take a look at our exclusive hoodies now! Head over to our shop to view our collection!</p></a>
+    </div>
+      <div class="row m-auto pt-3" style="max-width: 800px; visibility: hidden">
         <h3 class="font-weight-normal">Enjoy what you're reading? Sign up to our newsletter</h3>
         <form class="user col-12 text-left" method='POST' novalidate>
         {{ form.hidden_tag() }}
