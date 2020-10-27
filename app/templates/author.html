@@ -43,7 +43,7 @@
     <meta name="robots" content="index, follow">
     <title>In Wait of Tomorrow - {% for persona in person %}{{ persona.author_name }}{% endfor %}</title>
 </head>
-<body>
+<body style="overflow-x: hidden">
     {% with messages = get_flashed_messages() %}
             {% if messages %}
                 <div class="text-center m-auto p-5 font-weight-normal" style="max-width: 600px">
@@ -65,8 +65,8 @@
           {% endfor %}
       </div>
   </div>
-    <div class="row">
-        <div class="col-md-12">
+    <div class="container-fluid">
+        <div class="row">
             <nav class="navbar navbar-dark bg-dark container-fluid" itemscope itemtype="https://schema.org/SiteNavigationElement">
                 <a href="{{url_for('main.index')}}"><span class="navbar-brand text-white mb-0 h1 font-weight-normal">In Wait of Tomorrow</span></a>
                 <div class="dropdown dropleft show btn-group">
@@ -75,18 +75,35 @@
                 </div>
             </nav>
         </div>
-    </div>
-    <div class="row mt-5 ml-auto mr-auto mb-auto pb-5 w-100" style="max-width: 600px; background-color: #dddddd">
+    {% if request.MOBILE %}
+        <div class="row w-100 card m-auto text-center" style="max-width: 600px">
+            <img class="card-img-top img-fluid w-100 h-auto" src="../static/img/{% for persona in person %}{{ persona.carikita }}{% endfor %}" alt="carikatures">
+            <div class="card-footer"><a href="https://carikita.nw.r.appspot.com">Get your caricatures drawn now by Carikita!</a></div>
+        </div>
         <script type="text/javascript" src="https://platform.linkedin.com/badges/js/profile.js" async defer></script>
-        <div class="col-12 {% if request.MOBILE %}text-left{% else %}text-center{% endif %}">
+        <div class="row w-100 m-auto text-left pb-5" style="background-color: #dddddd; max-width: 600px">
             <h2 class="font-weight-normal mt-5">{% for persona in person %}{{ persona.author_name }}{% endfor %}</h2>
             <p>Roles: {% for persona in person %}{{ persona.roles }}{% endfor %}</p>
             <p>{% for persona in person %}{{ persona.description }}{% endfor %} Check out my articles below!</p>
+            <div class="ml-3"><div class="LI-profile-badge" data-version="v1" data-size="medium" data-locale="en_US" data-type="horizontal" data-theme="dark" data-vanity="{% for persona in person %}{{ persona.linkedin }}{% endfor %}"><a class="LI-simple-link" href='https://uk.linkedin.com/in/{% for persona in person %}{{ persona.linkedin }}{% endfor %}?trk=profile-badge'>{% for persona in person %}{{ persona.author_name }}{% endfor %}</a></div></div>
         </div>
-        <div class="col-12" {% if request.MOBILE %}{% else %}style="margin-left: 160px"{% endif %}><div class="LI-profile-badge" data-version="v1" data-size="medium" data-locale="en_US" data-type="horizontal" data-theme="dark" data-vanity="{% for persona in person %}{{ persona.linkedin }}{% endfor %}"><a class="LI-simple-link" href='https://uk.linkedin.com/in/{% for persona in person %}{{ persona.linkedin }}{% endfor %}?trk=profile-badge'>{% for persona in person %}{{ persona.author_name }}{% endfor %}</a></div></div>
-    </div>
+    {% else %}
+        <div class="row mt-5 ml-auto mr-auto mb-auto pb-5 w-100" style="max-width: 1000px">
+            <div class="col-4 card">
+                <img class="card-img" src="../static/img/{% for persona in person %}{{ persona.carikita }}{% endfor %}" style="max-width:300px" alt="carikatures">
+                <div class="card-footer"><a href="https://carikita.nw.r.appspot.com">Get your caricatures drawn now by Carikita!</a></div>
+            </div>
+            <script type="text/javascript" src="https://platform.linkedin.com/badges/js/profile.js" async defer></script>
+            <div class="col-8 text-left pb-5" style="background-color: #dddddd">
+                <h2 class="font-weight-normal mt-5">{% for persona in person %}{{ persona.author_name }}{% endfor %}</h2>
+                <p>Roles: {% for persona in person %}{{ persona.roles }}{% endfor %}</p>
+                <p>{% for persona in person %}{{ persona.description }}{% endfor %} Check out my articles below!</p>
+                <div class="ml-2"><div class="LI-profile-badge" data-version="v1" data-size="medium" data-locale="en_US" data-type="horizontal" data-theme="dark" data-vanity="{% for persona in person %}{{ persona.linkedin }}{% endfor %}"><a class="LI-simple-link" href='https://uk.linkedin.com/in/{% for persona in person %}{{ persona.linkedin }}{% endfor %}?trk=profile-badge'>{% for persona in person %}{{ persona.author_name }}{% endfor %}</a></div></div>
+            </div>
+        </div>
+    {% endif %}
     {% if request.MOBILE %}
-    <h3 class="font-weight-normal text-center align-self-center align-content-center">Articles by {% for author in person %}{{ author.author_name }}{% endfor %}</h3>
+    <h3 class="font-weight-normal text-center align-self-center align-content-center w-100 mt-2">Articles by {% for author in person %}{{ author.author_name }}{% endfor %}</h3>
     {% if posts|length %}
         <div class="row m-auto w-100" style="max-width: 600px">
             {% for post in posts %}
@@ -116,7 +133,7 @@
 {% else %}
     <h3 class="font-weight-normal text-center align-self-center align-content-center mt-5">Articles by {% for author in person %}{{ author.author_name }}{% endfor %}</h3>
     {% if posts|length %}
-        <div class="row m-2" id="cards">
+        <div class="row m-2 w-100" id="cards">
         <link rel="stylesheet" href="../../static/css/hovering.css">
             {% for post in posts %}
                 <div class="col-4">
@@ -144,6 +161,7 @@
     {% endif %}
 
     {% endif %}
+    </div>
 <script>
     function openNav() {
       document.getElementById("myNav").style.width = "100%";

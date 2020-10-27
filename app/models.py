@@ -10,6 +10,7 @@ class Authors(db.Model):
     linkedin = db.Column(db.Text)
     roles = db.Column(db.Text)
     description = db.Column(db.Text)
+    carikita = db.Column(db.Text)
 
 
 class Comments_dg_tmp(db.Model):
