@@ -25,6 +25,12 @@ class EnquiryForm(FlaskForm):
     submit = SubmitField('Send')
 
 
+class RatingForm(FlaskForm):
+    name = StringField('Name: ')
+    stars = RadioField('Leave a rating (5 being the best)', choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5')])
+    comment = TextAreaField('Comments: ')
+
+
 class CreditCardPayment(FlaskForm):
     first_name = StringField('First Name', validators=[DataRequired()])
     last_name = StringField('Last Name', validators=[DataRequired()])

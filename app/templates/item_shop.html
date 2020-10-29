@@ -44,7 +44,7 @@
     <meta name="robots" content="index, follow">
     <title>{% for item in item_on_page %}{{ item.item_name }}{% endfor %}</title>
 </head>
-<body style="font-family: 'Pridi', serif;" itemscope itemtype="https://schema.org/Product">
+<body style="font-family: 'Pridi', serif;">
 {% with messages = get_flashed_messages() %}
             {% if messages %}
                 <div class="text-center m-auto font-weight-normal h2" style="max-width: 600px; min-height: 50vh; padding-top: 20vh">
@@ -73,9 +73,9 @@
     </div>
 </div>
 <div {% if request.MOBILE %}class="row m-auto text-center pb-1" style="max-width: 600px"{% else %}class="col-6"{% endif %}>
-    <h1 class="{% if request.MOBILE %}pt-1{% else %}pt-5{% endif %} font-weight-normal w-100 m-auto text-center" itemprop="name">{% for item in item_on_page %}{{ item.item_name }}{% endfor %}</h1>
-    <p class="w-100 h3 font-weight-normal m-auto text-center" itemprop="price">Item price: £{% for item in item_on_page %}{{ item.price }}{% endfor %}</p><br>
-    <p class="card-subtitle mb-2 font-weight-normal m-auto text-dark pt-2 {% if request.MOBILE %}pb-1{% else %}pb-5{% endif %} text-center" itemprop="offers" itemscope itemtype="https://schema.org/Offer">FREE UK DELIVERY (limited time only!) <i style="border: none" class="fas fa-truck"></i></p>
+    <h1 class="{% if request.MOBILE %}pt-1{% else %}pt-5{% endif %} font-weight-normal w-100 m-auto text-center">{% for item in item_on_page %}{{ item.item_name }}{% endfor %}</h1>
+    <p class="w-100 h3 font-weight-normal m-auto text-center">Item price: £{% for item in item_on_page %}{{ item.price }}{% endfor %}</p><br>
+    <p class="card-subtitle mb-2 font-weight-normal m-auto text-dark pt-2 {% if request.MOBILE %}pb-1{% else %}pb-5{% endif %} text-center">FREE UK DELIVERY (limited time only!) <i style="border: none" class="fas fa-truck"></i></p>
     {% if request.MOBILE %}{% else %}
         <div class="pb-3 bg-transparent border-bottom border-dark">
         <div class="col-12"></div>
