@@ -29,6 +29,7 @@ class RatingForm(FlaskForm):
     name = StringField('Name: ')
     stars = RadioField('Leave a rating (5 being the best)', choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5')])
     comment = TextAreaField('Comments: ')
+    submit = SubmitField('Submit')
 
 
 class CreditCardPayment(FlaskForm):

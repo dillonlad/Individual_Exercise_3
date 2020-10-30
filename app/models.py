@@ -110,3 +110,12 @@ class main_stock_list(db.Model):
     Colour = db.Column(db.Text)
     Size = db.Column(db.Text)
     stock = db.Column(db.Integer)
+
+
+class item_reviews(db.Model):
+    review_id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
+    item_id = db.Column(db.Integer, db.ForeignKey(shop_items.item_number), nullable=False)
+    stars = db.Column(db.Integer)
+    review = db.Column(db.Text)
+    name = db.Column(db.Text)
+    date = db.Column(db.Text)

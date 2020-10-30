@@ -23,11 +23,11 @@ from app.main.forms import SignupForm, LoginForm, PostForm, BlogEditor, CreateAr
 from app.main.routes import bp_main
 
 from app.models import Posts_two, Blogs, Profile, Categories, Series, Authors, Comments_dg_tmp, \
-    mailing_list, shop_items, main_stock_list
+    mailing_list, shop_items, main_stock_list, item_reviews
 import paypalrestsdk
 
 from app.paypal_api_call import CreateOrder
-from app.shop.forms import testShop, CreditCardPayment, EnquiryForm
+from app.shop.forms import testShop, CreditCardPayment, EnquiryForm, RatingForm
 from app.new_paypal import PayPalClient
 from paypalcheckoutsdk.orders import OrdersCreateRequest, OrdersCaptureRequest
 from paypalcheckoutsdk.core import PayPalHttpClient, SandboxEnvironment, LiveEnvironment
@@ -94,6 +94,14 @@ def shop_item(id):
                 item_name = var.item_name
                 item_no = var.item_number
                 item_price = float(var.price)
+            reviews = item_reviews.query.order_by(desc(item_reviews.review_id)).filter(item_reviews.item_id==item_no).all()
+            stars_total = 0
+            number_of_reviews = len(reviews)
+            for var_review in reviews:
+                item_stars = var_review.stars
+                stars_total += item_stars
+            avg_rating = stars_total/number_of_reviews
+            int_avg_rating = int(avg_rating)
             testshopform = testShop(request.form)
             if request.method == 'POST':
                 if testshopform.colour.data == "Please select":
@@ -157,7 +165,7 @@ def shop_item(id):
                                 id)))
                         flash(message)
                         return redirect(url_for('shop.shop_item', id=id), code=303)
-            return render_template("item_shop.html", testshopform=testshopform, categories=categories, item_on_page=item_on_page, privacy_policy=privacy_policy, navigation_page=navigation_page)
+            return render_template("item_shop.html", testshopform=testshopform, categories=categories, item_on_page=item_on_page, privacy_policy=privacy_policy, navigation_page=navigation_page, reviews=reviews, number_of_reviews=number_of_reviews, average_rating=int_avg_rating)
 
 
 @bp_shop.route('/add-to-cart/<id>', methods=['GET', 'POST'])
@@ -314,6 +322,40 @@ def enquiry():
                 return redirect(url_for('shop.shop'), code=303)
         else:
             return render_template('enquiry_page.html', form=form)
+
+
+@bp_shop.route('/review/<id>', methods=['GET', 'POST'])
+def item_review(id):
+    form = RatingForm(request.form)
+    categories = Categories.query.all()
+    navigation_page = render_template('navigation.html', categories=categories)
+    if request.method == 'POST' and form.validate():
+        with app.mail.connect() as conn:
+            msg = Message('{} - comment'.format(form.name.data), sender=ADMINS[0], recipients=ADMINS)
+            msg.body = '{}'.format(form.comment.data)
+            msg.html = '<b>{}</b> says {}. Stars: {}. Item: {}'.format(
+                form.name.data, form.comment.data, form.stars.data, id)
+            conn.send(msg)
+        flash('Thanks for the reply! We will get back to you as soon as possible!')
+        return redirect(url_for('shop.shop'), code=303)
+    else:
+        if form.is_submitted():
+            form.method = 'POST'
+            if (len(form.name.data) > 0 and len(form.comment.data) > 0) or (
+                    len(form.name.data) > 0):
+                with app.mail.connect() as conn:
+                    msg = Message('{} - comment'.format(form.name.data), sender=ADMINS[0], recipients=ADMINS)
+                    msg.body = '{}'.format(form.comment.data)
+                    msg.html = '<b>{}</b> says {}. Stars: {}. Item; {}'.format(
+                        form.name.data, form.comment.data, form.stars.data, id)
+                    conn.send(msg)
+                flash('Thanks for the reply! We will get back to you as soon as possible!')
+                return redirect(url_for('shop.shop'), code=303)
+            else:
+                flash('Thanks for the reply! We will get back to you as soon as possible!')
+                return redirect(url_for('shop.shop'), code=303)
+        else:
+            return render_template('review_page.html', form=form, navigation_page=navigation_page)
 
 
 @bp_shop.route('/abroad-delivery')

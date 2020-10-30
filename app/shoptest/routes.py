@@ -23,7 +23,7 @@ from app.main.forms import SignupForm, LoginForm, PostForm, BlogEditor, CreateAr
 from app.main.routes import bp_main
 
 from app.models import Posts_two, Blogs, Profile, Categories, Series, Authors, Comments_dg_tmp, \
-    mailing_list, shop_items, main_stock_list
+    mailing_list, shop_items, main_stock_list, item_reviews
 import paypalrestsdk
 
 from app.paypal_api_call import CreateOrder
@@ -96,6 +96,15 @@ def test_shop_item(id):
                 item_name = var.item_name
                 item_no = var.item_number
                 item_price = float(var.price)
+            reviews = item_reviews.query.order_by(desc(item_reviews.review_id)).filter(
+                item_reviews.item_id == item_no).all()
+            stars_total = 0
+            number_of_reviews = len(reviews)
+            for var_review in reviews:
+                item_stars = var_review.stars
+                stars_total += item_stars
+            avg_rating = stars_total / number_of_reviews
+            int_avg_rating = int(avg_rating)
             testshopform = testShop(request.form)
             if request.method == 'POST':
                 if testshopform.colour.data == "Please select":
@@ -159,7 +168,7 @@ def test_shop_item(id):
                                 id)))
                         flash(message)
                         return redirect(url_for('shoptest.shop_item', id=id), code=303)
-            return render_template("item_shop.html", testshopform=testshopform, categories=categories, item_on_page=item_on_page, privacy_policy=privacy_policy, navigation_page=navigation_page)
+            return render_template("item_shop.html", testshopform=testshopform, categories=categories, item_on_page=item_on_page, privacy_policy=privacy_policy, navigation_page=navigation_page, reviews=reviews, number_of_reviews=number_of_reviews, average_rating=int_avg_rating)
 
 
 @bp_shoptest.route('/add-to-cart/<id>', methods=['GET', 'POST'])

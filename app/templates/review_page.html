@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-159574205-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-159574205-1');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="In Wait of Tomorrow"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="https://inwaitoftomorrow.appspot.com/shop/{% for item in item_on_page %}{{ item.item_id }}{% endfor %}"/>
+    <meta property="og:description" content="Fashion for science and technology lovers! Have a look at our latest hoodie designs!"/>
+    <meta property="og:image" content='http://inwaitoftomorrow.appspot.com/static/img/logo.jpeg'/>
+    <meta name="twitter:title" content="In Wait of Tomorrow"/>
+    <meta name="twitter:description" content="Fashion for science and technology lovers! Have a look at our latest hoodie designs!"/>
+    <meta name="twitter:image" content='http://inwaitoftomorrow.appspot.com/static/img/logo.jpeg'/>
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:url" content="https://inwaitoftomorrow.appspot.com/shop/{% for item in item_on_page %}{{ item.item_id }}{% endfor %}"/>
+    <meta name="google-site-verification" content="FXf4fXXrRB8YqX75YWs6DQXLlE3r_CWleoGSjxGSa5s" />
+    <script src="https://inwaitoftomorrow.appspot.com/static/bootstrap-4.0.0/js/tests/vendor/jquery-1.9.1.min.js"></script>
+    <script src="https://inwaitoftomorrow.appspot.com/static/bootstrap-4.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://inwaitoftomorrow.appspot.com/static/bootstrap-4.0.0/assets/js/vendor/popper.min.js"></script>
+    <link rel="stylesheet" href="https://inwaitoftomorrow.appspot.com/static/css/bootstrapnew.min.css">
+    <link rel="stylesheet" href="https://inwaitoftomorrow.appspot.com/static/css/hovering.min.css">
+
+    <link rel="stylesheet" href="https://inwaitoftomorrow.appspot.com/static/css/newnav.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pridi:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://inwaitoftomorrow.appspot.com/static/css/title.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="shortcut icon" href="https://inwaitoftomorrow.appspot.com/static/img/favico.ico">
+    <meta name="description" content="Fashion for science and technology lovers! Have a look at our latest hoodie designs!"/>
+    <meta name="keywords" content="inwaitoftomorrow, In Wait of Tomorrow, futurology, Technology, Science, Healthcare, Environment">
+    <meta name="author" content="inwaitoftomorrow">
+    <meta name="robots" content="index, follow">
+    <title>Leave a review</title>
+</head>
+<body style="font-family: 'Pridi', serif;">
+{% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="text-center m-auto font-weight-normal h2" style="max-width: 600px; min-height: 50vh; padding-top: 20vh">
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+    {% endwith %}
+{{ navigation_page | safe }}
+<div class="container-fluid" style="background-image: url('https://inwaitoftomorrow.appspot.com/static/img/annie-spratt-mzpYBn8ebqs-unsplash.jpg'); background-size: cover; min-height: 100vh">
+<div class="container-fluid" id="navigation">
+            <script src="https://kit.fontawesome.com/7380e39ab3.js" crossorigin="anonymous"></script>
+    <div id="nav_one" style="display: block" class="row">
+        <div class="col-12">
+            <nav class="navbar navbar-dark {% if request.MOBILE %}{% else %}fixed-top{% endif %} bg-transparent" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
+                    <a id="home_link" href="{{url_for('main.index')}}"><span class="navbar-brand text-dark navbar-dark mb-0 h1 font-weight-normal">In Wait of Tomorrow</span></a>
+                    <a href="{{ url_for('shop.shop_cart') }}" class="text-dark"><i style="border: none" class="fas fa-shopping-cart"></i></a>
+            </nav>
+        </div>
+    </div>
+<div class="row m-auto pb-5 bg-transparent" style="max-width: 600px; padding-top: 10vh">
+        <div class="col-12">
+                <form class="user col-12 text-left" method="POST" novalidate>
+                    {{ form.hidden_tag() }}
+                    <div class="form-group font-weight-normal">
+                      {{ form.name.label }}{{ form.name(class_="form-control form-control-user rounded-0") }}
+                    </div>
+                    <div class="form-group form-check-inline">
+                        {% for subfield in form.stars %}
+                            {{ subfield(class_="form-check-input") }}
+                            {{ subfield.label(class_="form-check-label pr-5") }}
+                        {% endfor %}
+                    </div>
+                    <div class="form-group">
+                      {{ form.comment.label }}{{ form.comment(class_="form-control form-control-user rounded-0", style_="min-height: 50vh;")}}
+                    </div>
+                    {{ form.submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
+                </form>
+        </div>
+</div>
+</div>
+</div>
+<script>
+    function openNav() {
+      document.getElementById("myNav").style.width = "100%";
+      document.getElementById("cards").style.visibility = "hidden"
+    }
+
+    function closeNav() {
+      document.getElementById("myNav").style.width = "0%";
+      document.getElementById("cards").style.visibility = "visible"
+    }
+</script>
+</body>
+</html>
