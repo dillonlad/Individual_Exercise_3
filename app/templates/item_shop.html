@@ -43,6 +43,7 @@
     <meta name="author" content="inwaitoftomorrow">
     <meta name="robots" content="index, follow">
     <title>{% for item in item_on_page %}{{ item.item_name }}{% endfor %}</title>
+    {{ data_structure | safe }}
 </head>
 <body style="font-family: 'Pridi', serif;">
 {% with messages = get_flashed_messages() %}
@@ -121,8 +122,8 @@
                     {% endfor %}
                 </div>
                 {% for review in reviews %}
-                    <div class="card w-100 mb-2 rounded-0" itemprop="review" itemscope itemtype="https://schema.org/Review">
-                        <div class="card-header text-right" itemprop="reviewRating" content="{{ review.stars }}">
+                    <div class="card w-100 mb-2 rounded-0">
+                        <div class="card-header text-right">
                             {% for number in range(review.stars) %}<i class="fas fa-star" style="border: none"></i>{% endfor %}
                         </div>
                         <div class="card-body">
@@ -189,8 +190,8 @@
             {% endfor %}
         </div>
         {% for review in reviews %}
-            <div class="card w-100 mb-2 rounded-0" itemprop="review" itemscope itemtype="https://schema.org/Review">
-                <div class="card-header text-right" itemprop="reviewRating" content="{{ review.stars }}">
+            <div class="card w-100 mb-2 rounded-0">
+                <div class="card-header text-right">
                     {% for number in range(review.stars) %}<i class="fas fa-star" style="border: none"></i>{% endfor %}
                 </div>
                 <div class="card-body">

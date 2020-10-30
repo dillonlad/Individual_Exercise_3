@@ -59,6 +59,60 @@ environment = LiveEnvironment(client_id=client_id, client_secret=client_secret)
 client = PayPalHttpClient(environment)
 
 
+def structured_data(item_on_page, average_rating, review_count, reviews):
+
+    for var in item_on_page:
+        item_name = var.item_name
+        item_no = var.item_number
+        item_price = float(var.price)
+        item_image = var.meta_image
+        item_desc = var.meta_description
+
+    reviews_data = []
+
+    for var_review in reviews:
+        structured_review = {
+            "@type": "Review",
+            "author": "{}".format(var_review.name),
+            "datePublished": "{}".format(var_review.date),
+            "reviewBody": "{}".format(var_review.review),
+            "name": "{} stars".format(var_review.stars),
+            "reviewRating": {
+                "@type": "Rating",
+                "bestRating": "5",
+                "ratingValue": "{}".format(var_review.stars),
+                "worstRating": "1"
+            }
+        }
+        reviews_data.append(structured_review)
+
+    aggregate_rating = {
+        "@type": "AggregateRating",
+        "ratingValue": "{}".format(average_rating),
+        "reviewCount": "{}".format(review_count)
+    }
+
+    structured_data_dict = {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "aggregateRating": aggregate_rating,
+        "description": "{}".format(item_desc),
+        "name": "{}".format(item_name),
+        "image": "{}".format(item_image),
+        "availability": "https://schema.org/InStock",
+        "price": "{}".format(item_price),
+        "priceCurrency": "GBP",
+        "brand": "What Next Bro?",
+        "sku": "{}".format(item_no),
+        "review": reviews_data
+    }
+
+    json_structured_data = json.dumps(structured_data_dict)
+    html_insert = render_template_string('<script type="application/ld+json">{}</script>'.format(json_structured_data))
+
+    return html_insert
+
+
 @bp_shop.route('/', methods=['GET'])
 def shop():
     host = request.host
@@ -102,6 +156,7 @@ def shop_item(id):
                 stars_total += item_stars
             avg_rating = stars_total/number_of_reviews
             int_avg_rating = int(avg_rating)
+            data_structure = structured_data(item_on_page, int_avg_rating, number_of_reviews, reviews)
             testshopform = testShop(request.form)
             if request.method == 'POST':
                 if testshopform.colour.data == "Please select":
@@ -165,7 +220,7 @@ def shop_item(id):
                                 id)))
                         flash(message)
                         return redirect(url_for('shop.shop_item', id=id), code=303)
-            return render_template("item_shop.html", testshopform=testshopform, categories=categories, item_on_page=item_on_page, privacy_policy=privacy_policy, navigation_page=navigation_page, reviews=reviews, number_of_reviews=number_of_reviews, average_rating=int_avg_rating)
+            return render_template("item_shop.html", testshopform=testshopform, categories=categories, item_on_page=item_on_page, privacy_policy=privacy_policy, navigation_page=navigation_page, reviews=reviews, number_of_reviews=number_of_reviews, average_rating=int_avg_rating, data_structure=data_structure)
 
 
 @bp_shop.route('/add-to-cart/<id>', methods=['GET', 'POST'])
@@ -203,7 +258,7 @@ def shop_cart():
             new_quantities.append(new_quantity)
         final_cost = round(sum(cost_list), 2)
         if 'abroad_delivery' in session:
-            shipping_cost = 9.85
+            shipping_cost = 32.91
             shipping_msg = "Intl"
         else:
             shipping_cost = 0.00
@@ -223,7 +278,7 @@ def card_payment():
         items_to_buy = []
         price_amount_list = []
         if 'abroad_delivery' in session:
-            shipping_cost = 9.85
+            shipping_cost = 32.91
         else:
             shipping_cost = 0.00
         for it in range(counter):

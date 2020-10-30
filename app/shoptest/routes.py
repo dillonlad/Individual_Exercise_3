@@ -32,6 +32,7 @@ from app.new_paypal import PayPalClient
 from paypalcheckoutsdk.orders import OrdersCreateRequest, OrdersCaptureRequest
 from paypalcheckoutsdk.core import PayPalHttpClient, SandboxEnvironment, LiveEnvironment
 
+from app.shop.routes import structured_data
 
 bp_shoptest = Blueprint('shoptest', __name__, url_prefix="/shoptest")
 ADMINS = ['inwaitoftomorrow@gmail.com']
@@ -106,6 +107,7 @@ def test_shop_item(id):
             avg_rating = stars_total / number_of_reviews
             int_avg_rating = int(avg_rating)
             testshopform = testShop(request.form)
+            data_structure = structured_data(item_on_page, int_avg_rating, number_of_reviews, reviews)
             if request.method == 'POST':
                 if testshopform.colour.data == "Please select":
                     flash('Invalid colour request')
@@ -168,7 +170,7 @@ def test_shop_item(id):
                                 id)))
                         flash(message)
                         return redirect(url_for('shoptest.shop_item', id=id), code=303)
-            return render_template("item_shop.html", testshopform=testshopform, categories=categories, item_on_page=item_on_page, privacy_policy=privacy_policy, navigation_page=navigation_page, reviews=reviews, number_of_reviews=number_of_reviews, average_rating=int_avg_rating)
+            return render_template("item_shop.html", testshopform=testshopform, categories=categories, item_on_page=item_on_page, privacy_policy=privacy_policy, navigation_page=navigation_page, reviews=reviews, number_of_reviews=number_of_reviews, average_rating=int_avg_rating, data_structure=data_structure)
 
 
 @bp_shoptest.route('/add-to-cart/<id>', methods=['GET', 'POST'])
