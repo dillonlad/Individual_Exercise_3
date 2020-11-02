@@ -42,8 +42,26 @@
     <meta name="keywords" content="In Wait of Tomorrow, Hoodie, Science Hoodie, Science, {% for item in item_on_page %}{{ item.item_name }}{% endfor %}">
     <meta name="author" content="inwaitoftomorrow">
     <meta name="robots" content="index, follow">
-    <title>{% for item in item_on_page %}{{ item.item_name }}{% endfor %}</title>
+    <title>{% for item in item_on_page %}{{ item.item_name }}{% endfor %} - Shop - In Wait of Tomorrow</title>
     {{ data_structure | safe }}
+
+    <!-- Facebook Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '363987458380932');
+    fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=363987458380932&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Facebook Pixel Code -->
 </head>
 <body style="font-family: 'Pridi', serif;">
 {% with messages = get_flashed_messages() %}
@@ -103,7 +121,7 @@
                         <a data-toggle="collapse" class="pt-2 pb-2 mb-2" href="#collapseSearch" role="button" aria-expanded="false" aria-controls="collapseExample">Before you proceed, click here to learn how we use cookies for your checkout experience</a>
                         {{ privacy_policy | safe }}
                     </div>
-                    {{ render_field(testshopform.submit, class="btn btn-dark btn-user btn-block rounded-0", id="submitButton", value="ADD TO CART") }}
+                    {{ render_field(testshopform.submit, class="btn btn-dark btn-user btn-block rounded-0", id="submitButton", value="ADD TO CART", onclick="facebookTrack()") }}
                 </form>
         </div>
         <div class="w-100 m-auto pb-3 pt-2">
@@ -171,7 +189,7 @@
                         <a data-toggle="collapse" class="pt-2 pb-2 mb-2" href="#collapseSearch" role="button" aria-expanded="false" aria-controls="collapseExample">Before you proceed, click here to learn how we use cookies for your checkout experience</a>
                         {{ privacy_policy | safe }}
                     </div>
-                    {{ render_field(testshopform.submit, class="btn btn-dark btn-user btn-block rounded-0", id="submitButton", value="ADD TO CART") }}
+                    {{ render_field(testshopform.submit, class="btn btn-dark btn-user btn-block rounded-0", id="submitButton", value="ADD TO CART", onclick="facebookTrack()") }}
                 </form>
         </div>
 <div class="row m-auto w-100 pb-3 pt-2 border-dark border-top" style="max-width: 600px">
@@ -236,6 +254,21 @@
         <p>Made in Leicestershire, with love from London.</p>
         <p class="text-muted">&copy; 2020 In Wait of Tomorrow</p>
     </footer>
+<script type="text/javascript">
+  function facebookTrack() {
+      fbq('track', 'PageView');
+      fbq('track', 'AddToCart',
+          // begin required parameter object
+          {
+            value: 22.99,
+            currency: 'GBP',
+            content_type: 'product', // required property
+            content_ids: '1' // required property, if not using 'contents' property
+          }
+          // end required parameter object
+        );
+      })
+</script>
 <script>
     function openNav() {
       document.getElementById("myNav").style.width = "100%";

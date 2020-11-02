@@ -43,8 +43,25 @@
     <meta name="author" content="inwaitoftomorrow">
     <meta name="robots" content="index, follow">
     <title>Shop Cart</title>
+    <!-- Facebook Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '363987458380932');
+    fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=363987458380932&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Facebook Pixel Code -->
 </head>
-<body style="font-family: 'Pridi', serif;">
+<body style="font-family: 'Pridi', serif;" onload="facebookPurchase()">
 <script
     src="https://www.paypal.com/sdk/js?client-id=AX1xZ5LS2EKdjzXGX5s9pqscRnp_HXF_DYoUarP40589iY4891E4bGL0OwllD8JSBwEQ6AWgkBDPvs5A&currency=GBP">
 </script>
@@ -85,7 +102,7 @@
             </tr>
         {% endfor %}
         <tr class="row border-top border-dark border-bottom pt-2 pb-2">
-            <td class="col-8">Shipping ({{ shipping_msg }}) <br><a href="{{ url_for('shop.abroad_delivery') }}">*For delivery outside the UK, click here for the appropriate shipping costs</a></td>
+            <td class="col-8">Shipping ({{ shipping_msg }}) <br><a href="{{ url_for('shop.abroad_delivery') }}">*CLICK HERE FOR DELIVERY OUTSIDE THE UK</a></td>
             <td class="col-2"></td>
             <td class="col-2">{{ shipping_cost }}</td>
         </tr>
@@ -161,6 +178,11 @@
     function closeNav() {
       document.getElementById("myNav").style.width = "0%";
       document.getElementById("cards").style.visibility = "visible"
+    }
+</script>
+<script>
+    function facebookPurchase(){
+        fbq('track', 'Purchase', {currency: "GBP", value: 22.99});
     }
 </script>
 </body>
