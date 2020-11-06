@@ -54,7 +54,16 @@
     s.parentNode.insertBefore(t,s)}(window, document,'script',
     'https://connect.facebook.net/en_US/fbevents.js');
     fbq('init', '363987458380932');
-    fbq('track', 'PageView');
+    fbq('track', 'AddToCart',
+      // begin required parameter object
+      {
+        value: .5,
+        currency: 'USD',
+        content_type: 'product', // required property
+        content_ids: '1' // required property, if not using 'contents' property
+      }
+      // end required parameter object
+    );
     </script>
     <noscript><img height="1" width="1" style="display:none"
     src="https://www.facebook.com/tr?id=363987458380932&ev=PageView&noscript=1"
@@ -182,7 +191,13 @@
 </script>
 <script>
     function facebookPurchase(){
-        fbq('track', 'Purchase', {currency: "GBP", value: 22.99});
+        fbq('track', 'Purchase',
+            {
+                currency: "GBP",
+                value: 22.99,
+                content_type: 'product', // required property
+                content_ids: '1' //
+            });
     }
 </script>
 </body>

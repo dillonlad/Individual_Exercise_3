@@ -358,6 +358,20 @@ def test_stock_checker(id, item_number, Colour, Size):
         return jsonify(stock_status=status)
 
 
+@bp_shoptest.route('/delivery/<country_id>', methods=['GET', 'POST'])
+@login_required
+def test_delivery_check(country_id):
+    if country_id == "GB":
+        session['abroad_delivery'] = "Yes"
+    return redirect(url_for('shoptest.test_shop_cart'))
+
+
+@bp_shoptest.route('/confirmation', methods=['GET', 'POST'])
+@login_required
+def confirmation():
+    return render_template_string("Transaction confirmed!")
+
+
 @bp_shoptest.errorhandler(404)
 @login_required
 def test_pnf_404(error):
