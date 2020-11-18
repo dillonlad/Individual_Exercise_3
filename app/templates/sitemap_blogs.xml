@@ -28,7 +28,7 @@
 {% for article in articles %}
 <url>
   <loc>https://inwaitoftomorrow.appspot.com/blogs/{{ article.Post_ID }}</loc>
-  <lastmod>{{ article.Date }}T{{ article.Time }}+00:00</lastmod>
+  <lastmod>{{ article.date_mod }}T{{ article.Time }}+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 {% endfor %}

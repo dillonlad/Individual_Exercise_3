@@ -85,6 +85,12 @@ def articles_sitemap():
     return render_template('sitemap_blogs.xml', categories=categories, articles=articles)
 
 
+@bp_main.route('/sitemap-news.xml', methods=['GET'])
+def news_sitemap():
+    articles = Blogs.query.all()
+    return render_template('news_sitemap.xml', articles=articles)
+
+
 @bp_main.route('/products-sitemap.xml', methods=['GET'])
 def products_sitemap():
     products = shop_items.query.all()

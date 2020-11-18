@@ -1,3 +1,4 @@
+import json
 from datetime import timedelta, datetime
 from urllib.parse import urlparse, urljoin
 
@@ -24,6 +25,72 @@ from app.models import Posts_two, Blogs, Profile, Categories, Series, Authors, C
 bp_blogs = Blueprint('blogs', __name__, url_prefix='/blogs')
 ADMINS = ['inwaitoftomorrow@gmail.com']
 NEWSLETTER_TEST = ['dlad82434@gmail.com']
+
+
+def structured_data(item_on_page, average_rating, review_count, reviews):
+
+    for var in item_on_page:
+        item_name = var.Title
+        item_no = var.article_id
+        item_image = "https://inwaitoftomorrow.appspot.com{}".format(var.Image_iphone)
+        item_desc = var.Description
+        item_date = var.Date
+        item_category = var.category
+        item_url = var.url_
+        item_author = var.author
+        item_body = var.Content
+        item_date_mod = var.date_mod
+
+    aggregate_rating = {
+        "@type": "AggregateRating",
+        "ratingValue": "{}".format(average_rating),
+        "ratingCount": "{}".format(review_count)
+    }
+
+    if len(reviews) > 0:
+        structured_data_dict = {
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "aggregateRating": aggregate_rating,
+            "description": "{}".format(item_desc),
+            "name": "{}".format(item_name),
+            "headline": "{}".format(item_name),
+            "publisher": "In Wait of Tomorrow",
+            "datePublished": "{}".format(item_date),
+            "dateModified": "{}".format(item_date_mod),
+            "image": "{}".format(item_image),
+            "articleSection": "{}".format(item_category),
+            "url": "{}".format(item_url),
+            "articleBody": "{}".format(item_body),
+            "author": {
+                "@type": "Person",
+                "name": "{}".format(item_author)
+            }
+        }
+    else:
+        structured_data_dict = {
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "description": "{}".format(item_desc),
+            "name": "{}".format(item_name),
+            "headline": "{}".format(item_name),
+            "publisher": "In Wait of Tomorrow",
+            "datePublished": "{}".format(item_date),
+            "dateModified": "{}".format(item_date_mod),
+            "image": "{}".format(item_image),
+            "articleSection": "{}".format(item_category),
+            "url": "{}".format(item_url),
+            "articleBody": "{}".format(item_body),
+            "author": {
+                "@type": "Person",
+                "name": "{}".format(item_author)
+            }
+        }
+
+    json_structured_data = json.dumps(structured_data_dict)
+    html_insert = render_template_string('<script type="application/ld+json">{}</script>'.format(json_structured_data))
+
+    return html_insert
 
 
 @bp_blogs.route('/<Post_ID>', methods=['POST', 'GET'])
@@ -54,6 +121,14 @@ def post(Post_ID):
                 return redirect(url_for('main.show_blog'))
             comments = Comments_dg_tmp.query.order_by(desc(Comments_dg_tmp.comment_id)).filter(Comments_dg_tmp.blog_name.contains(Post_ID)).all()
             number_of_comments = len(comments)
+            if number_of_comments > 0 :
+                total_rating = 0
+                for i in comments:
+                    total_rating += int(i.stars)
+                aggregate_rating = total_rating/number_of_comments
+            else:
+                aggregate_rating = 0
+            structured_info = structured_data(post, aggregate_rating, number_of_comments, comments)
             app.track_event(category="Blog read: {}".format(Post_ID), action='{}'.format(Post_ID))
             form = CommentForm(request.form)
             if request.method == 'POST' and form.validate():
@@ -98,7 +173,7 @@ def post(Post_ID):
                 else:
                     mob_template = render_template("blogs/blogs_template_mobile.html", post=post, categories=categories, comments=comments, number_of_comments=number_of_comments, latest_articles=latest_articles, quiz_of_the_week=quiz_of_the_week, form=form, post_authorid=post_authorid, new_date=new_date)
                     comp_template = render_template("blogs/blogs_template_not_mobile.html", post=post, categories=categories, comments=comments, number_of_comments=number_of_comments, latest_articles=latest_articles, quiz_of_the_week=quiz_of_the_week, form=form, post_authorid=post_authorid, new_date=new_date)
-                    return render_template("blogs/post.html", post=post, categories=categories, comments=comments, number_of_comments=number_of_comments, latest_articles=latest_articles, quiz_of_the_week=quiz_of_the_week, form=form, post_authorid=post_authorid, new_date=new_date, navigation_page=navigation_page)
+                    return render_template("blogs/post.html", post=post, categories=categories, comments=comments, number_of_comments=number_of_comments, latest_articles=latest_articles, quiz_of_the_week=quiz_of_the_week, form=form, post_authorid=post_authorid, new_date=new_date, navigation_page=navigation_page, structured_info=structured_info)
         else:
             flash("The article you tried to find does not exist, at least not with that URL, try using the search box to find what you're looking for")
             return redirect(url_for('main.show_blog'))

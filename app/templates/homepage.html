@@ -7,7 +7,11 @@
 {% block list_of_articles %}
 {% if request.MOBILE %}
     <div class="row col-12 justify-content-center">
-        <img src="../static/img/logo.webp" style="max-height: 200px" alt="In Wait of Tomorrow">
+        <picture>
+                    <source srcset="../static/img/logo.webp">
+                    <source srcset="../static/img/logo.jpeg">
+                    <img src="../static/img/logo.webp" style="max-height: 200px" alt="In Wait of Tomorrow" class="m-auto">
+                </picture>
     </div>
         <div class="row col-12 justify-content-center">
         <h3 class="h3 font-weight-light text-center">Latest articles</h3>
@@ -67,83 +71,53 @@
                 </div>
 </div>
     <link rel="stylesheet" href="../static/css/title.css">
-    <div itemscope itemtype="https://schema.org/AboutPage" class="container-fluid mainimage opacity-5 large-header-one" id="aboutus" style="background-image: url('../static/img/photo-1487525219605-eadb39ae229c.webp')">
-    <div class="row">
-        <div class="col-md-12">
-            <nav class="navbar navbar-dark bg-transparent container-fluid" itemscope itemtype="https://schema.org/SiteNavigationElement">
-                <a href="{{url_for('main.index')}}"><span class="navbar-brand text-white mb-0 h1">In Wait of Tomorrow</span></a>
-                <div class="dropdown dropleft show btn-group">
-                  <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
-                  </button>
+    <div itemscope itemtype="https://schema.org/AboutPage" class="container-fluid" id="aboutus">
+        <div class="container-fluid pt-5" style="min-height: 100vh">
+            <div class="row w-100 m-auto text-center" style="max-width: 600px">
+                <h2 class="h1 m-auto w-100 font-weight-light text-dark text-center mt-5" itemprop="name">About us</h2>
+                <div class="text-center text-dark w-100 m-auto">
+                    <a href="https://www.facebook.com/inwaitoftomorrow/" class="fa fa-facebook"></a>
+                    <a href="https://www.instagram.com/inwaitoftomorrow/" class="fa fa-twitter"></a>
+                    <a href="https://twitter.com/InWaitofTomorr1" class="fa fa-instagram"></a>
+                    <a href="https://www.reddit.com/user/inwaitoftomorrow" class="fa fa-reddit"></a>
                 </div>
-            </nav>
-        </div>
-    </div>
-    <header class="masthead" style="min-height: 100vh">
-        <div class="container h-100">
-            <div class="row h-100 align-items-center">
-                <div class="col-12" style="padding-top: 0vh">
-                    <span class="h1 row font-weight-light text-white" itemprop="name">About us</span>
-                <div style="max-width: 600px">
-                    <span class="row font-weight-normal text-white pt-3 text-center">
-    <div class="text-center text-dark">
-        <a href="https://www.facebook.com/inwaitoftomorrow/" class="fa fa-facebook"></a>
-        <a href="https://www.instagram.com/inwaitoftomorrow/" class="fa fa-twitter"></a>
-        <a href="https://twitter.com/InWaitofTomorr1" class="fa fa-instagram"></a>
-        <a href="https://www.reddit.com/user/inwaitoftomorrow" class="fa fa-reddit"></a>
-
-</div>                    </span>
-                    <span class="row font-weight-normal text-white">We present futurology.</span>
-                    <span class="row font-weight-normal text-white">In Wait of Tomorrow analyses current trends and discusses what they mean for our future.</span>
-                    <span class="row font-italic font-weight-normal text-white">How can biotech help avert the climate change crisis? Can artificial intelligence really help avoid deforestation?</span>
+                <p class="w-100 m-auto font-weight-normal text-dark">We present futurology.</p>
+                <p class="w-100 m-auto font-weight-normal text-dark">In Wait of Tomorrow analyses current trends and discusses what they mean for our future.</p>
+                <p class="w-100 m-auto font-italic font-weight-normal text-dark">How can biotech help avert the climate change crisis? Can artificial intelligence really help avoid deforestation?</p>
+                <div class="w-100 m-auto text-center">
+                    <picture>
+                        <source srcset="../static/img/logo.webp">
+                        <source srcset="../static/img/logo.jpeg">
+                        <img src="../static/img/logo.webp" style="max-height: 200px" alt="In Wait of Tomorrow" class="m-auto">
+                    </picture>
                 </div>
-                </div>
+                <a href="#aboutus_two" class="text-dark text-center w-100 m-auto border-dark btn rounded-0 bg-transparent h3 mt-3" style="border-width: medium; bottom: 10px!important;">LEARN MORE</a>
             </div>
         </div>
-    </header>
     </div>
-<div class="container-fluid mainimage opacity-5 large-header-one" itemscope itemtype="https://schema.org/AboutPage" id="aboutus_two" style="background-image: url('../static/img/nasahubble.webp')">
-    <div class="row">
-        <div class="col-md-12">
-            <nav class="navbar navbar-dark bg-transparent container-fluid" itemscope itemtype="https://schema.org/SiteNavigationElement">
-                <a href="{{url_for('main.index')}}"><span class="navbar-brand text-white mb-0 h1">In Wait of Tomorrow</span></a>
-                <div class="dropdown dropleft show btn-group">
-                  <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
-                  </button>
+    <div itemscope itemtype="https://schema.org/AboutPage" class="container-fluid" id="aboutus_two">
+        <div class="container-fluid pt-5">
+            <div class="row w-100 m-auto text-center" style="max-width: 600px">
+                <h2 class="h1 w-100 m-auto font-weight-light text-dark text-center mt-5" itemprop="name">About us</h2>
+                <div class="text-center text-dark w-100 m-auto">
+                    <a href="https://www.facebook.com/inwaitoftomorrow/" class="fa fa-facebook"></a>
+                    <a href="https://www.instagram.com/inwaitoftomorrow/" class="fa fa-twitter"></a>
+                    <a href="https://twitter.com/InWaitofTomorr1" class="fa fa-instagram"></a>
+                    <a href="https://www.reddit.com/user/inwaitoftomorrow" class="fa fa-reddit"></a>
                 </div>
-            </nav>
-        </div>
-    </div>
-    <header class="masthead" style="min-height: 100vh">
-        <div class="container h-100">
-            <div class="row h-100 align-items-center">
-                <div class="col-12" style="padding-top: 0vh">
-                    <span class="h1 row font-weight-light text-white" itemprop="name">About us</span>
-                <div style="max-width: 600px">
-                    <span class="row font-weight-normal text-white pt-3 text-center">
-    <div class="text-center text-dark">
-        <a href="https://www.facebook.com/inwaitoftomorrow/" class="fa fa-facebook"></a>
-        <a href="https://www.instagram.com/inwaitoftomorrow/" class="fa fa-twitter"></a>
-        <a href="https://twitter.com/InWaitofTomorr1" class="fa fa-instagram"></a>
-        <a href="https://www.reddit.com/user/inwaitoftomorrow" class="fa fa-reddit"></a>
-
-</div>                    </span>
-                    <span class="row font-weight-normal text-white">We present futurology.</span>
-                    <span class="row font-weight-normal text-white">In Wait of Tomorrow brings the most interesting developments from technology and science and explores how they will affect the future of society.</span>
-                    <span class="row font-italic font-weight-normal text-white"> Where will new technologies lead us? Can AI really be used to read your dreams?</span>
-                    <span class="row font-weight-normal font-small text-white mt-3 font-smaller float-right">The background image you see was captured on 28th February (inwaitoftomorrow's birthday) in 2008 by NASA's Hubble</span>
-                    <span class="row font-weight-normal text-white font-smaller float-right">It is an infrared image of the Galactic Center. The image reveals a series of massive stars in the hot gas of our galactic core.</span>
-
-                </div>
-                </div>
-                <div class="col-12">
-                    <div class="text-center text-white font-weight-normal col-12"><a class="font-weight-normal text-white" href="#articles"><i class="arrow down text-white"></i></a></div>
-                </div>
+                <p class="w-100 font-weight-normal text-dark m-auto">We present futurology.</p>
+                <p class="w-100 m-auto font-weight-normal text-dark">In Wait of Tomorrow brings the most interesting developments from technology and science and explores how they will affect the future of society.</p>
+                <p class="w-100 m-auto font-italic font-weight-normal text-dark"> Where will new technologies lead us? Can AI really be used to read your dreams?</p>
+                <p class="w-100 m-auto font-weight-normal text-dark">The image you see below was captured on 28th February (inwaitoftomorrow's birthday) in 2008 by NASA's Hubble</p>
+                <p class="w-100 m-auto font-weight-normal text-dark">It is an infrared image of the Galactic Center. The image reveals a series of massive stars in the hot gas of our galactic core.</p>
+                <picture>
+                    <source srcset="../static/img/nasahubble.webp">
+                    <source srcset="../static/img/nasahubble.jpg">
+                    <img src="../static/img/nasahubble.webp" alt="In Wait of Tomorrow" class="m-auto w-100 h-auto pb-2">
+                </picture>
             </div>
         </div>
-    </header>
-
-</div>
+    </div>
 {% else %}
     <div class="row container-fluid w-100" id="cards">
             <script src="https://kit.fontawesome.com/7380e39ab3.js" crossorigin="anonymous"></script>
@@ -184,7 +158,11 @@
     </div>
     </div>
          <div class= "row col-12 justify-content-center w-100" id="aboutUs">
-            <img src="../static/img/logo.webp" style="max-height: 200px" alt="In Wait of Tomorrow">
+            <picture>
+                <source srcset="../static/img/logo.webp">
+                    <source srcset="../static/img/logo.jpeg">
+                    <img src="../static/img/logo.webp" style="max-height: 200px" alt="In Wait of Tomorrow" class="m-auto">
+                </picture>
         </div>
         <div class="row col-12 justify-content-center text-center text-dark w-100">
             <a href="https://www.facebook.com/inwaitoftomorrow/" class="fa fa-facebook"></a>

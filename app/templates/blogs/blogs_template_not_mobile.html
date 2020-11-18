@@ -10,15 +10,7 @@
 
       gtag('config', 'UA-159574205-1');
     </script>
-    <script type="application/ld+json">
-        {
-          "@context": "https://schema.org",
-          "@type": "NewsArticle",
-          "image": "{% for post in post %}{{ post.url_ | safe }}{% endfor %}",
-          "headline": "{% for post in post %}{{ post.Title | safe }}{% endfor %}",
-          "datePublished": "{% for post in post %}{{ post.Date | safe }}{% endfor %}"
-        }
-    </script>
+    {{ structured_info | safe }}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta property="og:title" content="{% block fb_share_title %}{% endblock %}"/>
@@ -42,6 +34,8 @@
     <meta name="author" content="inwaitoftomorrow">
     <meta name="robots" content="index, follow">
     <link rel="shortcut icon" href="../static/img/favico.ico">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
     <title>{% block title %}{% endblock %}</title>
     <!-- Facebook Pixel Code -->
     <script>
@@ -61,15 +55,15 @@
     /></noscript>
     <!-- End Facebook Pixel Code -->
 </head>
-<body itemscope itemtype="https://schema.org/WebPage" onscroll="change_words()" onload="signup()">
+<body itemscope itemtype="https://schema.org/WebPage" onscroll="change_words()" onload="signup()" style="font-family: 'Cabin', sans-serif; font-size: 18px!important;">
 <div class="row m-auto pt-3" style="max-width: 1000px">
 <link rel="stylesheet" href="../static/css/newnav.css">
 {{ navigation_page | safe }}
 <div id="newsletter" class="overlay text-dark bg-white" style="height: 50%">
       <a href="javascript:void(0)" class="closebtn" onclick="close_newsletter()">&times;</a>
-    <div class="row m-auto pt-3" style="max-width: 600px">
-        <img href="{{ url_for('shop.shop_item', id="what-next-bro-light") }}" src="../static/img/whatnextbro11.jpeg" class="col-6" style="max-width: 300px; height: auto" alt="What Next bro?">
-        <a href="{{ url_for('shop.shop') }}" class="col-6 p-1"><p>Take a look at our exclusive hoodies now! Head over to our shop to view our collection!</p></a>
+    <div class="row m-auto pt-3" style="max-width: 800px">
+        <img href="{{ url_for('shop.shop_item', id="what-next-bro-light") }}" src="../static/img/whatnextbro11.jpeg" class="col-3 h-auto" style="height: auto; width: 200px" alt="What Next bro?">
+        <a href="{{ url_for('shop.shop') }}" class="col-9 p-1"><p>Take a look at our exclusive hoodies now! Head over to our shop to view our collection!</p></a>
     </div>
       <div class="row m-auto pt-3" style="max-width: 800px; visibility: hidden">
         <h3 class="font-weight-normal">Enjoy what you're reading? Sign up to our newsletter</h3>

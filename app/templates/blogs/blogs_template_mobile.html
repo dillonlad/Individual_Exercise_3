@@ -10,15 +10,7 @@
 
       gtag('config', 'UA-159574205-1');
     </script>
-    <script type="application/ld+json">
-        {
-          "@context": "https://schema.org",
-          "@type": "NewsArticle",
-          "image": "{% for post in post %}{{ post.url_ | safe }}{% endfor %}",
-          "headline": "{% for post in post %}{{ post.Title | safe }}{% endfor %}",
-          "datePublished": "{% for post in post %}{{ post.Date | safe }}{% endfor %}"
-        }
-    </script>
+    {{ structured_info | safe }}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta property="og:title" content="{% block fb_share_title %}{% endblock %}"/>
@@ -59,8 +51,10 @@
     src="https://www.facebook.com/tr?id=363987458380932&ev=PageView&noscript=1"
     /></noscript>
     <!-- End Facebook Pixel Code -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
 </head>
-<body itemscope itemtype="https://schema.org/WebPage" onscroll="change_words()">
+<body itemscope itemtype="https://schema.org/WebPage" onscroll="change_words()" style="font-family: 'Cabin', sans-serif;">
 <link rel="stylesheet" href="../static/css/newnav.css">
 {{ navigation_page | safe }}
 <div id="newsletter" class="overlay text-dark bg-white" style="height: 50%">

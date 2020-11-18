@@ -62,6 +62,7 @@ class Blogs(db.Model):
     no_series_name = db.Column(db.Text, nullable=True)
     series = db.Column(db.Text, nullable=True)
     Image_iphone = db.Column(db.Text, nullable=True)
+    date_mod = db.Column(db.Text, nullable=True)
 
 
 

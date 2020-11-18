@@ -9,13 +9,13 @@
 
 <url>
   <loc>https://inwaitoftomorrow.appspot.com/shop</loc>
-  <lastmod>2020-10-23T22:44:50+00:00</lastmod>
+  <lastmod>2020-11-08T11:44:50+00:00</lastmod>
   <priority>1.00</priority>
 </url>
     {% for product in products %}
 <url>
   <loc>https://inwaitoftomorrow.appspot.com/shop/{{ product.item_id }}</loc>
-  <lastmod>2020-04-21T22:44:50+00:00</lastmod>
+  <lastmod>2020-11-08T11:44:50+00:00</lastmod>
   <priority>0.80</priority>
 </url>
         {% endfor %}
