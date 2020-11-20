@@ -23,5 +23,8 @@ flask-mail==0.9.1
 urlfetch==1.2.1
 paypalrestsdk==1.13.1
 paypal-checkout-serversdk
+google-api-python-client
+google-api-core
+oauth2client
 
 

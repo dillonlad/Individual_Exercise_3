@@ -16,6 +16,7 @@ from flask_sitemap import Sitemap, sitemap_page_needed
 
 import app
 from app import db
+from app.HelloAnalytics import initialize_analyticsreporting, print_response, get_report
 from app.main.forms import SignupForm, LoginForm, PostForm, BlogEditor, CreateArticle, SearchForm
 
 from app.models import Posts_two, Blogs, Profile, Categories, Series, Authors, Comments_dg_tmp, \
@@ -439,6 +440,61 @@ def authors(author_id):
                 person_name.append(geeza.author_name)
             posts = Blogs.query.filter(Blogs.author.contains(person_name[0])).order_by(desc(Blogs.article_id)).all()
             return render_template('author.html', categories=categories, person=person, posts=posts, navigation_page=navigation_page)
+
+
+@bp_main.route('/admin/analytics', methods=['POST', 'GET'])
+@login_required
+def show_analytics():
+
+    categories = Categories.query.all()
+    navigation_page = render_template('navigation.html', categories=categories)
+
+    analytics = initialize_analyticsreporting()
+    response = get_report(analytics)
+    analytics_reports = print_response(response)
+
+    total_website_views = 0
+    for web_report in analytics_reports:
+        total_website_views += web_report['views']
+
+    blog_views = []
+    blog_titles = []
+
+    posts = Blogs.query.order_by(desc(Blogs.article_id)).all()
+    for post in posts:
+        blog_titles.append(post.Title)
+        total_views = 0
+        for report in analytics_reports:
+            if post.Post_ID in report['page']:
+                total_views += report['views']
+        blog_views.append(total_views)
+
+    total = sum(blog_views)
+    blog_list = []
+
+    for i in range(len(blog_titles)):
+        blog_dict = {'Blog_title': blog_titles[i], 'article_views': blog_views[i]}
+        blog_list.append(blog_dict)
+
+    product_names = []
+    product_views = []
+
+    products = shop_items.query.all()
+    for product in products:
+        product_names.append(product.item_name)
+        total_views = 0
+        for new_report in analytics_reports:
+            if product.item_id in new_report['page']:
+                total_views += new_report['views']
+        product_views.append(total_views)
+
+    product_list = []
+
+    for i in range(len(product_names)):
+        product_dict = {'product_name': product_names[i], 'product_views': product_views[i]}
+        product_list.append(product_dict)
+
+    return render_template('analytics.html', analytics_reports=analytics_reports, blog_views=blog_views, posts=posts, total=total, blog_list=blog_list, categories=categories, navigation_page=navigation_page, product_list=product_list, total_website_views=total_website_views)
 
 
 @bp_main.errorhandler(404)

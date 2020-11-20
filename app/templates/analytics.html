@@ -45,7 +45,10 @@
     <meta name="keywords" content="inwaitoftomorrow, In Wait of Tomorrow, futurology, Technology, Science, Healthcare, Environment">
     <meta name="author" content="inwaitoftomorrow">
     <meta name="robots" content="index, follow">
-    <title>{% block title %}{{ title }}{% endblock %}</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+    <title>Analytics</title>
 <!-- Facebook Pixel Code -->
     <script>
     !function(f,b,e,v,n,t,s)
@@ -64,6 +67,7 @@
     /></noscript>
     <!-- End Facebook Pixel Code -->
 </head>
+<body style="background-color: #dddddd; font-family: 'Cabin', sans-serif;">
     {% with messages = get_flashed_messages() %}
             {% if messages %}
                 <div class="text-center m-auto p-5 font-weight-normal" style="max-width: 600px">
@@ -74,24 +78,54 @@
             {% endif %}
     {% endwith %}
   {{ navigation_page | safe }}
-    <div class="row">
-        <div class="col-md-12">
-            <nav class="navbar navbar-dark bg-dark container-fluid" itemscope itemtype="https://schema.org/SiteNavigationElement">
-                <a href="{{url_for('main.index')}}"><span class="navbar-brand mb-0 h1 font-weight-normal">In Wait of Tomorrow</span></a>
-                <div class="dropdown dropleft show btn-group">
-                  <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
-                  </button>
-                </div>
+    <div style="display: block" class="row w-100">
+        <div class="col-12">
+            <nav class="navbar navbar-dark fixed-top bg-dark" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
+                    <a id="home_link" href="{{url_for('main.index')}}"><span class="navbar-brand text-white navbar-dark mb-0 h1 font-weight-normal">In Wait of Tomorrow</span></a>
+                    <div class="dropdown dropleft show btn-group">
+                      <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
+                      </button>
+                    </div>
             </nav>
         </div>
     </div>
-<div class="row m-auto text-center" style="max-width: 600px">
-    <h3 class="col-12 font-weight-normal mt-5 pl-0">Welcome back, {% for profile in profile %}{{ profile.username }}{% endfor %}</h3>
-    <a class="col-12 btn btn-dark text-white rounded-0 mb-2" href="{{ url_for('blogs.test_send_newsletter') }}">Send test newsletter</a>
-    <a class="col-12 btn btn-dark text-white rounded-0 mb-2" href="{{ url_for('blogs.send_newsletter') }}">Send newsletter</a>
-    <a class="col-12 btn btn-dark text-white rounded-0 mb-2" href="{{ url_for('main.show_analytics') }}">Analytics</a>
-    <a class="col-12 btn btn-dark text-white rounded-0" href="{{ url_for('main.logout') }}">Logout</a>
-</div>
+    <div class="row w-100 container-fluid m-auto text-center" style="min-height: 100vh; max-width: 600px; padding-top: 15vh">
+        <div class="border border-dark text-center m-auto" style="border-radius: 50%!important; height: 40vh; width: 40vh; border-width: 20px!important;">
+            <h3 class="h3 w-100 m-auto" style="margin-top: 25%!important;">Total website page views: </h3>
+            <p class="w-100 m-auto">{{ total_website_views }}</p>
+            <h4 class="h4 w-100 m-auto">Total article reads:</h4>
+            <p class="w-100 m-auto">{{ total }}</p>
+        </div>
+    </div>
+    <div class="row container-fluid w-100 m-auto pt-5" style="max-width: 800px;">
+        <table class="w-100 p-2">
+            <tr class="ml-1 border-bottom border-dark">
+                <th>Article</th>
+                <th>Views</th>
+            </tr>
+            {% for blog in blog_list %}
+                <tr>
+                    <td class="p-2">{{ blog.Blog_title }}</td>
+                    <td class="p-2">{{ blog.article_views }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        <p class="pt-5">Total: {{ total }}</p>
+    </div>
+    <div class="row container-fluid w-100 m-auto pt-5 pb-5" style="max-width: 800px;">
+        <table class="w-100 p-2">
+            <tr class="ml-1 border-bottom border-dark">
+                <th>Product</th>
+                <th>Views</th>
+            </tr>
+            {% for product in product_list %}
+                <tr>
+                    <td class="p-2">{{ product.product_name }}</td>
+                    <td class="p-2">{{ product.product_views }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
 <script src="../static/js/EasePack.min.js"></script>
 <script src="../static/js/TweenLite.min.js"></script>
 <script src="../static/js/demo.js"></script>
@@ -107,4 +141,5 @@
       document.getElementById("cards").style.visibility = "visible"
     }
 </script>
+</body>
 </html>
