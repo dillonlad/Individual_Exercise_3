@@ -17,6 +17,7 @@
     <script src="../../static/bootstrap-4.0.0/assets/js/vendor/popper.min.js"></script>
     <script src="../../static/js/mdb.min.js"></script>
     <link rel="stylesheet" href="../../static/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <link rel="shortcut icon" href="../../static/img/favico.ico">
     <meta name="robots" content="index, follow">
@@ -55,11 +56,11 @@
     {% endwith %}
     <link rel="stylesheet" href="../../static/css/newnav.css">
     {{ navigation_page| safe }}
-<div class="container-fluid mainimage opacity-5">
-    <div style="display: block" class="row">
+<div class="container-fluid mainimage opacity-5" {% if request.MOBILE %}{% else %}style="background-color: white"{% endif %}>
+    <div style="display: block" class="row" {% if request.MOBILE %}{% else %}style="background-color: white"{% endif %}>
         <div class="col-12">
-            <nav class="navbar navbar-dark fixed-top bg-dark" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
-                    <a id="home_link" href="{{url_for('main.index')}}"><span class="navbar-brand text-white navbar-dark mb-0 h1 font-weight-normal">In Wait of Tomorrow</span></a>
+            <nav class="navbar navbar-dark fixed-top {% if request.MOBILE %}bg-dark{% else %}bg-white{% endif %}" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
+                    <a id="home_link" href="{{url_for('main.index')}}"><span class="navbar-brand {% if request.MOBILE %}text-white{% else %}text-dark{% endif %} navbar-dark mb-0 h1 font-weight-normal">In Wait of Tomorrow</span></a>
                     <div class="dropdown dropleft show btn-group">
                       <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
                       </button>
@@ -68,16 +69,27 @@
         </div>
     </div>
 {% if request.MOBILE %}
-    <div class="row col-12 pl-5 justify-content-center text-center" style="margin-top: 60px">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://kit.fontawesome.com/7380e39ab3.js" crossorigin="anonymous"></script>
+    <div class="container-fluid w-100 row m-auto text-center" style="padding-top: 10vh">
+        <div class="text-center text-dark p-2 col-12 pb-5 w-100 m-auto">
+            <a href="https://www.facebook.com/inwaitoftomorrow/" class="fa fa-facebook"></a>
+            <a href="https://www.instagram.com/inwaitoftomorrow/" class="fa fa-twitter"></a>
+            <a href="https://twitter.com/InWaitofTomorr1" class="fa fa-instagram"></a>
+            <a href="https://www.reddit.com/user/inwaitoftomorrow" class="fa fa-reddit"></a>
+        </div>
+
+    <div class="col-12 w-100 m-auto text-center">
         <form class="form-inline" method="POST" action="" novalidate>
             {{ form.hidden_tag() }}
             <div class="form-group rounded-0">
-                {{ form.Search.label(class_="pr-2") }}{{ form.Search(class_="form-control form-control-user rounded-0") }}
+                {{ form.Search(class_="form-control form-control-user rounded-0") }}
             </div>
             <div class="form-group">
             {{ form.Submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
                 </div>
         </form>
+    </div>
     </div>
     <br>
     <h1 class="font-weight-normal text-center align-self-center align-content-center">Latest articles {% if article_category|length %}in {{ article_category }}{% endif %}</h1>
@@ -109,32 +121,47 @@
 
 {% else %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <div class="text-center text-dark p-2" style="margin-top: 70px">
-        <a href="https://www.facebook.com/inwaitoftomorrow/" class="fa fa-facebook"></a>
-        <a href="https://www.instagram.com/inwaitoftomorrow/" class="fa fa-twitter"></a>
-        <a href="https://twitter.com/InWaitofTomorr1" class="fa fa-instagram"></a>
-        <a href="https://www.reddit.com/user/inwaitoftomorrow" class="fa fa-reddit"></a>
-    </div>
-    <div class="row col-12 pl-5 justify-content-center mt-2 mb-2">
+    <div class="container-fluid w-100 row m-auto" style="min-height: 50vh;">
+
+    <script src="https://kit.fontawesome.com/7380e39ab3.js" crossorigin="anonymous"></script>
+        <h1 class="text-center w-100 display-2 col-12 font-weight-light" style="margin-top: 20vh">LATEST ARTICLES</h1>
+        {% if article_category|length %}<p class="h1 font-weight-normal text-center w-100 m-auto">{{ article_category }}</p>{% endif %}
+    <div class="text-center text-dark p-2 w-100 container-fluid" id="homepagefixedtop">
+        {% for category in categories %}
+            {% if category.category_name != "Blog" %}
+                <a class="p-2 text-dark" href="{{ url_for('main.show_blog_category', category=category.category_name) }}">{{ category.category_name }}</a>
+            {% endif %}
+        {% endfor %} <a data-toggle="collapse" class="text-dark" href="#collapseSearch" role="button" aria-expanded="false" aria-controls="collapseExample"><i class="fas fa-search" style="border: none"></i></a>
+
+ <div class="collapse" id="collapseSearch">
+  <div class="row col-12 pl-5 justify-content-center text-center" style="margin-top: 60px">
         <form class="form-inline" method="POST" action="" novalidate>
-            {{ form.hidden_tag() }}
-            <div class="form-group">
-                {{ form.Search.label(class_="pr-2") }}{{ form.Search(class_="form-control rounded-0 form-control-user") }}
-            </div>
-            <div class="form-group">
-            {{ form.Submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    {{ form.Search.label(class_="pr-2") }}{{ form.Search(class_="form-control rounded-0 form-control-user") }}
                 </div>
-        </form>
+                <div class="form-group">
+                {{ form.Submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
+                    </div>
+            </form>
     </div>
-    <br>
-    <h1 class="pb-5 font-weight-normal text-center align-self-center align-content-center">Latest articles {% if article_category|length %}in {{ article_category }}{% endif %}</h1>
+</div>
+    </div>
+    <div class="text-center text-dark p-2 col-12 pb-5">
+            <a href="https://www.facebook.com/inwaitoftomorrow/" class="fa fa-facebook"></a>
+            <a href="https://www.instagram.com/inwaitoftomorrow/" class="fa fa-twitter"></a>
+            <a href="https://twitter.com/InWaitofTomorr1" class="fa fa-instagram"></a>
+            <a href="https://www.reddit.com/user/inwaitoftomorrow" class="fa fa-reddit"></a>
+        </div>
+    </div>
+    </div>
     {% if posts|length %}
-        <div class="row m-auto" id="cards">
+        <div class="row m-auto container-fluid pt-5" id="cards">
         <link rel="stylesheet" href="../../static/css/hovering.css">
             {% for post in posts %}
-                <div class="col-4">
+                <div class="col-3">
                 <div class="card mb-3 rounded-0" style="border-color: #dddddd" itemscope itemtype="https://schema.org/Blog">
-                    <div class="hovereffect">
+                    <div class="hovereffect" style="min-height: 400px">
                         <picture>
                             <source style="max-width: 600px; height: auto" class="card-img-top img-fluid" srcset="..{{ post.Image_root }}" type="image/webp">
                             <img class="card-img-top img-fluid" itemscope itemtype="https://schema.org/ImageObject" src="..{{ post.Image_iphone }}" alt="{{ post.Title }}" style="max-width: 600px; height: auto">
@@ -143,7 +170,7 @@
                             <p class="text-white text-left ml-1" style="font-size: small" itemprop="description">{{ post.Description }}<br><a class="text-center bg-transparent border-white btn rounded-0 text-white w-50" style="font-size: x-small" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}">Read more</a></p>
                         </div>
                     </div>
-                  <div class="card-body">
+                  <div class="card-body" style="min-height: 200px">
                       <h6 class="card-subtitle mb-2 text-muted font-weight-normal">{{ post.author }} | {{ post.Date }}</h6>
                       <a class="text-dark font-weight-normal h-5 mb-2" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"><p class="card-text mb-2" itemprop="name">{{ post.Title }}</p></a>
                       <h6 class="card-subtitle mb-2 text-muted font-weight-normal">{{ post.category }} | 4 min read</h6>
@@ -157,7 +184,9 @@
     {% endif %}
 
     {% endif %}
-</div>
+{% if request.MOBILE %}
+    </div>{% else %}
+{% endif %}
     <div class="text-center row m-auto" style="max-width: 800px">
         {% if prev_url %}
         <a class="text-center col-12" href="{{ prev_url }}">Newer posts</a>
@@ -185,6 +214,7 @@
       document.getElementById("cards").style.visibility = "visible"
 
     }
+
 </script>
 </body>
 </html>

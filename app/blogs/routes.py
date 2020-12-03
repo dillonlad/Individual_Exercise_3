@@ -20,7 +20,7 @@ from app import db
 from app.blogs.forms import CommentForm, SubmitNewsletter, Newsletter
 
 from app.models import Posts_two, Blogs, Profile, Categories, Series, Authors, Comments_dg_tmp, \
-    mailing_list
+    mailing_list, shop_items
 
 bp_blogs = Blueprint('blogs', __name__, url_prefix='/blogs')
 ADMINS = ['inwaitoftomorrow@gmail.com']
@@ -105,6 +105,9 @@ def post(Post_ID):
     else:
         if Blogs.query.filter(Blogs.Post_ID.contains(Post_ID)).all():
             categories = Categories.query.all()
+            latest_product = shop_items.query.limit(1).all()
+            for variable in latest_product:
+                product_image = variable.meta_image.replace("http://inwaitoftomorrow.appspot.com", "..")
             navigation_page = render_template('navigation.html', categories=categories)
             post = Blogs.query.filter_by(Post_ID=Post_ID).all()
             for var in post:
@@ -171,9 +174,7 @@ def post(Post_ID):
                         flash('Thanks for the reply')
                         return redirect(url_for('blogs.post', Post_ID=Post_ID), code=302)
                 else:
-                    mob_template = render_template("blogs/blogs_template_mobile.html", post=post, categories=categories, comments=comments, number_of_comments=number_of_comments, latest_articles=latest_articles, quiz_of_the_week=quiz_of_the_week, form=form, post_authorid=post_authorid, new_date=new_date)
-                    comp_template = render_template("blogs/blogs_template_not_mobile.html", post=post, categories=categories, comments=comments, number_of_comments=number_of_comments, latest_articles=latest_articles, quiz_of_the_week=quiz_of_the_week, form=form, post_authorid=post_authorid, new_date=new_date)
-                    return render_template("blogs/post.html", post=post, categories=categories, comments=comments, number_of_comments=number_of_comments, latest_articles=latest_articles, quiz_of_the_week=quiz_of_the_week, form=form, post_authorid=post_authorid, new_date=new_date, navigation_page=navigation_page, structured_info=structured_info)
+                    return render_template("blogs/post.html", post=post, categories=categories, comments=comments, number_of_comments=number_of_comments, latest_articles=latest_articles, quiz_of_the_week=quiz_of_the_week, form=form, post_authorid=post_authorid, new_date=new_date, navigation_page=navigation_page, structured_info=structured_info, latest_product=latest_product, product_image=product_image)
         else:
             flash("The article you tried to find does not exist, at least not with that URL, try using the search box to find what you're looking for")
             return redirect(url_for('main.show_blog'))

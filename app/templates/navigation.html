@@ -6,6 +6,7 @@
     <body>
         <div id="myNav" class="overlay">
               <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        {% if request.MOBILE %}
               <div class="overlay-content mt-0">
                   <a href="{{ url_for('main.show_blog') }}">Latest articles</a>
                     <a href="{{ url_for('shop.shop') }}">SHOP</a>
@@ -16,6 +17,22 @@
                     {% endif %}
                   {% endfor %}
               </div>
+        {% else %}
+                <div class="overlay-content mt-0 row ml-auto mr-auto" style="max-width: 800px">
+                <div class="col-6 border-white border-right">
+                    <a href="{{ url_for('main.index') }}">Homepage</a>
+                    <a href="{{ url_for('main.show_blog') }}">Latest articles</a>
+                    <a href="{{ url_for('shop.shop') }}">SHOP</a>
+                </div>
+                  <div class="col-6">
+                  {% for category in categories %}
+                    {% if category.category_name != "Blog" %}
+                        <a href="{{ url_for('main.show_blog_category', category=category.category_name) }}">{{ category.category_name }}</a>
+                    {% endif %}
+                  {% endfor %}
+                  </div>
+              </div>
+        {% endif %}
         </div>
     </body>
 </html>

@@ -56,7 +56,7 @@
     <!-- End Facebook Pixel Code -->
 </head>
 <body itemscope itemtype="https://schema.org/WebPage" onscroll="change_words()" onload="signup()" style="font-family: 'Cabin', sans-serif; font-size: 18px!important;">
-<div class="row m-auto pt-3" style="max-width: 1000px">
+<div class="row m-auto pt-3">
 <link rel="stylesheet" href="../static/css/newnav.css">
 {{ navigation_page | safe }}
 <div id="newsletter" class="overlay text-dark bg-white" style="height: 50%">
@@ -79,7 +79,7 @@
     </form>
       </div>
   </div>
-<div class="container-fluid">
+<div class="container-fluid" style="max-width: 1000px">
 <div class="container-fluid" id="navigation">
     <div id="nav_one" style="display: block" class="row">
         <div class="col-12">
@@ -107,6 +107,7 @@
         {% block image_header %}{% endblock %}
     </div>
 </div>
+<div class="container-fluid m-auto" style="max-width: 80vw;">
     <div class="text-center text-dark p-2" {% if request.MOBILE %}style="margin-top: 50px" {% else %}style="margin-top:5%"{% endif %}>
         <script src="https://kit.fontawesome.com/7380e39ab3.js" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -122,42 +123,33 @@
             {% endfor %}
         {% endif %}
     {% endwith %}
-
-</div>
-    <div class="row"><div class="col-8" style="max-width: 800px">
-<div style="max-width: 800px" itemprop="name">
-    <div class="col-12 font-weight-normal h1 mt-3">
-        {% block article_title %}{% endblock %}
     </div>
-</div>
-<div class="dropdown-divider text-center mb-0 mt-3" style="max-width: 800px"></div>
-<div class="pt-2 pb-2" style="max-width: 800px">
+<div class="col-12 font-weight-normal h1 display-4 mt-3" itemprop="name">
+        {% for post in post %}{{ post.Title }}{% endfor %}
+    </div>
+<div class="pt-2 pb-2" style="max-width: 80vw">
     <div class="col-12 font-weight-normal h6 mb-0" itemtype="datePublished, author">{% block time_and_date %}{% endblock %}{% if number_of_comments > 0 %} | <i class="fas fa-comment" style="border: none"></i>{{ number_of_comments }} {% else %}{% endif %}<span style="float: right"><a class="text-dark" href="https://api.whatsapp.com/send?text={% for post in post %}{{ post.url_ | safe }}{% endfor %}"><i style="border: none" class="fab fa-whatsapp"></i></a> <a class="text-dark" href="http://www.facebook.com/sharer.php?u={% for post in post %}{{ post.url_ | safe }}{% endfor %}"><i class="fab fa-facebook-square" style="border: none"></i></a> <a class="text-dark" href="https://twitter.com/intent/tweet?url={% for post in post %}{{ post.url_ | safe }}{% endfor %}&text={% for post in post %}{{ post.Title | safe }}{% endfor %}"><i class="fab fa-twitter-square" style="border: none"></i></a> <a class="text-dark" href="https://www.linkedin.com/sharing/share-offsite/?url={% for post in post %}{{ post.url_ | safe }}{% endfor %}"><i style="border: none" class="fab fa-linkedin-in"></i></a></span>
 </div>
 </div>
-<div class="dropdown-divider text-center mb-0 pb-4" style="max-width: 800px"></div>
-    <div class="pb-3" style="max-width:800px">
+<div class="dropdown-divider text-center mb-0 pb-4" style="max-width: 70vw"></div>
+</div>
+<div class="container-fluid row m-auto" style="max-width: 80vw">
+<div class="container-fluid col-8">
+    <div class="pb-3">
         <img itemtype="primaryImageOfPage, image" src="{% block image_header_tw0 %}{% endblock %}" alt="{% for post in posts %}{{ post.Title }}{% endfor %}" style="max-height: 75vh" class="col-12">
     </div>
-    <div style="max-width: 800px">
+    <div>
         <div class="col-12 pl-0 ml-0 font-weight-normal">
             {% block main_article %}{% endblock %}
         </div>
     </div>
-
-
-<div class="row m-auto" style="max-width: 800px">
-<div class="col-1"></div>
-   <div class="col-1 h1 ml-0 font-weight-bold">
-   </div>
-</div>
-<div class="row m-auto text-center align-content-center" style="max-width: 800px">
+<div class="m-auto text-center align-content-center w-100">
     <a class="btn btn-dark h4 text-center w-100 rounded-0" data-toggle="collapse" href="#collapse-comments" role="button" aria-expanded="false" aria-controls="collapse-comments">
     Leave a reply
   </a>
 </div>
-<div class="row m-auto text-center collapse" id="collapse-comments" style="max-width: 800px">
-     <form class="user col-12 text-left" method='POST' novalidate>
+<div class="w-100 m-auto text-center collapse" id="collapse-comments">
+     <form class="user w-100 text-left" method='POST' novalidate>
         {{ form.hidden_tag() }}
         <div class="form-group font-weight-normal">
           {{ form.name.label }}{{ form.name(class_="form-control form-control-user rounded-0") }}
@@ -198,7 +190,7 @@
         {{ form.Submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
     </form>
 </div>
-<div class="row m-auto pb-2" style="max-width: 800px">
+<div class="w-100 m-auto pb-2">
     <h2 class="font-weight-normal">View our comments</h2>
     {% if comments|length %}
         {% for comment in comments %}
@@ -241,9 +233,35 @@
         {{ form.Submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
     </form>
 </div>
-    </div>
+</div>
+
     <div class="col-4 pt-2 mr-0 ml-0" id="articles">
-        {{ quiz_of_the_week | safe }}
+        <h3 class="font-weight-normal text-left ml-0 pt-4">SHOP NOW</h3>
+    {% if latest_product|length %}
+        <div class="m-auto" style="max-width: 600px">
+        {% for product in latest_product %}
+            <link rel="stylesheet" href="../../static/css/hovering.css">
+            <div class="card mb-3 rounded-0" style="width: 100%">
+                <div class="hovereffect">
+                    <picture>
+                        <source style="max-width: 600px; height: auto" class="card-img-top img-fluid" srcset="{{ product_image }}" type="image/jpeg">
+                        <img class="card-img-top img-fluid" src="{{ product_image }}" alt="{{ product.item_name }}" style="max-width: 600px; height: auto">
+                    </picture>
+                    <div class="overlay" id="img_overlay">
+                        <p class="text-white text-left ml-1" style="font-size: small">{{ product.meta_description }}<br><a class="text-center bg-transparent border-white btn rounded-0 text-white w-50" style="font-size: x-small" href="{{ url_for('shop.shop_item', id = product.item_id) }}">BUY NOW</a></p>
+                    </div>
+                </div>
+                <div class="card-body">
+                  <h6 class="card-subtitle mb-2 text-muted font-weight-normal ml-0">£{{ product.price }}</h6>
+                  <a class="mb-2 ml-0" href="{{ url_for('shop.shop_item', id = product.item_id) }}"><p class="card-text mb-2 ml-0" itemprop="name">{{ product.item_name }}</p></a>
+                  <p class="card-subtitle mb-2 text-muted font-weight-normal ml-0">FREE UK SHIPPING</p>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    {% else %}
+        {{ quiz_of_the_week }}
+    {% endif %}
         <h3 class="font-weight-normal text-left ml-0 pt-4">Recent posts {% if article_category|length %}in {{ article_category }}{% endif %}</h3>
     {% if latest_articles|length %}
         <div class="m-auto" style="max-width: 600px">
@@ -285,7 +303,8 @@
     </div>
     </div>
     </div>
-
+</div>
+</div>
 </div>
 </div>
 <footer class="text-center p-5 mt-5" style="background-color: #dddddd">
@@ -294,7 +313,7 @@
     </footer>
 <script>
     function signup(){
-        myVar = setTimeout(open_newsletter, 15000);
+        //myVar = setTimeout(open_newsletter, 15000);
     }
 
     function change_words(){
