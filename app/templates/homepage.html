@@ -70,6 +70,17 @@
                     <div class="text-center text-white font-weight-normal col-12"><a class="font-weight-normal text-white" href="#aboutus"><i class="arrow down text-white"></i></a></div>
                 </div>
 </div>
+</div>
+    <div class="container-fluid w-100 row m-auto" style="max-width: 600px">
+        {% for post in posts %}
+            <div class="col-6 p-1 m-auto text-center">
+                    <div class="text-left m-auto" style="height: 40vh; background-image: url('..{{ post.Image_iphone }}'); background-size: cover">
+                        <p class="text-white font-weight-bold" style="bottom: 0; left: 0; max-width: 30vw; position: absolute">{{ post.Title }}</p>
+                    </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="m-auto row" style="max-width: 600px">
     <link rel="stylesheet" href="../static/css/title.css">
     <div itemscope itemtype="https://schema.org/AboutPage" class="container-fluid" id="aboutus">
         <div class="container-fluid pt-5" style="min-height: 100vh">
@@ -117,6 +128,7 @@
                 </picture>
             </div>
         </div>
+    </div>
     </div>
 {% else %}
     <div class="row container-fluid w-100" id="cards">

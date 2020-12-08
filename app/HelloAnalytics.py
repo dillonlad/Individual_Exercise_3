@@ -46,6 +46,27 @@ def get_report(analytics):
   ).execute()
 
 
+def get_report_most_popular(analytics):
+  """Queries the Analytics Reporting API V4.
+
+  Args:
+    analytics: An authorized Analytics Reporting API V4 service object.
+  Returns:
+    The Analytics Reporting API V4 response.
+  """
+  return analytics.reports().batchGet(
+      body={
+        'reportRequests': [
+        {
+          'viewId': VIEW_ID,
+          'dateRanges': [{'startDate': '14daysAgo', 'endDate': 'today'}],
+          'metrics': [{'expression': 'ga:uniquePageviews'}],
+          'dimensions': [{'name': 'ga:pagePath'}]
+        }]
+      }
+  ).execute()
+
+
 def print_response(response):
   """Parses and prints the Analytics Reporting API V4 response.
 

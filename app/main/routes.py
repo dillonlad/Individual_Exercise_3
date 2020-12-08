@@ -361,7 +361,7 @@ def new_post():
         authors = Authors.query.all()
         time_date = datetime.now()
         if request.method == 'POST' and form.validate():
-            post_url = "https://inwaitoftomorrow.appspot.com/" + form.Post_ID.data
+            post_url = "https://inwaitoftomorrow.appspot.com/blogs/" + form.Post_ID.data
             post_main_image_root = "/static/img/"+form.Image_root.data
             post_jpg_image = post_main_image_root.replace(".webp",".jpg")
             post = Blogs(Title=form.Title.data, Post_ID=form.Post_ID.data, Description=form.Description.data, Image_root=post_main_image_root, url_=post_url, Content=form.Content.data, Time="{}:{}:{}".format(time_date.strftime("%H"), time_date.strftime("%M"), time_date.strftime("%S")), Date="{}-{}-{}".format(time_date.strftime("%Y"), time_date.strftime("%m"), time_date.strftime("%d")), category=form.category.data, author=form.author.data, keywords=form.keywords.data, Image_iphone=post_jpg_image)

@@ -9,6 +9,9 @@ __pycache__/
 # C extensions
 *.so
 
+.app.yaml
+/app/inwaitoftomorrow-203312885102.json
+
 # Distribution / packaging
 .Python
 build/
