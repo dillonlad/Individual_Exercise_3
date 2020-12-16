@@ -18,6 +18,7 @@ from flask_sitemap import Sitemap, sitemap_page_needed
 import app
 from app import db
 from app.blogs.forms import CommentForm, SubmitNewsletter, Newsletter
+from app.main.routes import third_party_cookies, cookies_accept
 
 from app.models import Posts_two, Blogs, Profile, Categories, Series, Authors, Comments_dg_tmp, \
     mailing_list, shop_items
@@ -120,6 +121,8 @@ def post(Post_ID):
             new_date = date_object.strftime("%d %b %Y")
             quiz_of_the_week = render_template('blogs/quiz.html')
             latest_articles = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Post_ID!=Post_ID).limit(5).all()
+            cookies_accept()
+            allow_third_party_cookies = third_party_cookies()
             if len(post) == 0:
                 return redirect(url_for('main.show_blog'))
             comments = Comments_dg_tmp.query.order_by(desc(Comments_dg_tmp.comment_id)).filter(Comments_dg_tmp.blog_name.contains(Post_ID)).all()
@@ -174,7 +177,7 @@ def post(Post_ID):
                         flash('Thanks for the reply')
                         return redirect(url_for('blogs.post', Post_ID=Post_ID), code=302)
                 else:
-                    return render_template("blogs/post.html", post=post, categories=categories, comments=comments, number_of_comments=number_of_comments, latest_articles=latest_articles, quiz_of_the_week=quiz_of_the_week, form=form, post_authorid=post_authorid, new_date=new_date, navigation_page=navigation_page, structured_info=structured_info, latest_product=latest_product, product_image=product_image)
+                    return render_template("blogs/post.html", post=post, categories=categories, comments=comments, number_of_comments=number_of_comments, latest_articles=latest_articles, quiz_of_the_week=quiz_of_the_week, form=form, post_authorid=post_authorid, new_date=new_date, navigation_page=navigation_page, structured_info=structured_info, latest_product=latest_product, product_image=product_image, allow_third_party_cookies=allow_third_party_cookies)
         else:
             flash("The article you tried to find does not exist, at least not with that URL, try using the search box to find what you're looking for")
             return redirect(url_for('main.show_blog'))

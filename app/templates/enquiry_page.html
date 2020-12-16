@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+{%  if allow_third_party_cookies == "True" %}
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-159574205-1"></script>
     <script>
@@ -10,6 +11,8 @@
 
       gtag('config', 'UA-159574205-1');
     </script>
+{% else %}
+{% endif %}
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -43,6 +46,7 @@
     <meta name="author" content="inwaitoftomorrow">
     <meta name="robots" content="index, follow">
     <title>{% for item in item_on_page %}{{ item.item_name }}{% endfor %}</title>
+{%  if allow_third_party_cookies == "True" %}
     <!-- Facebook Pixel Code -->
     <script>
     !function(f,b,e,v,n,t,s)
@@ -60,6 +64,8 @@
     src="https://www.facebook.com/tr?id=363987458380932&ev=PageView&noscript=1"
     /></noscript>
     <!-- End Facebook Pixel Code -->
+{% else %}
+{% endif %}
 </head>
 <body style="font-family: 'Pridi', serif;">
 {% with messages = get_flashed_messages() %}

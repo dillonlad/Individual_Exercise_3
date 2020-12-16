@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+{%  if allow_third_party_cookies == "True" %}
 <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-159574205-1"></script>
     <script>
@@ -10,6 +11,8 @@
 
       gtag('config', 'UA-159574205-1');
     </script>
+{% else %}
+{% endif %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="../../static/bootstrap-4.0.0/js/tests/vendor/jquery-1.9.1.min.js"></script>
@@ -24,6 +27,7 @@
     <meta name="description" content="Futurology: {% if article_category|length %}{{ article_category }}{% endif %}, inwaitoftomorrow is a blog about what the future might look like"/>
     <meta name="author" content="inwaitoftomorrow">
     <title>{% if article_category|length %}{{ article_category }}{% else %}Latest{% endif %} Articles</title>
+    {%  if allow_third_party_cookies == "True" %}
     <!-- Facebook Pixel Code -->
     <script>
     !function(f,b,e,v,n,t,s)
@@ -41,16 +45,19 @@
     src="https://www.facebook.com/tr?id=363987458380932&ev=PageView&noscript=1"
     /></noscript>
     <!-- End Facebook Pixel Code -->
+{% else %}
+{% endif %}
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
 </head>
 <body style="background-color: #dddddd; font-family: 'Cabin', sans-serif;" itemscope itemtype="https://schema.org/WebPage">
     {% with messages = get_flashed_messages() %}
             {% if messages %}
-                <div class="text-center m-auto p-5 font-weight-normal" style="max-width: 600px">
+                <div class="text-center m-auto p-5 font-weight-normal fixed-top" id="flashedmessages" style="max-width: 600px; background-color: #dddddd; z-index: 1031">
                     {% for message in messages %}
-                        {{ message }}
+                        {{ message | safe }}
                     {% endfor %}
+                <a class='border border-dark text-dark rounded-0 w-100 pt-1 pb-1 pl-5 pr-5' href='javascript:void(0)' onclick="closeflash()">OK</a>
                 </div>
             {% endif %}
     {% endwith %}
@@ -198,6 +205,7 @@
     <footer class="text-center p-5" style="background-color: #dddddd">
         <p>Made in Leicestershire, with love from London.</p>
         <p class="text-muted">&copy; 2020 In Wait of Tomorrow</p>
+        <a href="{{ url_for('main.privacy_policies') }}">Privacy & Cookies</a>
     </footer>
 
 
@@ -213,6 +221,10 @@
       document.getElementById("img_overlay").className = document.getElementById("img_overlay").className.replace( /(?:^|\s)(?!\S)/g , 'overlay' )
       document.getElementById("cards").style.visibility = "visible"
 
+    }
+
+    function closeflash(){
+        document.getElementById('flashedmessages').style.visibility = "hidden";
     }
 
 </script>

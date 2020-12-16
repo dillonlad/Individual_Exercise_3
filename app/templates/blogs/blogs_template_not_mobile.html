@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+{%  if allow_third_party_cookies == "True" %}
 <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-159574205-1"></script>
     <script>
@@ -10,6 +11,8 @@
 
       gtag('config', 'UA-159574205-1');
     </script>
+{% else %}
+{% endif %}
     {{ structured_info | safe }}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -37,6 +40,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
     <title>{% block title %}{% endblock %}</title>
+{%  if allow_third_party_cookies == "True" %}
     <!-- Facebook Pixel Code -->
     <script>
     !function(f,b,e,v,n,t,s)
@@ -54,6 +58,8 @@
     src="https://www.facebook.com/tr?id=363987458380932&ev=PageView&noscript=1"
     /></noscript>
     <!-- End Facebook Pixel Code -->
+{% else %}
+{% endif %}
 </head>
 <body itemscope itemtype="https://schema.org/WebPage" onscroll="change_words()" onload="signup()" style="font-family: 'Cabin', sans-serif; font-size: 18px!important;">
 <div class="row m-auto pt-3">
@@ -117,11 +123,14 @@
         <a href="https://www.reddit.com/user/inwaitoftomorrow" class="fa fa-reddit"></a>
         <!-- Displays flashed messages on a page -->
     {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages %}
-                {{ message }}
-            {% endfor %}
-        {% endif %}
+            {% if messages %}
+                <div class="text-center m-auto p-5 font-weight-normal fixed-top" id="flashedmessages" style="max-width: 600px; background-color: #dddddd; z-index: 1031">
+                    {% for message in messages %}
+                        {{ message | safe }}
+                    {% endfor %}
+                <a class='border border-dark text-dark rounded-0 w-100 pt-1 pb-1 pl-5 pr-5' href='javascript:void(0)' onclick="closeflash()">OK</a>
+                </div>
+            {% endif %}
     {% endwith %}
     </div>
 <div class="col-12 font-weight-normal h1 display-4 mt-3" itemprop="name">
@@ -310,6 +319,7 @@
 <footer class="text-center p-5 mt-5" style="background-color: #dddddd">
         <p>Made in Leicestershire, with love from London.</p>
         <p class="text-muted">&copy; 2020 In Wait of Tomorrow</p>
+    <a href="{{ url_for('main.privacy_policies') }}">Privacy & Cookies</a>
     </footer>
 <script>
     function signup(){
@@ -363,6 +373,10 @@
         document.getElementById("cross_one").style.visibility = "visible";
         document.getElementById("option_correct").style.color = "green";
         document.getElementById("tick").style.visibility = "visible"
+    }
+
+    function closeflash(){
+        document.getElementById('flashedmessages').style.visibility = "hidden";
     }
 </script>
 </body>

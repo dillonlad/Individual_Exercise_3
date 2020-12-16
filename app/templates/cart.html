@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {%  if allow_third_party_cookies == "True" %}
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-159574205-1"></script>
     <script>
@@ -10,6 +11,8 @@
 
       gtag('config', 'UA-159574205-1');
     </script>
+    {% else %}
+    {% endif %}
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">

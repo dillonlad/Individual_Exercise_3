@@ -20,7 +20,7 @@ from flask_sitemap import Sitemap, sitemap_page_needed
 import app
 from app import db
 from app.main.forms import SignupForm, LoginForm, PostForm, BlogEditor, CreateArticle, SearchForm
-from app.main.routes import bp_main
+from app.main.routes import bp_main, cookies_accept, third_party_cookies
 
 from app.models import Posts_two, Blogs, Profile, Categories, Series, Authors, Comments_dg_tmp, \
     mailing_list, shop_items, main_stock_list, item_reviews
@@ -128,7 +128,9 @@ def shop():
         categories = Categories.query.all()
         navigation_page = render_template('navigation.html', categories=categories)
         items = shop_items.query.all()
-        return render_template('shop.html', items=items, categories=categories, navigation_page=navigation_page)
+        cookies_accept()
+        allow_third_party_cookies = third_party_cookies()
+        return render_template('shop.html', items=items, allow_third_party_cookies=allow_third_party_cookies, categories=categories, navigation_page=navigation_page)
 
 
 @bp_shop.route('/<id>', methods=['GET', 'POST'])
@@ -158,6 +160,8 @@ def shop_item(id):
             int_avg_rating = int(avg_rating)
             data_structure = structured_data(item_on_page, int_avg_rating, number_of_reviews, reviews)
             testshopform = testShop(request.form)
+            cookies_accept()
+            allow_third_party_cookies = third_party_cookies()
             if request.method == 'POST':
                 if testshopform.colour.data == "Please select":
                     flash('Invalid colour request')
@@ -220,7 +224,7 @@ def shop_item(id):
                                 id)))
                         flash(message)
                         return redirect(url_for('shop.shop_item', id=id), code=303)
-            return render_template("item_shop.html", testshopform=testshopform, categories=categories, item_on_page=item_on_page, privacy_policy=privacy_policy, navigation_page=navigation_page, reviews=reviews, number_of_reviews=number_of_reviews, average_rating=int_avg_rating, data_structure=data_structure)
+            return render_template("item_shop.html", allow_third_party_cookies=allow_third_party_cookies, testshopform=testshopform, categories=categories, item_on_page=item_on_page, privacy_policy=privacy_policy, navigation_page=navigation_page, reviews=reviews, number_of_reviews=number_of_reviews, average_rating=int_avg_rating, data_structure=data_structure)
 
 
 @bp_shop.route('/add-to-cart/<id>', methods=['GET', 'POST'])
@@ -251,6 +255,8 @@ def shop_cart():
         counter = len(items_in_cart)
         cost_list = []
         new_quantities = []
+        cookies_accept()
+        allow_third_party_cookies = third_party_cookies()
         for i in range(counter):
             cost = quantities_in_cart[i]*prices_in_cart[i]
             cost_list.append(cost)
@@ -264,7 +270,7 @@ def shop_cart():
             shipping_cost = 0.00
             shipping_msg = "Free Delivery, UK ONLY"
         final_with_shipping = round(final_cost + shipping_cost, 2)
-        return render_template('cart-live.html', categories=categories, final_cost=final_cost, counter=counter, items=items_in_cart, colours=colours_in_cart, quantities=new_quantities, sizes=sizes_in_cart, prices=prices_in_cart, cost_list=cost_list, final_with_shipping=final_with_shipping, privacy_policy=privacy_policy, shipping_cost=shipping_cost, navigation_page=navigation_page, shipping_msg=shipping_msg)
+        return render_template('cart-live.html', allow_third_party_cookies=allow_third_party_cookies, categories=categories, final_cost=final_cost, counter=counter, items=items_in_cart, colours=colours_in_cart, quantities=new_quantities, sizes=sizes_in_cart, prices=prices_in_cart, cost_list=cost_list, final_with_shipping=final_with_shipping, privacy_policy=privacy_policy, shipping_cost=shipping_cost, navigation_page=navigation_page, shipping_msg=shipping_msg)
     else:
         flash('You have no items in your cart')
         return redirect(url_for('shop.shop'))
@@ -344,6 +350,8 @@ def empty_basket():
 @bp_shop.route('/enquiry', methods=['GET', 'POST'])
 def enquiry():
     form = EnquiryForm(request.form)
+    cookies_accept()
+    allow_third_party_cookies = third_party_cookies()
     if request.method == 'POST' and form.validate():
         with app.mail.connect() as conn:
             msg = Message('{} - comment'.format(form.name.data), sender=ADMINS[0], recipients=ADMINS)
@@ -376,7 +384,7 @@ def enquiry():
                 flash('Thanks for the reply! We will get back to you as soon as possible!')
                 return redirect(url_for('shop.shop'), code=303)
         else:
-            return render_template('enquiry_page.html', form=form)
+            return render_template('enquiry_page.html', form=form, allow_third_party_cookies=allow_third_party_cookies)
 
 
 @bp_shop.route('/review/<id>', methods=['GET', 'POST'])
@@ -384,6 +392,8 @@ def item_review(id):
     form = RatingForm(request.form)
     categories = Categories.query.all()
     navigation_page = render_template('navigation.html', categories=categories)
+    cookies_accept()
+    allow_third_party_cookies = third_party_cookies()
     if request.method == 'POST' and form.validate():
         with app.mail.connect() as conn:
             msg = Message('{} - comment'.format(form.name.data), sender=ADMINS[0], recipients=ADMINS)
@@ -410,7 +420,7 @@ def item_review(id):
                 flash('Thanks for the reply! We will get back to you as soon as possible!')
                 return redirect(url_for('shop.shop'), code=303)
         else:
-            return render_template('review_page.html', form=form, navigation_page=navigation_page)
+            return render_template('review_page.html', allow_third_party_cookies=allow_third_party_cookies, form=form, navigation_page=navigation_page)
 
 
 @bp_shop.route('/abroad-delivery')

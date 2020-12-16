@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {%  if allow_third_party_cookies == "True" %}
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-159574205-1"></script>
     <script>
@@ -10,6 +11,8 @@
 
       gtag('config', 'UA-159574205-1');
     </script>
+    {% else %}
+    {% endif %}
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -44,6 +47,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
     <title>Latest from Instagram</title>
+{%  if allow_third_party_cookies == "True" %}
      <!-- Facebook Pixel Code -->
     <script>
     !function(f,b,e,v,n,t,s)
@@ -61,14 +65,17 @@
     src="https://www.facebook.com/tr?id=363987458380932&ev=PageView&noscript=1"
     /></noscript>
     <!-- End Facebook Pixel Code -->
+{% else %}
+{% endif %}
 </head>
 <body class="w-100" style="font-family: 'Cabin', sans-serif;">
     {% with messages = get_flashed_messages() %}
             {% if messages %}
-                <div class="text-center m-auto p-5 font-weight-normal" style="max-width: 600px">
+                <div class="text-center m-auto p-5 font-weight-normal fixed-top" id="flashedmessages" style="max-width: 600px; background-color: #dddddd; z-index: 1031">
                     {% for message in messages %}
-                        {{ message }}
+                        {{ message | safe }}
                     {% endfor %}
+                <a class='border border-dark text-dark rounded-0 w-100 pt-1 pb-1 pl-5 pr-5' href='javascript:void(0)' onclick="closeflash()">OK</a>
                 </div>
             {% endif %}
     {% endwith %}
@@ -115,6 +122,10 @@
     function closeNav() {
       document.getElementById("myNav").style.width = "0%";
       document.getElementById("cards").style.visibility = "visible"
+    }
+
+    function closeflash(){
+        document.getElementById('flashedmessages').style.visibility = "hidden";
     }
 </script>
 </body>

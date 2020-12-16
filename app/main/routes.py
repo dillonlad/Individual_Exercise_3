@@ -2,7 +2,7 @@ from datetime import timedelta, datetime
 from urllib.parse import urlparse, urljoin
 
 from flask import render_template, Blueprint, request, flash, redirect, url_for, Flask, make_response, abort, \
-    render_template_string
+    render_template_string, session
 from flask_login import login_required, current_user, logout_user, login_user
 from flask_mail import Mail, Message
 from flask_mobility import Mobility
@@ -103,6 +103,37 @@ def facebook_verify():
     return render_template('e2signi7jnwn91lzisnqiix5uvmc3v.html')
 
 
+def cookies_accept():
+    if 'cookies_accept' not in session:
+        flash(render_template_string("<p>By using our website, you agree to our use of cookies. <a href='{{ url_for('main.privacy_policies') }}'>Click here to find out more and turn off cookies.</a></p>"))
+        session['cookies_accept'] = "True"
+
+
+def third_party_cookies():
+    if 'third_party_cookies_none' in session:
+        return "False"
+    else:
+        return "True"
+
+
+@bp_main.route('/cookies/disallow', methods=['POST', 'GET'])
+def no_cookies():
+    session['third_party_cookies_none'] = "None"
+    session['cookies_accept'] = "False"
+    flash(render_template_string("<p>Third party cookies have successfully been blocked</p>"
+                                 "<a class='border border-dark text-dark rounded-0 w-100 pt-1 pb-1 pl-5 pr-5' href='{{ url_for('main.privacy_policies') }}'>OK</a>"))
+    return redirect(url_for('main.privacy_policies'))
+
+
+@bp_main.route('/policy/privacy', methods=['POST', 'GET'])
+def privacy_policies():
+    allow_third_party_cookies = third_party_cookies()
+    privacy_statement = render_template('privacy_statement.html')
+    categories = Categories.query.all()
+    navigation_page = render_template('navigation.html', categories=categories)
+    return render_template('legal.html', allow_third_party_cookies=allow_third_party_cookies, privacy_statement=privacy_statement, categories=categories, navigation_page=navigation_page)
+
+
 @bp_main.route('/', methods=['POST', 'GET'])
 def index():
     host = request.host
@@ -127,6 +158,8 @@ def index():
             posts = Blogs.query.order_by(desc(Blogs.article_id)).limit(5).all()
             latest_article = Blogs.query.order_by(desc(Blogs.article_id)).limit(1).all()
             navigation_page = render_template('navigation.html', categories=categories)
+            cookies_accept()
+            allow_third_party_cookies = third_party_cookies()
             if request.method == 'POST':
                 search = form.Search.data
                 return redirect(url_for('main.article_search', search_query=search))
@@ -134,7 +167,7 @@ def index():
                 form.method = 'POST'
                 search = form.Search.data
                 return redirect(url_for('main.article_search', search_query=search))
-            return render_template('homepage.html', latest_article=latest_article, posts=posts, form=form, categories=categories, series=series, homepage=homepage, navigation_page=navigation_page)
+            return render_template('homepage.html', allow_third_party_cookies=allow_third_party_cookies, latest_article=latest_article, posts=posts, form=form, categories=categories, series=series, homepage=homepage, navigation_page=navigation_page)
 
 
 @bp_main.route('/linkinbio', methods=['GET'])
@@ -147,7 +180,9 @@ def linkinbio():
     else:
         categories = Categories.query.all()
         navigation_page = render_template('navigation.html', categories=categories)
-        return render_template('linkinbio.html', categories=categories, navigation_page=navigation_page)
+        cookies_accept()
+        allow_third_party_cookies = third_party_cookies()
+        return render_template('linkinbio.html', allow_third_party_cookies=allow_third_party_cookies, categories=categories, navigation_page=navigation_page)
 
 
 @bp_main.route('/linkinbio/articles', methods=['POST', 'GET'])
@@ -163,6 +198,8 @@ def show_blog_linkinbio():
         page = request.args.get('page',1,type=int)
         posts = Blogs.query.order_by(desc(Blogs.article_id)).paginate(page,5,False)
         navigation_page = render_template('navigation.html', categories=categories)
+        cookies_accept()
+        allow_third_party_cookies = third_party_cookies()
         next_url = url_for('main.show_blog_linkinbio', page=posts.next_num) \
             if posts.has_next else None
         prev_url = url_for('main.show_blog_linkinbio', page=posts.prev_num) \
@@ -174,7 +211,7 @@ def show_blog_linkinbio():
             form.method = 'POST'
             search = form.Search.data
             return redirect(url_for('main.article_search', search_query=search))
-        return render_template("mobile/blog_results.html", posts=posts.items, categories=categories, form=form,
+        return render_template("mobile/blog_results.html", allow_third_party_cookies=allow_third_party_cookies, posts=posts.items, categories=categories, form=form,
                                next_url=next_url, prev_url=prev_url, navigation_page=navigation_page)
 
 
@@ -184,6 +221,8 @@ def show_blog():
     categories = Categories.query.all()
     posts = Blogs.query.order_by(desc(Blogs.article_id)).all()
     navigation_page = render_template('navigation.html', categories=categories)
+    cookies_accept()
+    allow_third_party_cookies = third_party_cookies()
     if request.method == 'POST':
         search = form.Search.data
         return redirect(url_for('main.article_search', search_query=search))
@@ -191,7 +230,7 @@ def show_blog():
         form.method = 'POST'
         search = form.Search.data
         return redirect(url_for('main.article_search', search_query=search))
-    return render_template("mobile/blog_results.html", posts=posts, categories=categories, form=form, navigation_page=navigation_page)
+    return render_template("mobile/blog_results.html", allow_third_party_cookies=allow_third_party_cookies, posts=posts, categories=categories, form=form, navigation_page=navigation_page)
 
 
 @bp_main.route('/<category>', methods=['POST', 'GET'])
@@ -199,6 +238,8 @@ def show_blog_category(category):
         form = SearchForm(request.form)
         categories = Categories.query.all()
         navigation_page = render_template('navigation.html', categories=categories)
+        cookies_accept()
+        allow_third_party_cookies = third_party_cookies()
         if Categories.query.filter(Categories.category_name.contains(category)).all():
             posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.category.contains(category)).all()
             if request.method == 'POST':
@@ -209,7 +250,7 @@ def show_blog_category(category):
                 search = form.Search.data
                 return redirect(url_for('main.article_search', search_query=search))
             article_category = category
-            return render_template("mobile/blog_results.html", posts=posts, categories=categories,
+            return render_template("mobile/blog_results.html", allow_third_party_cookies=allow_third_party_cookies, posts=posts, categories=categories,
                                    article_category=article_category, form=form, navigation_page=navigation_page)
 
 
@@ -220,6 +261,7 @@ def article_search(search_query):
     navigation_page = render_template('navigation.html', categories=categories)
     posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Title.contains(search_query)).all()
     posts_two = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Content.contains(search_query)).all()
+    allow_third_party_cookies = third_party_cookies()
     for post in posts_two:
         if post not in posts:
             posts.append(post)
@@ -230,7 +272,7 @@ def article_search(search_query):
         form.method = 'POST'
         search = form.Search.data
         return redirect(url_for('main.article_search', search_query=search))
-    return render_template("mobile/blog_results.html", posts=posts, categories=categories, form=form, article_category=search_query,
+    return render_template("mobile/blog_results.html", allow_third_party_cookies = allow_third_party_cookies, posts=posts, categories=categories, form=form, article_category=search_query,
                        navigation_page=navigation_page)
 
 
@@ -240,13 +282,14 @@ def show_blog_series(series_key):
     form.Search.data = series_key
     request.method = 'POST'
     categories = Categories.query.all()
+    allow_third_party_cookies = third_party_cookies()
     navigation_page = render_template('navigation.html', categories=categories)
     posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Title.contains(form.Search.data)).all()
     posts_two = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Content.contains(form.Search.data)).all()
     for post in posts_two:
         if post not in posts:
             posts.append(post)
-    return render_template("mobile/blog_results.html", posts=posts, categories=categories, form=form, navigation_page=navigation_page)
+    return render_template("mobile/blog_results.html", allow_third_party_cookies=allow_third_party_cookies, posts=posts, categories=categories, form=form, navigation_page=navigation_page)
 
 
 
@@ -392,10 +435,12 @@ def authors(author_id):
             navigation_page = render_template('navigation.html', categories=categories)
             person_name = []
             person = Authors.query.filter_by(author_id=author_id).all()
+            cookies_accept()
+            allow_third_party_cookies = third_party_cookies()
             for geeza in person:
                 person_name.append(geeza.author_name)
             posts = Blogs.query.filter(Blogs.author.contains(person_name[0])).order_by(desc(Blogs.article_id)).all()
-            return render_template('author.html', categories=categories, person=person, posts=posts, navigation_page=navigation_page)
+            return render_template('author.html', allow_third_party_cookies=allow_third_party_cookies, categories=categories, person=person, posts=posts, navigation_page=navigation_page)
 
 
 @bp_main.route('/admin/analytics', methods=['POST', 'GET'])
