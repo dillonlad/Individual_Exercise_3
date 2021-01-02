@@ -13,11 +13,14 @@
   <priority>1.00</priority>
 </url>
     {% for category in categories %}
+        {% if category.category_name == "Blog" %}
+        {% else %}
 <url>
   <loc>https://inwaitoftomorrow.appspot.com/{{ category.category_name }}</loc>
   <lastmod>2020-04-21T22:44:50+00:00</lastmod>
   <priority>0.80</priority>
 </url>
+        {% endif %}
         {% endfor %}
 
 <url>

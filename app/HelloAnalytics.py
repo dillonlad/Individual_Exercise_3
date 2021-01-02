@@ -6,7 +6,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 
 
 SCOPES = ['https://www.googleapis.com/auth/analytics.readonly']
-KEY_FILE_LOCATION = 'app/inwaitoftomorrow-203312885102.json'
+KEY_FILE_LOCATION = 'app/inwaitoftomorrow-1f1619d16199.json'
 VIEW_ID = '216595109'
 
 
@@ -61,6 +61,27 @@ def get_report_most_popular(analytics):
           'viewId': VIEW_ID,
           'dateRanges': [{'startDate': '14daysAgo', 'endDate': 'today'}],
           'metrics': [{'expression': 'ga:uniquePageviews'}],
+          'dimensions': [{'name': 'ga:pagePath'}]
+        }]
+      }
+  ).execute()
+
+
+def get_report_pageviews(analytics):
+  """Queries the Analytics Reporting API V4.
+
+  Args:
+    analytics: An authorized Analytics Reporting API V4 service object.
+  Returns:
+    The Analytics Reporting API V4 response.
+  """
+  return analytics.reports().batchGet(
+      body={
+        'reportRequests': [
+        {
+          'viewId': VIEW_ID,
+          'dateRanges': [{'startDate': '2000daysAgo', 'endDate': 'today'}],
+          'metrics': [{'expression': 'ga:pageviews'}],
           'dimensions': [{'name': 'ga:pagePath'}]
         }]
       }

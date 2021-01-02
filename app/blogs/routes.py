@@ -52,7 +52,6 @@ def structured_data(item_on_page, average_rating, review_count, reviews):
         structured_data_dict = {
             "@context": "https://schema.org",
             "@type": "Article",
-            "aggregateRating": aggregate_rating,
             "description": "{}".format(item_desc),
             "name": "{}".format(item_name),
             "headline": "{}".format(item_name),
@@ -92,6 +91,32 @@ def structured_data(item_on_page, average_rating, review_count, reviews):
     html_insert = render_template_string('<script type="application/ld+json">{}</script>'.format(json_structured_data))
 
     return html_insert
+
+
+def form_send(form, Post_ID):
+
+    form_name = form.name.data
+    form_email = form.email.data
+    form_comment = form.comment.data
+    form_post_on_page = form.post_on_page.data
+    form_newsletter = form.newsletter.data
+    form_rating = form.rating.data
+
+    with app.mail.connect() as conn:
+        time_date = datetime.now()
+        msg = Message('{} - comment'.format(form_name), sender=ADMINS[0], recipients=ADMINS)
+        msg.body = '{}'.format(form_comment)
+        user_email = form_email
+        if user_email == "":
+            user_email = "not provided"
+        msg.html = '<b>{}</b> says {} about {} at this time {}:{}:{} on this date {}-{}-{}. User said {} to posting on the page and {} to newsletter, with the email {}. An overall rating of {}'.format(
+            form_name, form_comment, Post_ID, time_date.strftime("%H"), time_date.strftime("%M"),
+            time_date.strftime("%S"), time_date.strftime("%Y"), time_date.strftime("%m"),
+            time_date.strftime("%d"),
+            form_post_on_page, form_newsletter, user_email, form_rating)
+        conn.send(msg)
+
+    flash('Thanks for the reply!')
 
 
 @bp_blogs.route('/<Post_ID>', methods=['POST', 'GET'])
@@ -138,40 +163,13 @@ def post(Post_ID):
             app.track_event(category="Blog read: {}".format(Post_ID), action='{}'.format(Post_ID))
             form = CommentForm(request.form)
             if request.method == 'POST' and form.validate():
-                with app.mail.connect() as conn:
-                    time_date = datetime.now()
-                    msg = Message('{} - comment'.format(form.name.data), sender=ADMINS[0], recipients=ADMINS)
-                    msg.body = '{}'.format(form.comment.data)
-                    user_email = form.email.data
-                    if user_email == "":
-                        user_email = "not provided"
-                    msg.html = '<b>{}</b> says {} about {} at this time {}:{}:{} on this date {}-{}-{}. User said {} to posting on the page and {} to newsletter, with the email {}. An overall rating of {}'.format(
-                        form.name.data, form.comment.data, Post_ID, time_date.strftime("%H"), time_date.strftime("%M"),
-                        time_date.strftime("%S"), time_date.strftime("%Y"), time_date.strftime("%m"),
-                        time_date.strftime("%d"),
-                        form.post_on_page.data, form.newsletter.data, user_email, form.rating.data)
-                    conn.send(msg)
-                flash('Thanks for the reply!')
+                form_send(form, Post_ID)
                 return redirect(url_for('blogs.post', Post_ID=Post_ID), code=303)
             else:
                 if form.is_submitted():
                     form.method ='POST'
                     if (len(form.name.data) > 0 and len(form.comment.data) > 0) or (len(form.name.data) > 0 and len(form.email.data) > 0):
-                        with app.mail.connect() as conn:
-                            time_date = datetime.now()
-                            msg = Message('{} - comment'.format(form.name.data), sender=ADMINS[0], recipients=ADMINS)
-                            msg.body = '{}'.format(form.comment.data)
-                            user_email = form.email.data
-                            if user_email == "":
-                                user_email = "not provided"
-                            msg.html = '<b>{}</b> says {} about {} at this time {}:{}:{} on this date {}-{}-{}. User said {} to posting on the page and {} to newsletter, with the email {}. User gave the rating {}'.format(
-                                form.name.data, form.comment.data, Post_ID, time_date.strftime("%H"),
-                                time_date.strftime("%M"),
-                                time_date.strftime("%S"), time_date.strftime("%Y"), time_date.strftime("%m"),
-                                time_date.strftime("%d"),
-                                form.post_on_page.data, form.newsletter.data, user_email, form.rating.data)
-                            conn.send(msg)
-                        flash('Thanks for the reply!')
+                        form_send(form, Post_ID)
                         return redirect(url_for('blogs.post', Post_ID=Post_ID), code=303)
                     else:
                         flash('Thanks for the reply')
