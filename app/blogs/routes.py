@@ -168,11 +168,11 @@ def post(Post_ID):
             else:
                 if form.is_submitted():
                     form.method ='POST'
-                    if (len(form.name.data) > 0 and len(form.comment.data) > 0) or (len(form.name.data) > 0 and len(form.email.data) > 0):
+                    if (len(form.comment.data) > 0) or (len(form.email.data) > 0):
                         form_send(form, Post_ID)
                         return redirect(url_for('blogs.post', Post_ID=Post_ID), code=303)
                     else:
-                        flash('Thanks for the reply')
+                        flash('Please provide the required information')
                         return redirect(url_for('blogs.post', Post_ID=Post_ID), code=302)
                 else:
                     return render_template("blogs/post.html", post=post, categories=categories, comments=comments, number_of_comments=number_of_comments, latest_articles=latest_articles, quiz_of_the_week=quiz_of_the_week, form=form, post_authorid=post_authorid, new_date=new_date, navigation_page=navigation_page, structured_info=structured_info, latest_product=latest_product, product_image=product_image, allow_third_party_cookies=allow_third_party_cookies)

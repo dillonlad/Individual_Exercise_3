@@ -19,6 +19,12 @@
               </div>
         {% else %}
                 <div class="overlay-content mt-0 row ml-auto mr-auto" style="max-width: 800px">
+                {% if '/blogs/' in request.url %}
+                    <div class="col-12">
+                        <p>SEARCH</p>
+                    </div>
+                {% else %}
+                {% endif %}
                 <div class="col-6 border-white border-right">
                     <a href="{{ url_for('main.index') }}">Homepage</a>
                     <a href="{{ url_for('main.show_blog') }}">Latest articles</a>
