@@ -92,7 +92,7 @@
             <nav class="navbar navbar-dark fixed-top bg-dark" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
                 <a id="home_link" href="{{url_for('main.index')}}"><span class="navbar-brand text-white navbar-dark mb-0 h1 font-weight-normal">In Wait of Tomorrow</span></a>
                 <div>
-                    <i class="fas fa-search text-white" style="border: none"></i>
+                    <i class="fas fa-search text-white" onclick="openNav()" style="border: none"></i>
                     <div class="dropdown dropleft show btn-group">
                       <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
                       </button>
@@ -232,20 +232,28 @@
   </a>
 </div>
 <div class="row m-auto text-center collapse" id="collapse-newsletter" style="max-width: 800px">
-    <form class="user col-12 text-left" method='POST' novalidate>
-        {{ form.hidden_tag() }}
-        <div class="form-group font-weight-normal">
-          {{ form.name.label }}{{ form.name(class_="form-control form-control-user rounded-0") }}
-        </div>
+    <form class="user col-12 text-left" action="javascript:newsletterSignup()" novalidate>
+        {{ newsletter_form.hidden_tag() }}
+        {% from "_formhelpers.html" import render_field %}
         <div class="form-group">
-          {{ form.email.label }}{{ form.email(class_="form-control form-control-user rounded-0")}}
+        {{ render_field(newsletter_form.user_email, class="form-control form-control-user rounded-0", placeholder="Email Address", id='emailAddress') }}
         </div>
-        {{ form.Submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
+        {{ newsletter_form.Submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
     </form>
 </div>
 </div>
 
     <div class="col-4 pt-2 mr-0 ml-0" id="articles">
+    <div class="row m-auto pt-3" style="max-width: 800px">
+        <form class="user col-12 text-left" action="javascript:newsletterSignup_two()" novalidate>
+            {{ newsletter_form.hidden_tag() }}
+            {% from "_formhelpers.html" import render_field %}
+            <div class="form-group">
+            {{ render_field(newsletter_form.user_email, class="form-control form-control-user rounded-0", placeholder="Sign up to our newsletter!", id='emailAddress_two') }}
+            </div>
+            {{ render_field(newsletter_form.Submit, class="btn btn-dark btn-user btn-block rounded-0") }}
+        </form>
+    </div>
         <h3 class="font-weight-normal text-left ml-0 pt-4">SHOP NOW</h3>
     {% if latest_product|length %}
         <div class="m-auto" style="max-width: 600px">
@@ -298,17 +306,7 @@
     {% else %}
     <p>Sorry, no posts are available at this time</p>
         {% endif %}
-    <div class="row m-auto pt-3" style="max-width: 800px">
-        <h3 class="font-weight-normal">Sign up to our newsletter</h3>
-        <form class="user col-12 text-left" method='POST' novalidate>
-            {{ form.hidden_tag() }}
-            {% from "_formhelpers.html" import render_field %}
-            <div class="form-group">
-            {{ render_field(form.email, class="form-control form-control-user rounded-0", placeholder="Email Address") }}
-            </div>
-            {{ form.Submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
-        </form>
-    </div>
+
     </div>
     </div>
 </div>
@@ -376,6 +374,39 @@
 
     function closeflash(){
         document.getElementById('flashedmessages').style.visibility = "hidden";
+    }
+
+    function searchRedirect(){
+        search_query = document.getElementById('searchQuery').value;
+        window.location.replace('https://inwaitoftomorrow.appspot.com/search/' + search_query);
+    }
+
+    function newsletterSignup(){
+        email = document.getElementById('emailAddress').value;
+        return fetch("/blogs/signup/" + email, {
+            method: 'post',
+            headers: {
+              'content-type': 'application/json'
+            }
+          }).then(function(res) {
+            return res.json();
+          }).then(function(data) {
+            alert(data.status);
+          });
+    }
+
+    function newsletterSignup_two(){
+        email = document.getElementById('emailAddress_two').value;
+        return fetch("/blogs/signup/" + email, {
+            method: 'post',
+            headers: {
+              'content-type': 'application/json'
+            }
+          }).then(function(res) {
+            return res.json();
+          }).then(function(data) {
+            alert(data.status);
+          });
     }
 </script>
 </body>

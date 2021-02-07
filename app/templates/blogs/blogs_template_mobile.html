@@ -108,13 +108,33 @@
         {% block image_header %}{% endblock %}
     </div>
 </div>
-    <div class="text-center text-dark p-2" style="margin-top: 50px">
-        <script src="https://kit.fontawesome.com/7380e39ab3.js" crossorigin="anonymous"></script>
+    <div class="text-center text-dark p-2" style="margin-top: 60px">
+    <script src="https://kit.fontawesome.com/7380e39ab3.js" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <a href="https://www.facebook.com/inwaitoftomorrow/" class="fa fa-facebook"></a>
-        <a href="https://www.instagram.com/inwaitoftomorrow/" class="fa fa-twitter"></a>
-        <a href="https://twitter.com/InWaitofTomorr1" class="fa fa-instagram"></a>
-        <a href="https://www.reddit.com/user/inwaitoftomorrow" class="fa fa-reddit"></a>
+        <form class="user row w-100 m-auto text-left" action="javascript:newsletterSignup()" novalidate>
+            {{ newsletter_form.hidden_tag() }}
+            {% from "_formhelpers.html" import render_field %}
+            <div class="form-row">
+                <div class="form-group col-6">
+                    {{ render_field(newsletter_form.user_email, class="form-control rounded-0 form-control-user", placeholder="Sign up for email updates!", id='emailAddress') }}
+                </div>
+                <div class="form-group col-2">
+                    <button type="submit" class="btn btn-dark btn-user btn-block rounded-0 form-control form-control-user"><i class="fas fa-envelope" style="border: none"></i></button>
+                </div>
+                <div class="form-group col-1">
+                    <a href="https://www.facebook.com/inwaitoftomorrow/" style="background-color: white; font-size: 30px!important;"><i class="fab fa-facebook-square" style="border: none; color: #3B5998;"></i></a>
+                </div>
+                <div class="form-group col-1">
+                    <a href="https://www.instagram.com/inwaitoftomorrow/"  style="background-color: white; font-size: 30px!important;"><i class="fab fa-instagram-square" style="border: none; color: #125688;"></i></a>
+                </div>
+                <div class="form-group col-1">
+                    <a href="https://twitter.com/InWaitofTomorr1"  style="background-color: white; font-size: 30px!important;"><i class="fab fa-twitter-square" style="border: none; color: #55ACEE;"></i></a>
+                </div>
+                <div class="form-group col-1">
+                    <a href="https://www.reddit.com/user/inwaitoftomorrow" style="background-color: white; font-size: 30px!important;"><i class="fab fa-reddit-square" style="border: none; color: #ff5700;"></i></a>
+                </div>
+            </div>
+        </form>
         <!-- Displays flashed messages on a page -->
     {% with messages = get_flashed_messages() %}
             {% if messages %}
@@ -231,15 +251,13 @@
   </a>
 </div>
 <div class="row m-auto text-center collapse" id="collapse-newsletter" style="max-width: 800px">
-    <form class="user col-12 text-left" method='POST' novalidate>
-        {{ form.hidden_tag() }}
-        <div class="form-group font-weight-normal">
-          {{ form.name.label }}{{ form.name(class_="form-control form-control-user rounded-0") }}
-        </div>
+    <form class="user col-12 text-left" action="javascript:newsletterSignup_two()" novalidate>
+        {{ newsletter_form.hidden_tag() }}
+        {% from "_formhelpers.html" import render_field %}
         <div class="form-group">
-          {{ form.email.label }}{{ form.email(class_="form-control form-control-user rounded-0")}}
+        {{ render_field(newsletter_form.user_email, class="form-control form-control-user rounded-0", placeholder="Email Address", id='emailAddress_two') }}
         </div>
-        {{ form.Submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
+        {{ newsletter_form.Submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
     </form>
 </div>
 
@@ -303,6 +321,39 @@
 
     function closeflash(){
         document.getElementById('flashedmessages').style.visibility = "hidden";
+    }
+
+    function searchRedirect(){
+        search_query = document.getElementById('searchQuery').value;
+        window.location.replace('https://inwaitoftomorrow.appspot.com/search/' + search_query);
+    }
+
+    function newsletterSignup(){
+        email = document.getElementById('emailAddress').value;
+        return fetch("/blogs/signup/" + email, {
+            method: 'post',
+            headers: {
+              'content-type': 'application/json'
+            }
+          }).then(function(res) {
+            return res.json();
+          }).then(function(data) {
+            alert(data.status);
+          });
+    }
+
+    function newsletterSignup_two(){
+        email = document.getElementById('emailAddress_two').value;
+        return fetch("/blogs/signup/" + email, {
+            method: 'post',
+            headers: {
+              'content-type': 'application/json'
+            }
+          }).then(function(res) {
+            return res.json();
+          }).then(function(data) {
+            alert(data.status);
+          });
     }
 </script>
 </body>

@@ -8,6 +8,26 @@
               <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         {% if request.MOBILE %}
               <div class="overlay-content mt-0">
+              {% if '/blogs/' in request.url %}
+                    <div class="col-12">
+                        <form class="user" action="javascript:searchRedirect()" novalidate>
+                            {% from "_formhelpers.html" import render_field %}
+                            {{ search_form.hidden_tag() }}
+                            {{ search_form.csrf_token}}
+                            <div class="form-row" style="height: 10vh;">
+                                <div class="form-group col-11 h-100">
+                                    {{ render_field(search_form.Search, placeholder='SEARCH THE SITE', class='form-control text-white bg-transparent rounded-0 form-control-user font-weight-bold border-bottom', style="border: none", id='searchQuery') }}
+                                </div>
+                                <div class="form-group col-1 h-100 text-white">
+                                    <button type="submit" class="btn btn-dark bg-transparent btn-user btn-block rounded-0 form-control form-control-user" style="border: none"><i style="border: none" class="fas fa-search"></i></button>
+                                </div>
+                            </div>
+
+                            <hr>
+                        </form>
+                    </div>
+                {% else %}
+                {% endif %}
                   <a href="{{ url_for('main.show_blog') }}">Latest articles</a>
                     <a href="{{ url_for('shop.shop') }}">SHOP</a>
                   <div class="dropdown-divider text-center align-self-center m-auto" style="max-width: 600px"></div>
@@ -21,7 +41,21 @@
                 <div class="overlay-content mt-0 row ml-auto mr-auto" style="max-width: 800px">
                 {% if '/blogs/' in request.url %}
                     <div class="col-12">
-                        <p>SEARCH</p>
+                        <form class="user" action="javascript:searchRedirect()" novalidate>
+                            {% from "_formhelpers.html" import render_field %}
+                            {{ search_form.hidden_tag() }}
+                            {{ search_form.csrf_token}}
+                            <div class="form-row" style="height: 10vh;">
+                                <div class="form-group col-11 h-100">
+                                    {{ render_field(search_form.Search, placeholder='SEARCH THE SITE', class='form-control text-white bg-transparent rounded-0 form-control-user font-weight-bold border-bottom', style="border: none", id='searchQuery') }}
+                                </div>
+                                <div class="form-group col-1 h-100 text-white">
+                                    <button type="submit" class="btn btn-dark bg-transparent btn-user btn-block rounded-0 form-control form-control-user" style="border: none"><i style="border: none" class="fas fa-search"></i></button>
+                                </div>
+                            </div>
+
+                            <hr>
+                        </form>
                     </div>
                 {% else %}
                 {% endif %}

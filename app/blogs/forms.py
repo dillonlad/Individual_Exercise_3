@@ -24,6 +24,5 @@ class SubmitNewsletter(FlaskForm):
 
 
 class Newsletter(FlaskForm):
-    user_name = StringField('Name ')
     user_email = StringField('Email: ')
     Submit = SubmitField('Sign up')

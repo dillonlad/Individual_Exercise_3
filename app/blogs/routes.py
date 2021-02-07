@@ -3,7 +3,7 @@ from datetime import timedelta, datetime
 from urllib.parse import urlparse, urljoin
 
 from flask import render_template, Blueprint, request, flash, redirect, url_for, Flask, make_response, abort, \
-    render_template_string
+    render_template_string, jsonify
 from flask_login import login_required, current_user, logout_user, login_user
 from flask_mail import Mail, Message
 from flask_mobility import Mobility
@@ -18,6 +18,7 @@ from flask_sitemap import Sitemap, sitemap_page_needed
 import app
 from app import db
 from app.blogs.forms import CommentForm, SubmitNewsletter, Newsletter
+from app.main.forms import SearchForm
 from app.main.routes import third_party_cookies, cookies_accept
 
 from app.models import Posts_two, Blogs, Profile, Categories, Series, Authors, Comments_dg_tmp, \
@@ -119,6 +120,17 @@ def form_send(form, Post_ID):
     flash('Thanks for the reply!')
 
 
+@bp_blogs.route('/signup/<email>', methods=['POST', 'GET'])
+def newsletter_signup(email):
+
+    with app.mail.connect() as conn:
+        msg = Message('{} - newsletter sign up'.format(email), sender=ADMINS[0], recipients=ADMINS)
+        msg.body = '{} has signed up for email newsletter'.format(email)
+        conn.send(msg)
+
+    return jsonify(status="Thanks for signing up!")
+
+
 @bp_blogs.route('/<Post_ID>', methods=['POST', 'GET'])
 def post(Post_ID):
     host = request.host
@@ -134,7 +146,6 @@ def post(Post_ID):
             latest_product = shop_items.query.limit(1).all()
             for variable in latest_product:
                 product_image = variable.meta_image.replace("http://inwaitoftomorrow.appspot.com", "..")
-            navigation_page = render_template('navigation.html', categories=categories)
             post = Blogs.query.filter_by(Post_ID=Post_ID).all()
             for var in post:
                 p_author = var.author
@@ -162,12 +173,15 @@ def post(Post_ID):
             structured_info = structured_data(post, aggregate_rating, number_of_comments, comments)
             app.track_event(category="Blog read: {}".format(Post_ID), action='{}'.format(Post_ID))
             form = CommentForm(request.form)
+            search_form = SearchForm(request.form)
+            navigation_page = render_template('navigation.html', categories=categories, search_form=search_form)
+            newsletter_form = Newsletter(request.form)
             if request.method == 'POST' and form.validate():
                 form_send(form, Post_ID)
                 return redirect(url_for('blogs.post', Post_ID=Post_ID), code=303)
             else:
                 if form.is_submitted():
-                    form.method ='POST'
+                    form.method = 'POST'
                     if (len(form.comment.data) > 0) or (len(form.email.data) > 0):
                         form_send(form, Post_ID)
                         return redirect(url_for('blogs.post', Post_ID=Post_ID), code=303)
@@ -175,7 +189,7 @@ def post(Post_ID):
                         flash('Please provide the required information')
                         return redirect(url_for('blogs.post', Post_ID=Post_ID), code=302)
                 else:
-                    return render_template("blogs/post.html", post=post, categories=categories, comments=comments, number_of_comments=number_of_comments, latest_articles=latest_articles, quiz_of_the_week=quiz_of_the_week, form=form, post_authorid=post_authorid, new_date=new_date, navigation_page=navigation_page, structured_info=structured_info, latest_product=latest_product, product_image=product_image, allow_third_party_cookies=allow_third_party_cookies)
+                    return render_template("blogs/post.html", post=post, categories=categories, comments=comments, number_of_comments=number_of_comments, latest_articles=latest_articles, quiz_of_the_week=quiz_of_the_week, form=form, post_authorid=post_authorid, new_date=new_date, navigation_page=navigation_page, structured_info=structured_info, latest_product=latest_product, product_image=product_image, allow_third_party_cookies=allow_third_party_cookies, newsletter_form=newsletter_form)
         else:
             flash("The article you tried to find does not exist, at least not with that URL, try using the search box to find what you're looking for")
             return redirect(url_for('main.show_blog'))
