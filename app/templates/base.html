@@ -114,20 +114,20 @@
 
 </div>
     {% else %}
-    <div class="container-fluid w-100 h-100 opacity-5 mainimage" style="background-image: url('../static/img/backgroundnew.jpg'); background-size: cover; min-height: 100vh">
+    <div class="container-fluid w-100 h-100 opacity-5 mainimage" style="background-image: url('../static/img/purple-background.jpeg'); background-size: cover; min-height: 100vh">
         <div class="container-fluid">
             <div id="nav_one" style="display: block" class="row">
                 <div class="col-12">
-                    <nav class="navbar border-bottom border-white bg-transparent container-fluid w-100" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
+                    <nav class="navbar bg-white container-fluid w-100 fixed-top" style="width: 100%; height: 8vh" itemscope itemtype="https://schema.org/SiteNavigationElement">
                         {% if homepage == "yes" %}
-                            <span style="float: left"><a class="text-white" href="https://www.facebook.com/inwaitoftomorrow"><i class="fab fa-facebook-square" style="border: none"></i></a> <a class="text-white" href="https://twitter.com/InWaitofTomorr1"><i class="fab fa-twitter-square" style="border: none"></i></a> <a href="https://www.instagram.com/inwaitoftomorrow/" class="text-white"><i class="fab fa-instagram" style="background: transparent"></i></a></span>
+                            <span style="float: left"><a class="text-dark" href="https://www.facebook.com/inwaitoftomorrow"><i class="fab fa-facebook-square" style="border: none"></i></a> <a class="text-dark" href="https://twitter.com/InWaitofTomorr1"><i class="fab fa-twitter-square" style="border: none"></i></a> <a href="https://www.instagram.com/inwaitoftomorrow/" class="text-dark"><i class="fab fa-instagram" style="border: none; color: black; background: none"></i></a></span>
                         {% else %}
                             <a href="{{ url_for('main.index') }}" class="text-white">In Wait of Tomorrow</a>
                         {% endif %}
                         <div>
-                            <a href="#aboutUs"><span class="navbar-brand mb-0 h1 font-weight-normal text-white">About</span></a>
-                            <a href="{{ url_for('main.show_blog') }}"><span class="navbar-brand mb-0 h1 font-weight-normal text-white">Latest Articles</span></a>
-                            <a href="{{ url_for('shop.shop') }}"><span class="navbar-brand mb-0 h1 font-weight-normal text-white">SHOP</span></a>
+                            <a href="#aboutUs"><span class="navbar-brand mb-0 h1 font-weight-normal text-dark">About</span></a>
+                            <a href="{{ url_for('main.show_blog') }}"><span class="navbar-brand mb-0 h1 font-weight-normal text-dark">Latest Articles</span></a>
+                            <a href="{{ url_for('shop.shop') }}"><span class="navbar-brand mb-0 h1 font-weight-normal text-dark">SHOP</span></a>
                         </div>
                         <div class="dropdown dropleft show btn-group float-right">
                           <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
@@ -209,8 +209,9 @@
         var h = window.innerHeight;
         var h2 = h/2;
         if (document.body.scrollTop > h2 || document.documentElement.scrollTop > h2) {
-            document.getElementById("homepagefixedtop").classList.add("fixed-top", "bg-white");
+            document.getElementById("homepagefixedtop").classList.add("fixed-top", "bg-white", "pt-4");
             document.getElementById("homepagefixedtop").classList.remove("bg-transparent");
+            document.getElementById('homepagefixedtop').style.minHeight = "8vh";
         }
         else
             if (document.body.scrollTop < h2 || document.documentElement.scrollTop < h2) {

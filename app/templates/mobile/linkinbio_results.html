@@ -63,11 +63,11 @@
     {% endwith %}
     <link rel="stylesheet" href="../../static/css/newnav.css">
     {{ navigation_page| safe }}
-<div class="container-fluid mainimage opacity-5" {% if request.MOBILE %}{% else %}style="background-color: white"{% endif %}>
+<div class="container-fluid mainimage opacity-5" style="background-color: white">
     <div style="display: block" class="row" {% if request.MOBILE %}{% else %}style="background-color: white"{% endif %}>
         <div class="col-12">
-            <nav class="navbar navbar-dark fixed-top {% if request.MOBILE %}bg-dark{% else %}bg-white{% endif %}" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
-                    <a id="home_link" href="{{url_for('main.index')}}"><span class="navbar-brand {% if request.MOBILE %}text-white{% else %}text-dark{% endif %} navbar-dark mb-0 h1 font-weight-normal">In Wait of Tomorrow</span></a>
+            <nav class="navbar navbar-dark fixed-top bg-white" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
+                    <a id="home_link" href="{{url_for('main.index')}}"><span class="navbar-brand text-dark navbar-dark mb-0 h1 font-weight-normal">In Wait of Tomorrow</span></a>
                     <div class="dropdown dropleft show btn-group">
                       <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
                       </button>
@@ -85,7 +85,7 @@
             <a href="https://twitter.com/InWaitofTomorr1" class="fa fa-instagram"></a>
             <a href="https://www.reddit.com/user/inwaitoftomorrow" class="fa fa-reddit"></a>
         </div>
-
+    <h1 class="font-weight-normal text-center col-12 w-100 pt-5 pb-5">Latest articles {% if article_category|length %}in {{ article_category }}{% endif %}</h1>
     <div class="col-12 m-auto text-center">
         <form class="form-row" method="POST" action="" novalidate>
             {{ form.hidden_tag() }}
@@ -97,28 +97,19 @@
             </div>
         </form>
     </div>
-    <h1 class="font-weight-normal text-center col-12 w-100">Latest articles {% if article_category|length %}in {{ article_category }}{% endif %}</h1>
+
+    </div>
     </div>
     <br>
     {% if posts|length %}
-        <div class="m-auto" style="max-width: 600px">
+        <div class="container-fluid w-100 row m-auto" style="max-width: 600px;">
             {% for post in posts %}
-                <link rel="stylesheet" href="../../static/css/hovering.css">
-                <div class="card mb-3 rounded-0" style="width: 100%" itemscope itemtype="https://schema.org/Blog">
-                    <div class="hovereffect rounded-0 bg-transparent">
-                        <picture>
-                            <source style="max-width: 600px; height: auto" class="card-img-top img-fluid" srcset="..{{ post.Image_root }}" type="image/webp">
-                            <img class="card-img-top img-fluid" itemscope itemtype="https://schema.org/ImageObject" src="..{{ post.Image_iphone }}" alt="{{ post.Title }}" style="max-width: 600px; height: auto; border-radius: 0!important;">
-                        </picture>
-                            <div class="overlay" id="img_overlay">
-                            <p class="text-white text-left ml-1" style="font-size: small" itemprop="description">{{ post.Description }}<br><a class="text-center bg-transparent border-white btn rounded-0 text-white w-50" style="font-size: x-small" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}">Read more</a></p>
+                <div class="col-6 p-1 m-auto text-center">
+                    <a href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}">
+                        <div class="text-left m-auto" style="height: 40vh; background-image: url('..{{ post.Image_iphone }}'); background-size: cover">
+                            <p class="text-white font-weight-bold pl-2" style="bottom: 0; left: 0; max-width: 30vw; position: absolute">{{ post.Title }}</p>
                         </div>
-                    </div>
-                  <div class="card-body">
-                      <h6 class="card-subtitle mb-2 text-muted font-weight-normal">{{ post.author }} | {{ post.Date }}</h6>
-                      <a class="h4 mb-2" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"><p class="card-text mb-2" itemprop="name">{{ post.Title }}</p></a>
-                      <p class="card-subtitle mb-2 text-muted font-weight-normal">{{ post.category }} | 4 min read</p>
-                  </div>
+                    </a>
                 </div>
             {% endfor %}
         </div>
@@ -191,9 +182,6 @@
     {% endif %}
 
     {% endif %}
-{% if request.MOBILE %}
-    </div>{% else %}
-{% endif %}
     <div class="text-center row m-auto" style="max-width: 800px">
         {% if prev_url %}
         <a class="text-center col-12" href="{{ prev_url }}">Newer posts</a>

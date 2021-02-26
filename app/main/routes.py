@@ -195,8 +195,8 @@ def show_blog_linkinbio():
     else:
         form = SearchForm(request.form)
         categories = Categories.query.all()
-        page = request.args.get('page',1,type=int)
-        posts = Blogs.query.order_by(desc(Blogs.article_id)).paginate(page,5,False)
+        page = request.args.get('page', 1, type=int)
+        posts = Blogs.query.order_by(desc(Blogs.article_id)).paginate(page, 6, False)
         navigation_page = render_template('navigation.html', categories=categories)
         cookies_accept()
         allow_third_party_cookies = third_party_cookies()
@@ -211,7 +211,7 @@ def show_blog_linkinbio():
             form.method = 'POST'
             search = form.Search.data
             return redirect(url_for('main.article_search', search_query=search))
-        return render_template("mobile/blog_results.html", allow_third_party_cookies=allow_third_party_cookies, posts=posts.items, categories=categories, form=form,
+        return render_template("mobile/linkinbio_results.html", allow_third_party_cookies=allow_third_party_cookies, posts=posts.items, categories=categories, form=form,
                                next_url=next_url, prev_url=prev_url, navigation_page=navigation_page)
 
 
