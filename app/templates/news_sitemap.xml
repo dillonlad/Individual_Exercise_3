@@ -3,14 +3,14 @@
         xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
   {% for article in articles %}
     <url>
-    <loc>{{ article.url_ }}</loc>
+    <loc>{{ article['url'] }}</loc>
     <news:news>
     <news:publication>
       <news:name>In Wait of Tomorrow</news:name>
       <news:language>en</news:language>
     </news:publication>
-    <news:publication_date>{{ article.Date }}</news:publication_date>
-      <news:title>{{ article.Title }}</news:title>
+    <news:publication_date>{{ article['Date'] }}</news:publication_date>
+      <news:title>{{ article['Title'] }}</news:title>
     </news:news>
   </url>
     {% endfor %}

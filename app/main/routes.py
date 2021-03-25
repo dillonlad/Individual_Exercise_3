@@ -89,7 +89,21 @@ def articles_sitemap():
 @bp_main.route('/sitemap-news.xml', methods=['GET'])
 def news_sitemap():
     articles = Blogs.query.all()
-    return render_template('news_sitemap.xml', articles=articles)
+    list_of_articles = []
+    for article in articles:
+        article_dict = {}
+        article_url = article.url_
+        if '_' in article_url:
+            article_url = article_url.replace("_","-")
+        if 'http://' in article_url:
+            article_url = article_url.replace("http://","https://")
+
+        article_dict['url'] = article_url
+        article_dict['Date'] = article.Date
+        article_dict['Title'] = article.Title
+        article_dict['last_mod'] = article.date_mod
+        list_of_articles.append(article_dict)
+    return render_template('news_sitemap.xml', articles=list_of_articles)
 
 
 @bp_main.route('/products-sitemap.xml', methods=['GET'])
