@@ -67,16 +67,7 @@
 <div id="newsletter" class="overlay text-dark bg-white" style="height: 50%">
       <a href="javascript:void(0)" class="closebtn" onclick="close_newsletter()">&times;</a>
       <div class="row m-auto pt-3" style="max-width: 800px">
-        <h3 class="font-weight-normal">Email newsletter</h3>
-        <form class="user col-12 text-left" method='POST' novalidate>
-        {{ form.hidden_tag() }}
-        <div class="form-group font-weight-normal">
-          {{ form.name.label }}{{ form.name(class_="form-control form-control-user rounded-0") }}
-        </div>
-        <div class="form-group">
-          {{ form.email.label }}{{ form.email(class_="form-control form-control-user rounded-0")}}
-        </div>
-        {{ form.Submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
+        <h3 class="font-weight-normal">Enjoy what you're reading? Sign up to our newsletter</h3>
     </form>
       </div>
   </div>
@@ -171,19 +162,16 @@
    <div class="col-1 h1 ml-0 font-weight-bold">
    </div>
 </div>
-<div class="row m-auto text-center align-content-center" style="max-width: 800px">
-    <a class="btn btn-dark h4 text-center w-100 rounded-0" data-toggle="collapse" href="#collapse-comments" role="button" aria-expanded="false" aria-controls="collapse-comments">
-    Leave a reply
-  </a>
-</div>
-<div class="row m-auto text-center collapse w-100" id="collapse-comments" style="max-width: 800px">
-     <form class="user col-12 text-left" method='POST' novalidate>
+<div class="row m-auto w-100 pb-2 pt-3" style="max-width: 800px">
+    <form class="user w-100 text-left pb-4" action="javascript:blogComment()" novalidate>
+    <h3 class="ml-0 pl-0 pb-4">Comments</h3>
         {{ form.hidden_tag() }}
+        {% from "_formhelpers.html" import render_field %}
         <div class="form-group font-weight-normal">
-          {{ form.name.label }}{{ form.name(class_="form-control form-control-user rounded-0") }}
+            {{ render_field(form.name, class="form-control form-control-user rounded-0", placeholder="Full Name", id='userCommentName') }}
         </div>
         <div class="form-group font-weight-normal">
-          {{ form.comment.label }}{{ form.comment(class_="form-control form-control-user rounded-0")}}
+          {{ render_field(form.comment, class="form-control form-control-user rounded-0", placeholder="Comment", id='userComment', rows="3") }}
         </div>
         <div class="form-group">
              {{ form.rating.label }}
@@ -194,32 +182,8 @@
                     {{ subfield.label(class_="form-check-label pr-5") }}
                 {% endfor %}
             </div>
-        <div class="form-group">
-             {{ form.post_on_page.label }}
-        </div>
-            <div class="form-group form-check-inline">
-                {% for subfield in form.post_on_page %}
-                    {{ subfield(class_="form-check-input") }}
-                    {{ subfield.label(class_="form-check-label pr-5") }}
-                {% endfor %}
-            </div>
-        <div class="form-group">
-             <b>{{ form.newsletter.label }}</b>
-        </div>
-        <div class="form-group form-check-inline">
-                {% for subfield in form.newsletter %}
-                    {{ subfield(class_="form-check-input") }}
-                    {{ subfield.label(class_="form-check-label pr-5") }}
-                {% endfor %}
-            </div>
-        <div class="form-group">
-          {{ form.email.label }}{{ form.email(class_="form-control form-control-user rounded-0")}}
-        </div>
         {{ form.Submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
     </form>
-</div>
-<div class="row m-auto pb-2" style="max-width: 800px">
-    <h2 class="font-weight-normal">View our comments</h2>
     {% if comments|length %}
         {% for comment in comments %}
             <div class="card w-100 mb-2 rounded-0">
@@ -240,24 +204,23 @@
             </div>
         {% endfor %}
     {% else %}
-        <p>There are no comments, use the form above to leave one and sign up for our newsletter</p>
     {% endif %}
 
+
 </div>
-     {{ quiz_of_the_week | safe }}
-<div class="row m-auto text-center align-content-center" style="max-width: 800px">
-    <a class="btn btn-dark h4 text-center w-100 rounded-0" data-toggle="collapse" href="#collapse-newsletter" role="button" aria-expanded="false" aria-controls="collapse-newsletter">
-    Sign up to our mailing list
-  </a>
-</div>
-<div class="row m-auto text-center collapse" id="collapse-newsletter" style="max-width: 800px">
-    <form class="user col-12 text-left" action="javascript:newsletterSignup_two()" novalidate>
+<div class="row m-auto pt-3 w-100" style="max-width: 800px">
+    <h3 class="font-weight-normal">Enjoy what you're reading? Sign up for email alerts!</h3>
+    <form class="user col-12 w-100 text-left" action="javascript:newsletterSignup_two()" novalidate>
         {{ newsletter_form.hidden_tag() }}
         {% from "_formhelpers.html" import render_field %}
-        <div class="form-group">
-        {{ render_field(newsletter_form.user_email, class="form-control form-control-user rounded-0", placeholder="Email Address", id='emailAddress_two') }}
+        <div class="form-row">
+            <div class="form-group col-8">
+            {{ render_field(newsletter_form.user_email, class="form-control form-control-user rounded-0", placeholder="Email Address", id='emailAddress_two') }}
+            </div>
+            <div class="form-group col-4">
+                {{ newsletter_form.Submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
+            </div>
         </div>
-        {{ newsletter_form.Submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
     </form>
 </div>
 
@@ -355,6 +318,31 @@
             alert(data.status);
           });
     }
+
+    function blogComment(){
+        const userName = document.getElementById('userCommentName').value;
+        const userComment = document.getElementById('userComment').value;
+        const ratingValues = document.querySelectorAll("input[name='rating']");
+        const postName = document.getElementById('postTitle').innerText;
+        let selectedValue;
+        for (const ratingValue of ratingValues){
+            if (ratingValue.checked){
+                selectedValue = ratingValue.value;
+                break;
+            }
+        }
+        return fetch("/blogs/comment/" + userName + "/" + selectedValue + "/" + userComment + "/" + postName, {
+            method: 'post',
+            headers: {
+                'content-type': 'application/json'
+            }
+        }).then(function(res){
+            return res.json();
+        }).then(function(data){
+            alert(data.status)
+        });
+    }
+
 </script>
 </body>
 

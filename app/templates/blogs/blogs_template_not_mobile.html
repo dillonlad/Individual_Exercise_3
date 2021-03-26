@@ -73,16 +73,6 @@
     </div>
       <div class="row m-auto pt-3" style="max-width: 800px; visibility: hidden">
         <h3 class="font-weight-normal">Enjoy what you're reading? Sign up to our newsletter</h3>
-        <form class="user col-12 text-left" method='POST' novalidate>
-        {{ form.hidden_tag() }}
-        <div class="form-group font-weight-normal">
-          {{ form.name.label }}{{ form.name(class_="form-control form-control-user rounded-0") }}
-        </div>
-        <div class="form-group">
-          {{ form.email.label }}{{ form.email(class_="form-control form-control-user rounded-0")}}
-        </div>
-        {{ form.Submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
-    </form>
       </div>
   </div>
 <div class="container-fluid" style="max-width: 1000px">
@@ -136,7 +126,7 @@
             {% endif %}
     {% endwith %}
     </div>
-        <h1 class="row w-100 ml-3 mr-3 mt-3 h1 display-4 font-weight-normal" style="max-width: 80vw" itemprop="name">{% for post in post %}{{ post.Title }}{% endfor %}</h1>
+        <h1 class="row w-100 ml-3 mr-3 mt-3 h1 display-4 font-weight-normal" style="max-width: 80vw" id="postTitle" itemprop="name">{% for post in post %}{{ post.Title }}{% endfor %}</h1>
 <div class="pt-2 pb-2" style="max-width: 80vw">
     <div class="col-12 font-weight-normal h6 mb-0" itemtype="datePublished, author">{% block time_and_date %}{% endblock %}{% if number_of_comments > 0 %} | <i class="fas fa-comment" style="border: none"></i>{{ number_of_comments }} {% else %}{% endif %}<span style="float: right"><a class="text-dark" href="https://api.whatsapp.com/send?text={% for post in post %}{{ post.url_ | safe }}{% endfor %}"><i style="border: none" class="fab fa-whatsapp"></i></a> <a class="text-dark" href="http://www.facebook.com/sharer.php?u={% for post in post %}{{ post.url_ | safe }}{% endfor %}"><i class="fab fa-facebook-square" style="border: none"></i></a> <a class="text-dark" href="https://twitter.com/intent/tweet?url={% for post in post %}{{ post.url_ | safe }}{% endfor %}&text={% for post in post %}{{ post.Title | safe }}{% endfor %}"><i class="fab fa-twitter-square" style="border: none"></i></a> <a class="text-dark" href="https://www.linkedin.com/sharing/share-offsite/?url={% for post in post %}{{ post.url_ | safe }}{% endfor %}"><i style="border: none" class="fab fa-linkedin-in"></i></a></span>
 </div>
@@ -153,19 +143,16 @@
             {% block main_article %}{% endblock %}
         </div>
     </div>
-<div class="m-auto text-center align-content-center w-100">
-    <a class="btn btn-dark h4 text-center w-100 rounded-0" data-toggle="collapse" href="#collapse-comments" role="button" aria-expanded="false" aria-controls="collapse-comments">
-    Leave a reply
-  </a>
-</div>
-<div class="w-100 m-auto text-center collapse" id="collapse-comments">
-     <form class="user w-100 text-left" method='POST' novalidate>
+<div class="row m-auto w-100 pb-2 pt-3" style="max-width: 800px">
+    <form class="user w-100 text-left pb-4" action="javascript:blogComment()" novalidate>
+    <h3 class="ml-0 pl-0 pb-4">Comments</h3>
         {{ form.hidden_tag() }}
+        {% from "_formhelpers.html" import render_field %}
         <div class="form-group font-weight-normal">
-          {{ form.name.label }}{{ form.name(class_="form-control form-control-user rounded-0") }}
+            {{ render_field(form.name, class="form-control form-control-user rounded-0", placeholder="Full Name", id='userCommentName') }}
         </div>
         <div class="form-group font-weight-normal">
-          {{ form.comment.label }}{{ form.comment(class_="form-control form-control-user rounded-0")}}
+          {{ render_field(form.comment, class="form-control form-control-user rounded-0", placeholder="Comment", id='userComment', rows="3") }}
         </div>
         <div class="form-group">
              {{ form.rating.label }}
@@ -176,32 +163,8 @@
                     {{ subfield.label(class_="form-check-label pr-5") }}
                 {% endfor %}
             </div>
-        <div class="form-group">
-             {{ form.post_on_page.label }}
-        </div>
-            <div class="form-group form-check-inline">
-                {% for subfield in form.post_on_page %}
-                    {{ subfield(class_="form-check-input") }}
-                    {{ subfield.label(class_="form-check-label pr-5") }}
-                {% endfor %}
-            </div>
-        <div class="form-group">
-             <b>{{ form.newsletter.label }}</b>
-        </div>
-        <div class="form-group form-check-inline">
-                {% for subfield in form.newsletter %}
-                    {{ subfield(class_="form-check-input") }}
-                    {{ subfield.label(class_="form-check-label pr-5") }}
-                {% endfor %}
-            </div>
-        <div class="form-group">
-          {{ form.email.label }}{{ form.email(class_="form-control form-control-user rounded-0")}}
-        </div>
         {{ form.Submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
     </form>
-</div>
-<div class="w-100 m-auto pb-2">
-    <h2 class="font-weight-normal">View our comments</h2>
     {% if comments|length %}
         {% for comment in comments %}
             <div class="card w-100 mb-2 rounded-0">
@@ -222,23 +185,24 @@
             </div>
         {% endfor %}
     {% else %}
-        <p>There are no comments, use the form above to leave one and sign up for our newsletter</p>
+
     {% endif %}
 
+
 </div>
-<div class="row m-auto text-center align-content-center" style="max-width: 800px">
-    <a class="btn btn-dark h4 text-center w-100 rounded-0" data-toggle="collapse" href="#collapse-newsletter" role="button" aria-expanded="false" aria-controls="collapse-newsletter">
-    Sign up to our mailing list
-  </a>
-</div>
-<div class="row m-auto text-center collapse" id="collapse-newsletter" style="max-width: 800px">
-    <form class="user col-12 text-left" action="javascript:newsletterSignup()" novalidate>
+<div class="row m-auto w-100" style="max-width: 800px">
+    <h3 class="font-weight-normal">Enjoy what you're reading? Sign up for email alerts!</h3>
+    <form class="user col-12 w-100 text-left" action="javascript:newsletterSignup_two()" novalidate>
         {{ newsletter_form.hidden_tag() }}
         {% from "_formhelpers.html" import render_field %}
-        <div class="form-group">
-        {{ render_field(newsletter_form.user_email, class="form-control form-control-user rounded-0", placeholder="Email Address", id='emailAddress') }}
+        <div class="form-row">
+            <div class="form-group col-8">
+            {{ render_field(newsletter_form.user_email, class="form-control form-control-user rounded-0", placeholder="Email Address", id='emailAddress_two') }}
+            </div>
+            <div class="form-group col-4">
+                {{ newsletter_form.Submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
+            </div>
         </div>
-        {{ newsletter_form.Submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
     </form>
 </div>
 </div>
@@ -407,6 +371,30 @@
           }).then(function(data) {
             alert(data.status);
           });
+    }
+
+    function blogComment(){
+        const userName = document.getElementById('userCommentName').value;
+        const userComment = document.getElementById('userComment').value;
+        const ratingValues = document.querySelectorAll("input[name='rating']");
+        const postName = document.getElementById('postTitle').innerText;
+        let selectedValue;
+        for (const ratingValue of ratingValues){
+            if (ratingValue.checked){
+                selectedValue = ratingValue.value;
+                break;
+            }
+        }
+        return fetch("/blogs/comment/" + userName + "/" + selectedValue + "/" + userComment + "/" + postName, {
+            method: 'post',
+            headers: {
+                'content-type': 'application/json'
+            }
+        }).then(function(res){
+            return res.json();
+        }).then(function(data){
+            alert(data.status)
+        });
     }
 </script>
 </body>

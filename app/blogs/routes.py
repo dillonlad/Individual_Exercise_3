@@ -96,25 +96,20 @@ def structured_data(item_on_page, average_rating, review_count, reviews):
 
 def form_send(form, Post_ID):
 
-    form_name = form.name.data
-    form_email = form.email.data
-    form_comment = form.comment.data
-    form_post_on_page = form.post_on_page.data
-    form_newsletter = form.newsletter.data
-    form_rating = form.rating.data
+    name = form.name.data
+    comment = form.comment.data
+    rating = form.rating.data
+    post_title = Post_ID
 
     with app.mail.connect() as conn:
         time_date = datetime.now()
-        msg = Message('{} - comment'.format(form_name), sender=ADMINS[0], recipients=ADMINS)
-        msg.body = '{}'.format(form_comment)
-        user_email = form_email
-        if user_email == "":
-            user_email = "not provided"
-        msg.html = '<b>{}</b> says {} about {} at this time {}:{}:{} on this date {}-{}-{}. User said {} to posting on the page and {} to newsletter, with the email {}. An overall rating of {}'.format(
-            form_name, form_comment, Post_ID, time_date.strftime("%H"), time_date.strftime("%M"),
+        msg = Message('{} - comment'.format(name), sender=ADMINS[0], recipients=ADMINS)
+        msg.body = '{}'.format(comment)
+        msg.html = '<b>{}</b> says {} about {} at this time {}:{}:{} on this date {}-{}-{}. An overall rating of {}'.format(
+            name, comment, post_title, time_date.strftime("%H"), time_date.strftime("%M"),
             time_date.strftime("%S"), time_date.strftime("%Y"), time_date.strftime("%m"),
             time_date.strftime("%d"),
-            form_post_on_page, form_newsletter, user_email, form_rating)
+            rating)
         conn.send(msg)
 
     flash('Thanks for the reply!')
@@ -129,6 +124,22 @@ def newsletter_signup(email):
         conn.send(msg)
 
     return jsonify(status="Thanks for signing up!")
+
+
+@bp_blogs.route('/comment/<name>/<rating>/<comment>/<post_title>', methods=['POST', 'GET'])
+def blog_comment(name, rating, comment, post_title):
+    with app.mail.connect() as conn:
+        time_date = datetime.now()
+        msg = Message('{} - comment'.format(name), sender=ADMINS[0], recipients=ADMINS)
+        msg.body = '{}'.format(comment)
+        msg.html = '<b>{}</b> says {} about {} at this time {}:{}:{} on this date {}-{}-{}. An overall rating of {}'.format(
+            name, comment, post_title, time_date.strftime("%H"), time_date.strftime("%M"),
+            time_date.strftime("%S"), time_date.strftime("%Y"), time_date.strftime("%m"),
+            time_date.strftime("%d"),
+            rating)
+        conn.send(msg)
+
+    return jsonify(status="Thanks for the comment")
 
 
 @bp_blogs.route('/<Post_ID>', methods=['POST', 'GET'])
