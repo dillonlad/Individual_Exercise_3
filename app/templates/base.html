@@ -68,7 +68,7 @@
     {% else %}
     {% endif %}
 </head>
-<body itemscope itemtype="https://schema.org/WebPage" class="w-100" onscroll="fixed_top()" style="font-family: 'Cabin', sans-serif;">
+<body itemscope itemtype="https://schema.org/WebPage" class="w-100" onscroll="fixed_top()" onload="mostPopular()" style="font-family: 'Cabin', sans-serif; background-color: #dddddd">
     {% with messages = get_flashed_messages() %}
             {% if messages %}
                 <div class="text-center m-auto p-5 font-weight-normal fixed-top" id="flashedmessages" style="max-width: 600px; background-color: #dddddd; z-index: 1031; {% if request.MOBILE %}{% else %}top: 60px;{% endif %}">
@@ -114,7 +114,7 @@
 
 </div>
     {% else %}
-    <div class="container-fluid w-100 h-100 opacity-5 mainimage" style="background-image: url('../static/img/purple-background.jpeg'); background-size: cover; min-height: 100vh">
+    <div class="container-fluid w-100 h-100 opacity-5 mainimage" style="background-color: white; background-size: cover; min-height: 40vh">
         <div class="container-fluid">
             <div id="nav_one" style="display: block" class="row">
                 <div class="col-12">
@@ -137,23 +137,30 @@
                 </div>
             </div>
         </div>
-
-    <div class="w-100 container-fluid mr-auto ml-0 mt-auto mb-auto row" style="max-width: 50vw">
-                    <h1 class="font-weight-normal text-white display-1 text-left ml-5 w-100" id="main-title" style="padding-top: 25vh" itemprop="name">In Wait of Tomorrow</h1>
-                    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11"></script>
-                    <div id="typed-strings" class="text-white" style="max-width: 600px">
-                        <p class="lead">^1000 Futurology ^1000 - Systematic forecasting of the future ^1000 based on current trends^2000</p>
-                        <p class="font-weight-normal font-italic">"I know not with what weapons World War III will be fought ^1000, but World War IV will be fought with sticks and stones." ~ Albert Einstein ^1000</p>
-                    </div>
-                    <span id="typed" class="pb-5 text-white ml-5 w-100"></span>
-        <div class="w-100">
-                    <a href="#cards" class="text-white ml-5 border-white font-weight-bold btn rounded-0 bg-transparent h3" style="border-width: medium">CHECK OUT OUR LATEST ARTICLES</a>
+        <div class="row m-auto container-fluid w-100" style="padding-top: 15vh">
+            <div class="col-9">
+                <h1 class="font-weight-normal text-dark display-1 text-left ml-5 w-100" itemprop="name">In Wait of Tomorrow</h1>
+                <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11"></script>
+                <div id="typed-strings" class="text-dark" style="max-width: 600px">
+                    <p class="lead">^1000 Futurology ^1000 - Systematic forecasting of the future ^1000 based on current trends^2000</p>
+                    <p class="font-weight-normal font-italic">"I know not with what weapons World War III will be fought ^1000, but World War IV will be fought with sticks and stones." ~ Albert Einstein ^1000</p>
+                </div>
+                <span id="typed" class="pb-5 text-dark ml-5"></span>
             </div>
+            <div class="col-3 text-left">
+                <picture>
+                    <source srcset="../static/img/logo.webp" style="max-width: 200px" class="m-auto">
+                    <source srcset="../static/img/logo.jpeg" style="max-width: 200px" class="m-auto">
+                    <img src="../static/img/logo.webp" style="max-width: 200px" alt="In Wait of Tomorrow" class="m-auto">
+                </picture>
+            </div>
+        </div>
     </div>
+
 
 </div>
         {% if homepage == "yes" %}
-<div class="text-center text-dark p-2 border-dark border-bottom w-100 container-fluid" id="homepagefixedtop">
+<div class="text-center text-dark p-2 border-dark border-bottom w-100 container-fluid bg-white" id="homepagefixedtop">
         {% for category in categories %}
             {% if category.category_name != "Blog" %}
                 <a class="p-2 text-dark" href="{{ url_for('main.show_blog_category', category=category.category_name) }}">{{ category.category_name }}</a>
@@ -209,14 +216,25 @@
         var h = window.innerHeight;
         var h2 = h/2;
         if (document.body.scrollTop > h2 || document.documentElement.scrollTop > h2) {
-            document.getElementById("homepagefixedtop").classList.add("fixed-top", "bg-white", "pt-4");
-            document.getElementById("homepagefixedtop").classList.remove("bg-transparent");
-            document.getElementById('homepagefixedtop').style.minHeight = "8vh";
+            try {
+                document.getElementById("homepagefixedtop").classList.add("fixed-top", "bg-white", "pt-4");
+                document.getElementById("homepagefixedtop").classList.remove("bg-transparent");
+                document.getElementById('homepagefixedtop').style.minHeight = "8vh";
+            }
+            catch(err){
+                console.log(err)
+            }
         }
         else
             if (document.body.scrollTop < h2 || document.documentElement.scrollTop < h2) {
-                document.getElementById("homepagefixedtop").classList.remove("fixed-top", "bg-white");
-                document.getElementById("homepagefixedtop").classList.add("bg-transparent");            }
+                try {
+                    document.getElementById("homepagefixedtop").classList.remove("fixed-top", "bg-white");
+                    document.getElementById("homepagefixedtop").classList.add("bg-white");
+                }
+                catch(err){
+                    console.log(err)
+                }
+            }
     }
 
     function submit_form_1(){
@@ -233,6 +251,20 @@
 
     function closeflash(){
         document.getElementById('flashedmessages').style.visibility = "hidden";
+    }
+
+    function mostPopular(){
+        div = document.getElementById('mostPopularArticles');
+        return fetch("/api/most-popular", {
+            method: 'post',
+            headers: {
+              'content-type': 'application/json'
+            }
+          }).then(function(res) {
+            return res.json();
+          }).then(function(data) {
+            div.innerHTML = data.status;
+          });
     }
 
 </script>

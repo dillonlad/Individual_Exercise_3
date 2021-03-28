@@ -17,9 +17,10 @@ from flask_sitemap import Sitemap, sitemap_page_needed
 
 import app
 from app import db
+from app.HelloAnalytics import initialize_analyticsreporting, print_response, get_report_most_popular
 from app.blogs.forms import CommentForm, SubmitNewsletter, Newsletter
 from app.main.forms import SearchForm
-from app.main.routes import third_party_cookies, cookies_accept
+from app.main.routes import third_party_cookies, cookies_accept, bp_main
 
 from app.models import Posts_two, Blogs, Profile, Categories, Series, Authors, Comments_dg_tmp, \
     mailing_list, shop_items

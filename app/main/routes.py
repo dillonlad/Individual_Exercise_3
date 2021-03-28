@@ -2,7 +2,7 @@ from datetime import timedelta, datetime
 from urllib.parse import urlparse, urljoin
 
 from flask import render_template, Blueprint, request, flash, redirect, url_for, Flask, make_response, abort, \
-    render_template_string, session
+    render_template_string, session, jsonify
 from flask_login import login_required, current_user, logout_user, login_user
 from flask_mail import Mail, Message
 from flask_mobility import Mobility
@@ -16,7 +16,7 @@ from flask_sitemap import Sitemap, sitemap_page_needed
 
 import app
 from app import db
-from app.HelloAnalytics import initialize_analyticsreporting, print_response, get_report
+from app.HelloAnalytics import initialize_analyticsreporting, print_response, get_report, get_report_most_popular
 from app.main.forms import SignupForm, LoginForm, PostForm, BlogEditor, CreateArticle, SearchForm
 
 from app.models import Posts_two, Blogs, Profile, Categories, Series, Authors, Comments_dg_tmp, \
@@ -169,7 +169,7 @@ def index():
             homepage = "yes"
             categories = Categories.query.all()
             series = Series.query.all()
-            posts = Blogs.query.order_by(desc(Blogs.article_id)).limit(5).all()
+            posts = Blogs.query.order_by(desc(Blogs.article_id)).limit(6).all()
             latest_article = Blogs.query.order_by(desc(Blogs.article_id)).limit(1).all()
             navigation_page = render_template('navigation.html', categories=categories)
             cookies_accept()
@@ -455,6 +455,66 @@ def authors(author_id):
                 person_name.append(geeza.author_name)
             posts = Blogs.query.filter(Blogs.author.contains(person_name[0])).order_by(desc(Blogs.article_id)).all()
             return render_template('author.html', allow_third_party_cookies=allow_third_party_cookies, categories=categories, person=person, posts=posts, navigation_page=navigation_page)
+
+
+@bp_main.route('/api/most-popular', methods=['POST', 'GET'])
+def get_most_popular():
+    analytics = initialize_analyticsreporting()
+    response = get_report_most_popular(analytics)
+    analytics_reports = print_response(response)
+    sorted_dict = sorted(analytics_reports, key=lambda k: k['views'], reverse=True)
+    most_popular = []
+    posts = Blogs.query.order_by(desc(Blogs.article_id)).all()
+    for dict in sorted_dict:
+        for post in posts:
+            if post.Post_ID in dict['page']:
+                if len(most_popular) < 5:
+                    most_popular.append(post)
+                else:
+                    break
+
+    return jsonify(status=render_template('most_popular.html', posts=most_popular, title="Most popular"))
+
+
+@bp_main.route('/api/similar/<title>', methods=['POST', 'GET'])
+def get_similar_blogs(title):
+
+    post = Blogs.query.filter_by(Title=title).all()
+    for match_post in post:
+        category = match_post.category
+
+    if ',' in category:
+        category_list = category.split(', ')
+    else:
+        category_list = [category]
+
+    posts = Blogs.query.order_by(desc(Blogs.article_id)).all()
+    similar_posts = []
+
+    for post in posts:
+        if ',' in post.category:
+            post_categories = post.category.split(', ')
+        else:
+            post_categories = [post.category]
+        similarity_index = 0
+
+        for category in post_categories:
+            if category in category_list:
+                similarity_index += 1
+
+        if similarity_index > 0:
+            similar_post = {}
+            similar_post['index'] = similarity_index
+            similar_post['post'] = post
+            similar_posts.append(similar_post)
+
+    sorted_dict = sorted(similar_posts, key=lambda k: k['index'], reverse=True)
+    result = []
+    for dict in sorted_dict:
+        if (len(result) < 3) and (dict['post'].Title != title):
+            result.append(dict['post'])
+
+    return jsonify(status=render_template('most_similar.html', posts=result, title="More like this"))
 
 
 @bp_main.route('/admin/analytics', methods=['POST', 'GET'])

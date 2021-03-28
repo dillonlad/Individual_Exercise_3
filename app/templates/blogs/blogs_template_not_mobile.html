@@ -61,7 +61,7 @@
 {% else %}
 {% endif %}
 </head>
-<body itemscope itemtype="https://schema.org/WebPage" onscroll="change_words()" onload="signup()" style="font-family: 'Cabin', sans-serif; font-size: 18px!important;">
+<body itemscope itemtype="https://schema.org/WebPage" onscroll="change_words()" onload="mostSimilar()" style="font-family: 'Cabin', sans-serif; font-size: 18px!important;">
 <div class="row m-auto pt-3">
 <link rel="stylesheet" href="../static/css/newnav.css">
 {{ navigation_page | safe }}
@@ -270,7 +270,7 @@
     {% else %}
     <p>Sorry, no posts are available at this time</p>
         {% endif %}
-
+        <div id="mostSimilarArticles"></div>
     </div>
     </div>
 </div>
@@ -395,6 +395,21 @@
         }).then(function(data){
             alert(data.status)
         });
+    }
+
+    function mostSimilar(){
+        const postName = document.getElementById('postTitle').innerText;
+        div = document.getElementById('mostSimilarArticles');
+        return fetch("/api/similar/" + postName, {
+            method: 'post',
+            headers: {
+              'content-type': 'application/json'
+            }
+          }).then(function(res) {
+            return res.json();
+          }).then(function(data) {
+            div.innerHTML = data.status;
+          });
     }
 </script>
 </body>

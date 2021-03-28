@@ -1,0 +1,38 @@
+{% if request.MOBILE %}
+
+    <!-- Mobile-->
+
+    <h4 class="col-12 font-weight-normal text-center p-3" id="articles-title">Most popular <i style="border: none" class="fas fa-chart-line"></i></h4>
+    {% for post in posts %}
+        <div class="card w-100 bg-transparent border-dark border-top rounded-0" style="border: none">
+        <div class="card-body row w-100 m-auto">
+            <p class="card-title w-100 ml-0">{{ post.Title }}</p>
+            <a href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}" class="btn btn-dark rounded-0">READ MORE</a>
+        </div>
+        </div>
+    {% endfor %}
+
+{% else %}
+
+    <!-- Not Mobile -->
+
+    <h4 class="col-12 font-weight-normal text-center p-3" id="articles-title">Most popular <i style="border: none" class="fas fa-chart-line"></i></h4>
+    {% for post in posts %}
+        <div class="card w-100 bg-transparent border-dark border-top rounded-0" style="border: none">
+        <div class="card-body row w-100 m-auto">
+            <div class="col-3">
+                <picture>
+                    <source class="rounded-0" srcset="..{{ post.Image_root }}" type="image/webp" style="max-width: 100%; height: auto">
+                    <img itemscope itemtype="https://schema.org/ImageObject" src="..{{ post.Image_iphone }}" alt="{{ post.Title }}" style="max-width: 100%; height: auto">
+                </picture>
+            </div>
+              <div class="col-9">
+                <h5 class="card-title">{{ post.Title }}</h5>
+                <p class="card-text">{{ post.Description }}</p>
+                <a href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}" class="btn btn-dark rounded-0">READ MORE</a>
+              </div>
+        </div>
+        </div>
+    {% endfor %}
+
+{% endif %}
