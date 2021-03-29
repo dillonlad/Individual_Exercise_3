@@ -188,6 +188,7 @@ def post(Post_ID):
             search_form = SearchForm(request.form)
             navigation_page = render_template('navigation.html', categories=categories, search_form=search_form)
             newsletter_form = Newsletter(request.form)
+            footer = render_template('footer.html', categories=categories)
             if request.method == 'POST' and form.validate():
                 form_send(form, Post_ID)
                 return redirect(url_for('blogs.post', Post_ID=Post_ID), code=303)
@@ -201,7 +202,7 @@ def post(Post_ID):
                         flash('Please provide the required information')
                         return redirect(url_for('blogs.post', Post_ID=Post_ID), code=302)
                 else:
-                    return render_template("blogs/post.html", post=post, categories=categories, comments=comments, number_of_comments=number_of_comments, latest_articles=latest_articles, quiz_of_the_week=quiz_of_the_week, form=form, post_authorid=post_authorid, new_date=new_date, navigation_page=navigation_page, structured_info=structured_info, latest_product=latest_product, product_image=product_image, allow_third_party_cookies=allow_third_party_cookies, newsletter_form=newsletter_form)
+                    return render_template("blogs/post.html", post=post, categories=categories, comments=comments, number_of_comments=number_of_comments, latest_articles=latest_articles, quiz_of_the_week=quiz_of_the_week, form=form, post_authorid=post_authorid, new_date=new_date, navigation_page=navigation_page, structured_info=structured_info, latest_product=latest_product, product_image=product_image, allow_third_party_cookies=allow_third_party_cookies, newsletter_form=newsletter_form, footer=footer)
         else:
             flash("The article you tried to find does not exist, at least not with that URL, try using the search box to find what you're looking for")
             return redirect(url_for('main.show_blog'))

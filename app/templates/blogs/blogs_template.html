@@ -1,24 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-159574205-1"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+    {%  if allow_third_party_cookies == "True" %}
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-159574205-1"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
 
-      gtag('config', 'UA-159574205-1');
-    </script>
-    <script type="application/ld+json">
-        {
-          "@context": "https://schema.org",
-          "@type": "NewsArticle",
-          "image": "{% for post in post %}{{ post.url_ | safe }}{% endfor %}",
-          "headline": "{% for post in post %}{{ post.Title | safe }}{% endfor %}",
-          "datePublished": "{% for post in post %}{{ post.Date | safe }}{% endfor %}"
-        }
-    </script>
+          gtag('config', 'UA-159574205-1');
+        </script>
+    {% else %}
+    {% endif %}
+    {{ structured_info | safe }}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta property="og:title" content="{% block fb_share_title %}{% endblock %}"/>
@@ -42,255 +37,130 @@
     <meta name="author" content="inwaitoftomorrow">
     <meta name="robots" content="index, follow">
     <link rel="shortcut icon" href="../static/img/favico.ico">
+    {%  if allow_third_party_cookies == "True" %}
+        <!-- Facebook Pixel Code -->
+        <script>
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window, document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '363987458380932');
+        fbq('track', 'PageView');
+        </script>
+        <noscript><img height="1" width="1" style="display:none"
+        src="https://www.facebook.com/tr?id=363987458380932&ev=PageView&noscript=1"
+        /></noscript>
+        <!-- End Facebook Pixel Code -->
+    {% else %}
+    {% endif %}
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
     <title>{% block title %}{% endblock %}</title>
 </head>
-<body itemscope itemtype="https://schema.org/WebPage">
-{% if request.MOBILE %}{% else %}<div class="row m-auto pt-3" style="max-width: 1000px">{% endif %}
-<link rel="stylesheet" href="../static/css/newnav.css">
-{{ navigation_page | safe }}
-<div class="container-fluid">
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <nav class="navbar navbar-dark fixed-top bg-dark" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
-                    <a href="{{url_for('main.index')}}"><span class="navbar-brand text-white navbar-dark mb-0 h1">In Wait of Tomorrow</span></a>
-                    <div class="dropdown dropleft show btn-group">
-                      <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
-                      </button>
-                    </div>
-            </nav>
-        </div>
-    </div>
-    <div class="row container-fluid align-content-center mainimage w-100">
-        {% block image_header %}{% endblock %}
-    </div>
-</div>
-    <div class="text-center text-dark p-2" {% if request.MOBILE %}style="margin-top: 50px" {% else %}style="margin-top:5%"{% endif %}>
-        <script src="https://kit.fontawesome.com/7380e39ab3.js" crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <a href="https://www.facebook.com/inwaitoftomorrow/" class="fa fa-facebook"></a>
-        <a href="https://www.instagram.com/inwaitoftomorrow/" class="fa fa-twitter"></a>
-        <a href="https://twitter.com/InWaitofTomorr1" class="fa fa-instagram"></a>
-        <a href="https://www.reddit.com/user/inwaitoftomorrow" class="fa fa-reddit"></a>
-        <!-- Displays flashed messages on a page -->
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages %}
-                {{ message }}
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-
-</div>
-    {% if request.MOBILE %}{% else %}<div class="row"><div class="col-8" style="max-width: 800px">{% endif %}
-<div class="{% if request.MOBILE %}row m-auto{% else %}{% endif %}" style="max-width: 800px" itemprop="name">
-    <div class="col-12 font-weight-normal {% if request.MOBILE %}ml-0 pl-0 h2{% else %}h1 mt-3{% endif %}">
-        {% block article_title %}{% endblock %}
-    </div>
-</div>
-{% if request.MOBILE %}{% else %}
-<div class="dropdown-divider text-center mb-0 mt-3" style="max-width: 800px"></div>{% endif %}
-<div class="{% if request.MOBILE %}row m-auto{% else %}pt-2 pb-2{% endif %}" style="max-width: 800px">
-    <div class="col-12 font-weight-normal h6 {% if request.MOBILE %}ml-0 pl-0{% else %}mb-0{% endif %}" itemtype="datePublished, author">{% block time_and_date %}{% endblock %}{% if number_of_comments > 0 %} | <i class="fas fa-comment" style="border: none"></i>{{ number_of_comments }} {% else %}{% endif %}<span style="float: right"><a class="text-dark" href="https://api.whatsapp.com/send?text={% for post in post %}{{ post.url_ | safe }}{% endfor %}"><i style="border: none" class="fab fa-whatsapp"></i></a> <a class="text-dark" href="http://www.facebook.com/sharer.php?u={% for post in post %}{{ post.url_ | safe }}{% endfor %}"><i class="fab fa-facebook-square" style="border: none"></i></a> <a class="text-dark" href="https://twitter.com/intent/tweet?url={% for post in post %}{{ post.url_ | safe }}{% endfor %}&text={% for post in post %}{{ post.Title | safe }}{% endfor %}"><i class="fab fa-twitter-square" style="border: none"></i></a> <a class="text-dark" href="https://www.linkedin.com/sharing/share-offsite/?url={% for post in post %}{{ post.url_ | safe }}{% endfor %}"><i style="border: none" class="fab fa-linkedin-in"></i></a></span>
-</div>
-</div>
-    {% if request.MOBILE %}{% else %}
-<div class="dropdown-divider text-center mb-0 pb-4" style="max-width: 800px"></div>{% endif %}
-{% if request.MOBILE %}
-    <div class="row pb-3" style="max-width: 800px">
-        <img itemtype="primaryImageOfPage, image" src="{% block image_header_tw0_mob %}{% endblock %}" style="max-height: 75vh" class="w-100" alt="{% for post in posts %}{{ post.Title }}{% endfor %}">
-    </div>
-    <div class="row" style="max-width: 800px">
-        <div class="col-12 font-weight-normal pl-0 ml-0 w-100">
-            {% block main_article_mob %}{% endblock %}
-        </div>
-    </div>
-{% else %}
-    <div class="pb-3" style="max-width:800px">
-        <img itemtype="primaryImageOfPage, image" src="{% block image_header_tw0 %}{% endblock %}" alt="{% for post in posts %}{{ post.Title }}{% endfor %}" style="max-height: 75vh" class="col-12">
-    </div>
-    <div style="max-width: 800px">
-        <div class="col-12 pl-0 ml-0 font-weight-normal">
-            {% block main_article %}{% endblock %}
-        </div>
-    </div>
-{% endif %}
-
-
-<div class="row m-auto" style="max-width: 800px">
-<div class="col-1"></div>
-   <div class="col-1 h1 ml-0 font-weight-bold">
-   </div>
-</div>
-<div class="row m-auto text-center align-content-center" style="max-width: 800px">
-    <a class="btn btn-dark h4 text-center w-100 rounded-0" data-toggle="collapse" href="#collapse-comments" role="button" aria-expanded="false" aria-controls="collapse-comments">
-    Leave a reply
-  </a>
-</div>
-<div class="row m-auto text-center collapse" id="collapse-comments" style="max-width: 800px">
-     <form class="user col-12 text-left" method='POST' novalidate>
-        {{ form.hidden_tag() }}
-        <div class="form-group font-weight-normal">
-          {{ form.name.label }}{{ form.name(class_="form-control form-control-user rounded-0") }}
-        </div>
-        <div class="form-group font-weight-normal">
-          {{ form.comment.label }}{{ form.comment(class_="form-control form-control-user rounded-0")}}
-        </div>
-        <div class="form-group">
-             {{ form.rating.label }}
-        </div>
-        <div class="form-group form-check-inline">
-                {% for subfield in form.rating %}
-                    {{ subfield(class_="form-check-input") }}
-                    {{ subfield.label(class_="form-check-label pr-5") }}
-                {% endfor %}
-            </div>
-        <div class="form-group">
-             {{ form.post_on_page.label }}
-        </div>
-            <div class="form-group form-check-inline">
-                {% for subfield in form.post_on_page %}
-                    {{ subfield(class_="form-check-input") }}
-                    {{ subfield.label(class_="form-check-label pr-5") }}
-                {% endfor %}
-            </div>
-        <div class="form-group">
-             <b>{{ form.newsletter.label }}</b>
-        </div>
-        <div class="form-group form-check-inline">
-                {% for subfield in form.newsletter %}
-                    {{ subfield(class_="form-check-input") }}
-                    {{ subfield.label(class_="form-check-label pr-5") }}
-                {% endfor %}
-            </div>
-        <div class="form-group">
-          {{ form.email.label }}{{ form.email(class_="form-control form-control-user rounded-0")}}
-        </div>
-        {{ form.Submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
-    </form>
-</div>
-<div class="row m-auto pb-2" style="max-width: 800px">
-    <h2 class="font-weight-normal">View our comments</h2>
-    {% if comments|length %}
-        {% for comment in comments %}
-            <div class="card w-100 mb-2 rounded-0">
-                <div class="card-header text-right">
-                    {% for number in range(comment.stars) %}<i class="fas fa-star" style="border: none"></i>{% endfor %}
-                </div>
-                <div class="card-body">
-                    <table>
-                        <tr class="col-12">
-                            <td class="text-primary font-weight-bold" style="max-width: 30%">{{ comment.name }}</td>
-                            <td class="font-weight-normal pl-3">{{ comment.comment }}</td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="card-footer">
-                    <p class="text-muted text-right">{{ comment.date }}</p>
-                </div>
-            </div>
-        {% endfor %}
-    {% else %}
-        <p>There are no comments, use the form above to leave one and sign up for our newsletter</p>
-    {% endif %}
-
-</div>
-    {% if request.MOBILE %}{{ quiz_of_the_week | safe }}{% else %}{% endif %}
-<div class="row m-auto text-center align-content-center" style="max-width: 800px">
-    <a class="btn btn-dark h4 text-center w-100 rounded-0" data-toggle="collapse" href="#collapse-newsletter" role="button" aria-expanded="false" aria-controls="collapse-newsletter">
-    Sign up to our mailing list
-  </a>
-</div>
-<div class="row m-auto text-center collapse" id="collapse-newsletter" style="max-width: 800px">
-    <form class="user col-12 text-left" method='POST' novalidate>
-        {{ form.hidden_tag() }}
-        <div class="form-group font-weight-normal">
-          {{ form.name.label }}{{ form.name(class_="form-control form-control-user rounded-0") }}
-        </div>
-        <div class="form-group">
-          {{ form.email.label }}{{ form.email(class_="form-control form-control-user rounded-0")}}
-        </div>
-        {{ form.Submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
-    </form>
-</div>
-{% if request.MOBILE %}{% else %}
-    </div>
-    <div class="col-4 pt-2 mr-0 ml-0" id="articles">
-        {{ quiz_of_the_week | safe }}
-        <h3 class="font-weight-normal text-left ml-0">Recent posts {% if article_category|length %}in {{ article_category }}{% endif %}</h3>
-    {% if latest_articles|length %}
-        <div class="m-auto" style="max-width: 600px">
-            {% for post in latest_articles %}
-                <link rel="stylesheet" href="../../static/css/hovering.css">
-                <div class="card mb-3 rounded-0" style="width: 100%" itemscope itemtype="https://schema.org/Blog">
-                    <div class="hovereffect">
-                        <picture>
-                            <source style="max-width: 600px; height: auto" class="card-img-top img-fluid" srcset="..{{ post.Image_root }}" type="image/webp">
-                            <img class="card-img-top img-fluid" itemscope itemtype="https://schema.org/ImageObject" src="..{{ post.Image_iphone }}" alt="{{ post.Title }}" style="max-width: 600px; height: auto">
-                        </picture>
-                            <div class="overlay text-left" id="img_overlay">
-                            <p class="text-white" itemprop="description">{{ post.Description }}...<br><a class="h4 text-white ml-0" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"> Read more...</a></p>
-                        </div>
-                    </div>
-                  <div class="card-body">
-                      <h6 class="card-subtitle mb-2 text-muted font-weight-normal ml-0">{{ post.author }} | {{ post.Date }}</h6>
-                      <a class="mb-2 ml-0" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"><p class="card-text mb-2 ml-0" itemprop="name">{{ post.Title }}</p></a>
-                      <p class="card-subtitle mb-2 text-muted font-weight-normal ml-0">{{ post.category }} | 4 min read</p>
-                  </div>
-                </div>
-            {% endfor %}
-        </div>
-    {% else %}
-    <p>Sorry, no posts are available at this time</p>
-        {% endif %}
-    <div class="row m-auto pt-3" style="max-width: 800px">
-        <h3 class="font-weight-normal">Sign up to our newsletter</h3>
-        <form class="user col-12 text-left" method='POST' novalidate>
-        {{ form.hidden_tag() }}
-        <div class="form-group font-weight-normal">
-          {{ form.name.label }}{{ form.name(class_="form-control form-control-user rounded-0") }}
-        </div>
-        <div class="form-group">
-          {{ form.email.label }}{{ form.email(class_="form-control form-control-user rounded-0")}}
-        </div>
-        {{ form.Submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
-    </form>
-    </div>
-    </div>
-    </div>
-{% endif %}
-
-</div>
-{% if request.MOBILE %}{% else %}</div>{% endif %}
-<footer class="text-center p-5" style="background-color: #dddddd">
-        <p>Made in Leicestershire, with love from London.</p>
-        <p class="text-muted">&copy; 2020 In Wait of Tomorrow</p>
-    </footer>
+<body itemscope itemtype="https://schema.org/WebPage" onscroll="change_words()" onload="mostSimilar()" style="font-family: 'Cabin', sans-serif;{% if request.MOBILE %}{% else %} font-size: 18px!important;{% endif %}">
+{% block body %}
+{% endblock %}
+{{ footer|safe }}
 <script>
+
     function openNav() {
       document.getElementById("myNav").style.width = "100%";
       document.getElementById("articles").style.visibility = "hidden"
     }
+
 
     function closeNav() {
       document.getElementById("myNav").style.width = "0%";
       document.getElementById("articles").style.visibility = "visible"
     }
 
-    function optioncorrect() {
-        document.getElementById("option_correct").style.color = "green";
-        document.getElementById("tick").style.visibility = "visible"
+    function closeflash(){
+        document.getElementById('flashedmessages').style.visibility = "hidden";
     }
 
-    function optionincorrect() {
-        document.getElementById("option_incorrect").style.color = "red";
-        document.getElementById("option_incorrect_one").style.color = "red";
-        document.getElementById("cross").style.visibility = "visible";
-        document.getElementById("cross_one").style.visibility = "visible";
-        document.getElementById("option_correct").style.color = "green";
-        document.getElementById("tick").style.visibility = "visible"
+    function searchRedirect(){
+            search_query = document.getElementById('searchQuery').value;
+            window.location.replace('https://inwaitoftomorrow.appspot.com/search/' + search_query);
+        }
+
+
+    function newsletterSignup(){
+        email = document.getElementById('emailAddress').value;
+        return fetch("/blogs/signup/" + email, {
+            method: 'post',
+            headers: {
+              'content-type': 'application/json'
+            }
+          }).then(function(res) {
+            return res.json();
+          }).then(function(data) {
+            alert(data.status);
+          });
     }
+
+    function newsletterSignup_two(){
+        email = document.getElementById('emailAddress_two').value;
+        return fetch("/blogs/signup/" + email, {
+            method: 'post',
+            headers: {
+              'content-type': 'application/json'
+            }
+          }).then(function(res) {
+            return res.json();
+          }).then(function(data) {
+            alert(data.status);
+          });
+    }
+
+    function blogComment(){
+        const userName = document.getElementById('userCommentName').value;
+        const userComment = document.getElementById('userComment').value;
+        const ratingValues = document.querySelectorAll("input[name='rating']");
+        const postName = document.getElementById('postTitle').innerText;
+        let selectedValue;
+        for (const ratingValue of ratingValues){
+            if (ratingValue.checked){
+                selectedValue = ratingValue.value;
+                break;
+            }
+        }
+        return fetch("/blogs/comment/" + userName + "/" + selectedValue + "/" + userComment + "/" + postName, {
+            method: 'post',
+            headers: {
+                'content-type': 'application/json'
+            }
+        }).then(function(res){
+            return res.json();
+        }).then(function(data){
+            alert(data.status)
+        });
+    }
+
+    function mostSimilar(){
+        var pathArray = window.location.pathname.split('/blogs/');
+        console.log(pathArray)
+        const postID = pathArray[1];
+        div = document.getElementById('mostSimilarArticles');
+        return fetch("/api/similar/" + postID, {
+            method: 'post',
+            headers: {
+              'content-type': 'application/json'
+            }
+          }).then(function(res) {
+            return res.json();
+          }).then(function(data) {
+            div.innerHTML = data.status;
+          });
+    }
+
+
 </script>
+{% block custom_scripts %}
+    {% endblock %}
 </body>
 
 </html>

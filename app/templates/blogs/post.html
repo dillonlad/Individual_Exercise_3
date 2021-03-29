@@ -3,7 +3,6 @@
 {% else %}
     {% extends "blogs/blogs_template_not_mobile.html" %}
 {% endif %}
-
 {% block fb_share_url %}{% for post in post %}{{ post.url_ | safe }}{% endfor %}{% endblock %}
 {% block fb_share_title %}{% for post in post %}{{ post.Title | safe }}{% endfor %}{% endblock %}
 {% block fb_share_description %}{% for post in post %}{{ post.Description | safe }}{% endfor %}{% endblock %}

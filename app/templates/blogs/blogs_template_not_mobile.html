@@ -1,419 +1,247 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-{%  if allow_third_party_cookies == "True" %}
-<!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-159574205-1"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+{% extends 'blogs/blogs_template.html' %}
+{% block body %}
 
-      gtag('config', 'UA-159574205-1');
-    </script>
-{% else %}
-{% endif %}
-    {{ structured_info | safe }}
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta property="og:title" content="{% block fb_share_title %}{% endblock %}"/>
-    <meta property="og:type" content="website"/>
-    <meta property="og:url" content="{% block fb_share_url %}{% endblock %}"/>
-    <meta property="og:description" content="{% block fb_share_description %}{% endblock %}"/>
-    <meta property="og:image" content={% block fb_share_image %}{% endblock %}/>
-    <meta property="fb:app_id" content="2681838985277439"/>
-    <meta name="twitter:title" content="{% block twitter_share_title %}{% endblock %}"/>
-    <meta name="twitter:description" content="{% block twitter_share_description %}{% endblock %}"/>
-    <meta name="twitter:image" content={% block twitter_share_image %}{% endblock %}/>
-    <meta name="twitter:card" content="summary_large_image"/>
-    <meta name="twitter:url" content="{% block twitter_share_url %}{% endblock %}"/>
-    <meta name="description" content="{% block meta_description %}{% endblock %}"/>
-    <script src="../static/bootstrap-4.0.0/js/tests/vendor/jquery-1.9.1.min.js" defer></script>
-    <script src="../static/bootstrap-4.0.0/dist/js/bootstrap.bundle.js" defer></script>
-    <script src="../static/bootstrap-4.0.0/assets/js/vendor/popper.min.js" defer></script>
-    <link rel="stylesheet" href="../static/css/bootstrap.css">
-    <link rel="stylesheet" href="../static/bootstrap-4.0.0/dist/css/bootstrap.min.css">
-    <meta name="keywords" content="inwaitoftomorrow, In Wait of Tomorrow, futurology, {% block meta_keywords %}{% endblock %}">
-    <meta name="author" content="inwaitoftomorrow">
-    <meta name="robots" content="index, follow">
-    <link rel="shortcut icon" href="../static/img/favico.ico">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
-    <title>{% block title %}{% endblock %}</title>
-{%  if allow_third_party_cookies == "True" %}
-    <!-- Facebook Pixel Code -->
-    <script>
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window, document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '363987458380932');
-    fbq('track', 'PageView');
-    </script>
-    <noscript><img height="1" width="1" style="display:none"
-    src="https://www.facebook.com/tr?id=363987458380932&ev=PageView&noscript=1"
-    /></noscript>
-    <!-- End Facebook Pixel Code -->
-{% else %}
-{% endif %}
-</head>
-<body itemscope itemtype="https://schema.org/WebPage" onscroll="change_words()" onload="mostSimilar()" style="font-family: 'Cabin', sans-serif; font-size: 18px!important;">
-<div class="row m-auto pt-3">
-<link rel="stylesheet" href="../static/css/newnav.css">
-{{ navigation_page | safe }}
-<div id="newsletter" class="overlay text-dark bg-white" style="height: 50%">
-      <a href="javascript:void(0)" class="closebtn" onclick="close_newsletter()">&times;</a>
-    <div class="row m-auto pt-3" style="max-width: 800px">
-        <img href="{{ url_for('shop.shop_item', id="what-next-bro-light") }}" src="../static/img/whatnextbro11.jpeg" class="col-3 h-auto" style="height: auto; width: 200px" alt="What Next bro?">
-        <a href="{{ url_for('shop.shop') }}" class="col-9 p-1"><p>Take a look at our exclusive hoodies now! Head over to our shop to view our collection!</p></a>
-    </div>
-      <div class="row m-auto pt-3" style="max-width: 800px; visibility: hidden">
-        <h3 class="font-weight-normal">Enjoy what you're reading? Sign up to our newsletter</h3>
-      </div>
-  </div>
-<div class="container-fluid" style="max-width: 1000px">
-<div class="container-fluid" id="navigation">
-    <div id="nav_one" style="display: block" class="row">
-        <div class="col-12">
-            <nav class="navbar navbar-dark fixed-top bg-dark" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
-                <a id="home_link" href="{{url_for('main.index')}}"><span class="navbar-brand text-white navbar-dark mb-0 h1 font-weight-normal">In Wait of Tomorrow</span></a>
-                <div>
-                    <i class="fas fa-search text-white" onclick="openNav()" style="border: none"></i>
-                    <div class="dropdown dropleft show btn-group">
-                      <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
-                      </button>
+    <div class="row m-auto pt-3">
+        <link rel="stylesheet" href="../static/css/newnav.css">
+        {{ navigation_page | safe }}
+        <div class="container-fluid" style="max-width: 1000px">
+
+            <!-- Navigation bar-->
+            <div class="container-fluid" id="navigation">
+                <div id="nav_one" style="display: block" class="row">
+                    <div class="col-12">
+                        <nav class="navbar navbar-dark fixed-top bg-dark" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
+                            <a id="home_link" href="{{url_for('main.index')}}"><span class="navbar-brand text-white navbar-dark mb-0 h1 font-weight-normal">In Wait of Tomorrow</span></a>
+                            <div>
+                                <i class="fas fa-search text-white" onclick="openNav()" style="border: none"></i>
+                                <div class="dropdown dropleft show btn-group">
+                                  <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
+                                  </button>
+                                </div>
+                            </div>
+                        </nav>
                     </div>
                 </div>
-            </nav>
-        </div>
-    </div>
-    <div id="nav_two" style="display: none" class="row">
-        <div class="col-12">
-            <nav id="navbar" class="navbar navbar-dark fixed-top bg-dark" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
-                    <span id="new_words" class="navbar-brand text-white navbar-dark mb-0">{% for post in post %}{{ post.Title }}{% endfor %}</span>
-                    <div class="dropdown dropleft show btn-group">
-                      <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
-                      </button>
-                    </div>
-            </nav>
-        </div>
-    </div>
-    <div class="row container-fluid align-content-center mainimage w-100">
-        {% block image_header %}{% endblock %}
-    </div>
-</div>
-<div class="container-fluid m-auto" style="max-width: 80vw;">
-    <div class="text-center text-dark p-2" {% if request.MOBILE %}style="margin-top: 50px" {% else %}style="margin-top:5%"{% endif %}>
-        <script src="https://kit.fontawesome.com/7380e39ab3.js" crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <a href="https://www.facebook.com/inwaitoftomorrow/" class="fa fa-facebook"></a>
-        <a href="https://www.instagram.com/inwaitoftomorrow/" class="fa fa-twitter"></a>
-        <a href="https://twitter.com/InWaitofTomorr1" class="fa fa-instagram"></a>
-        <a href="https://www.reddit.com/user/inwaitoftomorrow" class="fa fa-reddit"></a>
-        <!-- Displays flashed messages on a page -->
-    {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <div class="text-center m-auto p-5 font-weight-normal fixed-top" id="flashedmessages" style="max-width: 600px; background-color: #dddddd; z-index: 1031">
-                    {% for message in messages %}
-                        {{ message | safe }}
-                    {% endfor %}
-                <a class='border border-dark text-dark rounded-0 w-100 pt-1 pb-1 pl-5 pr-5' href='javascript:void(0)' onclick="closeflash()">OK</a>
-                </div>
-            {% endif %}
-    {% endwith %}
-    </div>
-        <h1 class="row w-100 ml-3 mr-3 mt-3 h1 display-4 font-weight-normal" style="max-width: 80vw" id="postTitle" itemprop="name">{% for post in post %}{{ post.Title }}{% endfor %}</h1>
-<div class="pt-2 pb-2" style="max-width: 80vw">
-    <div class="col-12 font-weight-normal h6 mb-0" itemtype="datePublished, author">{% block time_and_date %}{% endblock %}{% if number_of_comments > 0 %} | <i class="fas fa-comment" style="border: none"></i>{{ number_of_comments }} {% else %}{% endif %}<span style="float: right"><a class="text-dark" href="https://api.whatsapp.com/send?text={% for post in post %}{{ post.url_ | safe }}{% endfor %}"><i style="border: none" class="fab fa-whatsapp"></i></a> <a class="text-dark" href="http://www.facebook.com/sharer.php?u={% for post in post %}{{ post.url_ | safe }}{% endfor %}"><i class="fab fa-facebook-square" style="border: none"></i></a> <a class="text-dark" href="https://twitter.com/intent/tweet?url={% for post in post %}{{ post.url_ | safe }}{% endfor %}&text={% for post in post %}{{ post.Title | safe }}{% endfor %}"><i class="fab fa-twitter-square" style="border: none"></i></a> <a class="text-dark" href="https://www.linkedin.com/sharing/share-offsite/?url={% for post in post %}{{ post.url_ | safe }}{% endfor %}"><i style="border: none" class="fab fa-linkedin-in"></i></a></span>
-</div>
-</div>
-<div class="dropdown-divider text-center mb-0 pb-4" style="max-width: 70vw"></div>
-</div>
-<div class="container-fluid row m-auto" style="max-width: 80vw">
-<div class="container-fluid col-8">
-    <div class="pb-3">
-        <img itemtype="primaryImageOfPage, image" src="{% block image_header_tw0 %}{% endblock %}" alt="{% for post in posts %}{{ post.Title }}{% endfor %}" style="max-height: 75vh" class="col-12">
-    </div>
-    <div>
-        <div class="col-12 pl-0 ml-0 font-weight-normal">
-            {% block main_article %}{% endblock %}
-        </div>
-    </div>
-<div class="row m-auto w-100 pb-2 pt-3" style="max-width: 800px">
-    <form class="user w-100 text-left pb-4" action="javascript:blogComment()" novalidate>
-    <h3 class="ml-0 pl-0 pb-4">Comments</h3>
-        {{ form.hidden_tag() }}
-        {% from "_formhelpers.html" import render_field %}
-        <div class="form-group font-weight-normal">
-            {{ render_field(form.name, class="form-control form-control-user rounded-0", placeholder="Full Name", id='userCommentName') }}
-        </div>
-        <div class="form-group font-weight-normal">
-          {{ render_field(form.comment, class="form-control form-control-user rounded-0", placeholder="Comment", id='userComment', rows="3") }}
-        </div>
-        <div class="form-group">
-             {{ form.rating.label }}
-        </div>
-        <div class="form-group form-check-inline">
-                {% for subfield in form.rating %}
-                    {{ subfield(class_="form-check-input") }}
-                    {{ subfield.label(class_="form-check-label pr-5") }}
-                {% endfor %}
-            </div>
-        {{ form.Submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
-    </form>
-    {% if comments|length %}
-        {% for comment in comments %}
-            <div class="card w-100 mb-2 rounded-0">
-                <div class="card-header text-right">
-                    {% for number in range(comment.stars) %}<i class="fas fa-star" style="border: none"></i>{% endfor %}
-                </div>
-                <div class="card-body">
-                    <table>
-                        <tr class="col-12">
-                            <td class="text-primary font-weight-bold" style="max-width: 30%">{{ comment.name }}</td>
-                            <td class="font-weight-normal pl-3">{{ comment.comment }}</td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="card-footer">
-                    <p class="text-muted text-right">{{ comment.date }}</p>
-                </div>
-            </div>
-        {% endfor %}
-    {% else %}
-
-    {% endif %}
-
-
-</div>
-<div class="row m-auto w-100" style="max-width: 800px">
-    <h3 class="font-weight-normal">Enjoy what you're reading? Sign up for email alerts!</h3>
-    <form class="user col-12 w-100 text-left" action="javascript:newsletterSignup_two()" novalidate>
-        {{ newsletter_form.hidden_tag() }}
-        {% from "_formhelpers.html" import render_field %}
-        <div class="form-row">
-            <div class="form-group col-8">
-            {{ render_field(newsletter_form.user_email, class="form-control form-control-user rounded-0", placeholder="Email Address", id='emailAddress_two') }}
-            </div>
-            <div class="form-group col-4">
-                {{ newsletter_form.Submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
-            </div>
-        </div>
-    </form>
-</div>
-</div>
-
-    <div class="col-4 pt-2 mr-0 ml-0" id="articles">
-    <div class="row m-auto pt-3" style="max-width: 800px">
-        <form class="user col-12 text-left" action="javascript:newsletterSignup_two()" novalidate>
-            {{ newsletter_form.hidden_tag() }}
-            {% from "_formhelpers.html" import render_field %}
-            <div class="form-group">
-            {{ render_field(newsletter_form.user_email, class="form-control form-control-user rounded-0", placeholder="Sign up to our newsletter!", id='emailAddress_two') }}
-            </div>
-            {{ render_field(newsletter_form.Submit, class="btn btn-dark btn-user btn-block rounded-0") }}
-        </form>
-    </div>
-        <h3 class="font-weight-normal text-left ml-0 pt-4">SHOP NOW</h3>
-    {% if latest_product|length %}
-        <div class="m-auto" style="max-width: 600px">
-        {% for product in latest_product %}
-            <link rel="stylesheet" href="../../static/css/hovering.css">
-            <div class="card mb-3 rounded-0" style="width: 100%">
-                <div class="hovereffect">
-                    <picture>
-                        <source style="max-width: 600px; height: auto" class="card-img-top img-fluid" srcset="{{ product_image }}" type="image/jpeg">
-                        <img class="card-img-top img-fluid" src="{{ product_image }}" alt="{{ product.item_name }}" style="max-width: 600px; height: auto">
-                    </picture>
-                    <div class="overlay" id="img_overlay">
-                        <p class="text-white text-left ml-1" style="font-size: small">{{ product.meta_description }}<br><a class="text-center bg-transparent border-white btn rounded-0 text-white w-50" style="font-size: x-small" href="{{ url_for('shop.shop_item', id = product.item_id) }}">BUY NOW</a></p>
+                <div id="nav_two" style="display: none" class="row">
+                    <div class="col-12">
+                        <nav id="navbar" class="navbar navbar-dark fixed-top bg-dark" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
+                                <span id="new_words" class="navbar-brand text-white navbar-dark mb-0">{% for post in post %}{{ post.Title }}{% endfor %}</span>
+                                <div class="dropdown dropleft show btn-group">
+                                  <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
+                                  </button>
+                                </div>
+                        </nav>
                     </div>
                 </div>
-                <div class="card-body">
-                  <h6 class="card-subtitle mb-2 text-muted font-weight-normal ml-0">£{{ product.price }}</h6>
-                  <a class="mb-2 ml-0" href="{{ url_for('shop.shop_item', id = product.item_id) }}"><p class="card-text mb-2 ml-0" itemprop="name">{{ product.item_name }}</p></a>
-                  <p class="card-subtitle mb-2 text-muted font-weight-normal ml-0">FREE UK SHIPPING</p>
+                <!--Redundant-->
+                <div class="row container-fluid align-content-center mainimage w-100">
+                    {% block image_header %}{% endblock %}
                 </div>
+                <!--End of redundant-->
             </div>
-        {% endfor %}
-        </div>
-    {% else %}
-        {{ quiz_of_the_week }}
-    {% endif %}
-        <h3 class="font-weight-normal text-left ml-0 pt-4">Recent posts {% if article_category|length %}in {{ article_category }}{% endif %}</h3>
-    {% if latest_articles|length %}
-        <div class="m-auto" style="max-width: 600px">
-            {% for post in latest_articles %}
-                <link rel="stylesheet" href="../../static/css/hovering.css">
-                <div class="card mb-3 rounded-0" style="width: 100%" itemscope itemtype="https://schema.org/Blog">
-                    <div class="hovereffect">
-                        <picture>
-                            <source style="max-width: 600px; height: auto" class="card-img-top img-fluid" srcset="..{{ post.Image_root }}" type="image/webp">
-                            <img class="card-img-top img-fluid" itemscope itemtype="https://schema.org/ImageObject" src="..{{ post.Image_iphone }}" alt="{{ post.Title }}" style="max-width: 600px; height: auto">
-                        </picture>
-                            <div class="overlay" id="img_overlay">
-                            <p class="text-white text-left ml-1" style="font-size: small" itemprop="description">{{ post.Description }}<br><a class="text-center bg-transparent border-white btn rounded-0 text-white w-50" style="font-size: x-small" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}">Read more</a></p>
+
+
+            <div class="container-fluid m-auto" style="max-width: 80vw;">
+
+                <!--Top social media links-->
+                <div class="text-center text-dark p-2" {% if request.MOBILE %}style="margin-top: 50px" {% else %}style="margin-top:5%"{% endif %}>
+                    <script src="https://kit.fontawesome.com/7380e39ab3.js" crossorigin="anonymous"></script>
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+                    <a href="https://www.facebook.com/inwaitoftomorrow/" class="fa fa-facebook"></a>
+                    <a href="https://www.instagram.com/inwaitoftomorrow/" class="fa fa-twitter"></a>
+                    <a href="https://twitter.com/InWaitofTomorr1" class="fa fa-instagram"></a>
+                    <a href="https://www.reddit.com/user/inwaitoftomorrow" class="fa fa-reddit"></a>
+
+                    <!-- Displays flashed messages on a page -->
+                    {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                                <div class="text-center m-auto p-5 font-weight-normal fixed-top" id="flashedmessages" style="max-width: 600px; background-color: #dddddd; z-index: 1031">
+                                    {% for message in messages %}
+                                        {{ message | safe }}
+                                    {% endfor %}
+                                <a class='border border-dark text-dark rounded-0 w-100 pt-1 pb-1 pl-5 pr-5' href='javascript:void(0)' onclick="closeflash()">OK</a>
+                                </div>
+                            {% endif %}
+                    {% endwith %}
+                </div>
+
+                <!--Main title-->
+                <h1 class="row w-100 ml-3 mr-3 mt-3 h1 display-4 font-weight-normal" style="max-width: 80vw" id="postTitle" itemprop="name">{% for post in post %}{{ post.Title }}{% endfor %}</h1>
+                <!--Author and share buttons-->
+                <div class="pt-2 pb-2" style="max-width: 80vw">
+                    <div class="col-12 font-weight-normal h6 mb-0" itemtype="datePublished, author">{% block time_and_date %}{% endblock %}{% if number_of_comments > 0 %} | <i class="fas fa-comment" style="border: none"></i>{{ number_of_comments }} {% else %}{% endif %}<span style="float: right"><a class="text-dark" href="https://api.whatsapp.com/send?text={% for post in post %}{{ post.url_ | safe }}{% endfor %}"><i style="border: none" class="fab fa-whatsapp"></i></a> <a class="text-dark" href="http://www.facebook.com/sharer.php?u={% for post in post %}{{ post.url_ | safe }}{% endfor %}"><i class="fab fa-facebook-square" style="border: none"></i></a> <a class="text-dark" href="https://twitter.com/intent/tweet?url={% for post in post %}{{ post.url_ | safe }}{% endfor %}&text={% for post in post %}{{ post.Title | safe }}{% endfor %}"><i class="fab fa-twitter-square" style="border: none"></i></a> <a class="text-dark" href="https://www.linkedin.com/sharing/share-offsite/?url={% for post in post %}{{ post.url_ | safe }}{% endfor %}"><i style="border: none" class="fab fa-linkedin-in"></i></a></span>
+                    </div>
+                </div>
+                <div class="dropdown-divider text-center mb-0 pb-4" style="max-width: 70vw"></div>
+            </div>
+
+            <!--Main body-->
+            <div class="container-fluid row m-auto" style="max-width: 80vw">
+
+                <!--Main image and article, left hand side column-->
+                <div class="container-fluid col-8">
+                    <div class="pb-3">
+                        <img itemtype="primaryImageOfPage, image" src="{% block image_header_tw0 %}{% endblock %}" alt="{% for post in posts %}{{ post.Title }}{% endfor %}" style="max-height: 75vh" class="col-12">
+                    </div>
+                    <div>
+                        <div class="col-12 pl-0 ml-0 font-weight-normal">
+                            {% block main_article %}{% endblock %}
                         </div>
                     </div>
-                  <div class="card-body">
-                      <h6 class="card-subtitle mb-2 text-muted font-weight-normal ml-0">{{ post.author }} | {{ post.Date }}</h6>
-                      <a class="mb-2 ml-0" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"><p class="card-text mb-2 ml-0" itemprop="name">{{ post.Title }}</p></a>
-                      <p class="card-subtitle mb-2 text-muted font-weight-normal ml-0">{{ post.category }} | 4 min read</p>
-                  </div>
+                    <div class="row m-auto w-100 pb-2 pt-3" style="max-width: 800px">
+                        <!--Comments form-->
+                        <form class="user w-100 text-left pb-4" action="javascript:blogComment()" novalidate>
+                            <h3 class="ml-0 pl-0 pb-4">Comments</h3>
+                            {{ form.hidden_tag() }}
+                            {% from "_formhelpers.html" import render_field %}
+                            <div class="form-group font-weight-normal">
+                                {{ render_field(form.name, class="form-control form-control-user rounded-0", placeholder="Full Name", id='userCommentName') }}
+                            </div>
+                            <div class="form-group font-weight-normal">
+                              {{ render_field(form.comment, class="form-control form-control-user rounded-0", placeholder="Comment", id='userComment', rows="3") }}
+                            </div>
+                            <div class="form-group">
+                                 {{ form.rating.label }}
+                            </div>
+                            <div class="form-group form-check-inline">
+                                {% for subfield in form.rating %}
+                                    {{ subfield(class_="form-check-input") }}
+                                    {{ subfield.label(class_="form-check-label pr-5") }}
+                                {% endfor %}
+                            </div>
+                            {{ form.Submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
+                        </form>
+                        <!--Comments display-->
+                        {% if comments|length %}
+                            {% for comment in comments %}
+                                <div class="card w-100 mb-2 rounded-0">
+                                    <div class="card-header text-right">
+                                        {% for number in range(comment.stars) %}<i class="fas fa-star" style="border: none"></i>{% endfor %}
+                                    </div>
+                                    <div class="card-body">
+                                        <table>
+                                            <tr class="col-12">
+                                                <td class="text-primary font-weight-bold" style="max-width: 30%">{{ comment.name }}</td>
+                                                <td class="font-weight-normal pl-3">{{ comment.comment }}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="card-footer">
+                                        <p class="text-muted text-right">{{ comment.date }}</p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+
+                        {% endif %}
+
+                    </div>
+                    <!--Bottom of page sign up form-->
+                    <div class="row m-auto w-100" style="max-width: 800px">
+                        <h3 class="font-weight-normal">Enjoy what you're reading? Sign up for email alerts!</h3>
+                        <form class="user col-12 w-100 text-left" action="javascript:newsletterSignup_two()" novalidate>
+                            {{ newsletter_form.hidden_tag() }}
+                            {% from "_formhelpers.html" import render_field %}
+                            <div class="form-row">
+                                <div class="form-group col-8">
+                                {{ render_field(newsletter_form.user_email, class="form-control form-control-user rounded-0", placeholder="Email Address", id='emailAddress_two') }}
+                                </div>
+                                <div class="form-group col-4">
+                                    {{ newsletter_form.Submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            {% endfor %}
+
+                <!--Right side column-->
+                <div class="col-4 pt-2 mr-0 ml-0" id="articles">
+
+                    <!--Right side newsletter sign up-->
+                    <div class="row m-auto pt-3" style="max-width: 800px">
+                        <form class="user col-12 text-left" action="javascript:newsletterSignup_two()" novalidate>
+                            {{ newsletter_form.hidden_tag() }}
+                            {% from "_formhelpers.html" import render_field %}
+                            <div class="form-group">
+                            {{ render_field(newsletter_form.user_email, class="form-control form-control-user rounded-0", placeholder="Sign up to our newsletter!", id='emailAddress_two') }}
+                            </div>
+                            {{ render_field(newsletter_form.Submit, class="btn btn-dark btn-user btn-block rounded-0") }}
+                        </form>
+                    </div>
+                    <!--Shop now button-->
+                    <h3 class="font-weight-normal text-left ml-0 pt-4">SHOP NOW</h3>
+                    {% if latest_product|length %}
+                        <div class="m-auto" style="max-width: 600px">
+                            {% for product in latest_product %}
+                                <link rel="stylesheet" href="../../static/css/hovering.css">
+                                <div class="card mb-3 rounded-0" style="width: 100%">
+                                    <div class="hovereffect">
+                                        <picture>
+                                            <source style="max-width: 600px; height: auto" class="card-img-top img-fluid" srcset="{{ product_image }}" type="image/jpeg">
+                                            <img class="card-img-top img-fluid" src="{{ product_image }}" alt="{{ product.item_name }}" style="max-width: 600px; height: auto">
+                                        </picture>
+                                        <div class="overlay" id="img_overlay">
+                                            <p class="text-white text-left ml-1" style="font-size: small">{{ product.meta_description }}<br><a class="text-center bg-transparent border-white btn rounded-0 text-white w-50" style="font-size: x-small" href="{{ url_for('shop.shop_item', id = product.item_id) }}">BUY NOW</a></p>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                      <h6 class="card-subtitle mb-2 text-muted font-weight-normal ml-0">£{{ product.price }}</h6>
+                                      <a class="mb-2 ml-0" href="{{ url_for('shop.shop_item', id = product.item_id) }}"><p class="card-text mb-2 ml-0" itemprop="name">{{ product.item_name }}</p></a>
+                                      <p class="card-subtitle mb-2 text-muted font-weight-normal ml-0">FREE UK SHIPPING</p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                    {% endif %}
+
+                    <!--Recent articles-->
+                    <h3 class="font-weight-normal text-left ml-0 pt-4">Recent posts {% if article_category|length %}in {{ article_category }}{% endif %}</h3>
+                    {% if latest_articles|length %}
+                        <div class="m-auto" style="max-width: 600px">
+                            {% for post in latest_articles %}
+                                <link rel="stylesheet" href="../../static/css/hovering.css">
+                                <div class="card mb-3 rounded-0" style="width: 100%" itemscope itemtype="https://schema.org/Blog">
+                                    <div class="hovereffect">
+                                        <picture>
+                                            <source style="max-width: 600px; height: auto" class="card-img-top img-fluid" srcset="..{{ post.Image_root }}" type="image/webp">
+                                            <img class="card-img-top img-fluid" itemscope itemtype="https://schema.org/ImageObject" src="..{{ post.Image_iphone }}" alt="{{ post.Title }}" style="max-width: 600px; height: auto">
+                                        </picture>
+                                            <div class="overlay" id="img_overlay">
+                                            <p class="text-white text-left ml-1" style="font-size: small" itemprop="description">{{ post.Description }}<br><a class="text-center bg-transparent border-white btn rounded-0 text-white w-50" style="font-size: x-small" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}">Read more</a></p>
+                                        </div>
+                                    </div>
+                                  <div class="card-body">
+                                      <h6 class="card-subtitle mb-2 text-muted font-weight-normal ml-0">{{ post.author }} | {{ post.Date }}</h6>
+                                      <a class="mb-2 ml-0" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"><p class="card-text mb-2 ml-0" itemprop="name">{{ post.Title }}</p></a>
+                                      <p class="card-subtitle mb-2 text-muted font-weight-normal ml-0">{{ post.category }} | 4 min read</p>
+                                  </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p>Sorry, no posts are available at this time</p>
+                    {% endif %}
+                    <div id="mostSimilarArticles"></div>
+                </div>
+            </div>
         </div>
-    {% else %}
-    <p>Sorry, no posts are available at this time</p>
-        {% endif %}
-        <div id="mostSimilarArticles"></div>
     </div>
-    </div>
-</div>
-</div>
-</div>
-</div>
-<footer class="text-center p-5 mt-5" style="background-color: #dddddd">
-        <p>Made in Leicestershire, with love from London.</p>
-        <p class="text-muted">&copy; 2020 In Wait of Tomorrow</p>
-    <a href="{{ url_for('main.privacy_policies') }}">Privacy & Cookies</a>
-    </footer>
-<script>
-    function signup(){
-        //myVar = setTimeout(open_newsletter, 15000);
-    }
 
-    function change_words(){
-        if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
-            document.getElementById("nav_one").style.display = "none";
-            document.getElementById("nav_two").style.display = "block";
+{% endblock %}
+{% block custom_scripts %}
+    <script>
+
+        function change_words(){
+            if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+                document.getElementById("nav_one").style.display = "none";
+                document.getElementById("nav_two").style.display = "block";
+            }
+            else
+                if (document.body.scrollTop < 100 || document.documentElement.scrollTop < 100) {
+                    document.getElementById("nav_one").style.display = "block";
+                    document.getElementById("nav_two").style.display = "none";
+                }
         }
-        else
-            if (document.body.scrollTop < 100 || document.documentElement.scrollTop < 100) {
-                document.getElementById("nav_one").style.display = "block";
-                document.getElementById("nav_two").style.display = "none";
-            }
-    }
-
-    function openNav() {
-        document.getElementById("myNav").style.width = "100%";
-        document.getElementById("articles").style.visibility = "hidden"
-    }
-
-    function open_newsletter() {
-        document.getElementById("newsletter").style.width = "100%";
-        document.getElementById("articles").style.visibility = "hidden";
-        document.getElementById("navigation").style.visibility = "hidden"
-    }
-
-    function closeNav() {
-      document.getElementById("myNav").style.width = "0%";
-      document.getElementById("articles").style.visibility = "visible"
-    }
-
-    function close_newsletter() {
-      document.getElementById("newsletter").style.width = "0%";
-      document.getElementById("articles").style.visibility = "visible";
-      document.getElementById("navigation").style.visibility = "visible";
-      document.body.onload = null
-    }
-
-    function optioncorrect() {
-        document.getElementById("option_correct").style.color = "green";
-        document.getElementById("tick").style.visibility = "visible"
-    }
-
-    function optionincorrect() {
-        document.getElementById("option_incorrect").style.color = "red";
-        document.getElementById("option_incorrect_one").style.color = "red";
-        document.getElementById("cross").style.visibility = "visible";
-        document.getElementById("cross_one").style.visibility = "visible";
-        document.getElementById("option_correct").style.color = "green";
-        document.getElementById("tick").style.visibility = "visible"
-    }
-
-    function closeflash(){
-        document.getElementById('flashedmessages').style.visibility = "hidden";
-    }
-
-    function searchRedirect(){
-        search_query = document.getElementById('searchQuery').value;
-        window.location.replace('https://inwaitoftomorrow.appspot.com/search/' + search_query);
-    }
-
-    function newsletterSignup(){
-        email = document.getElementById('emailAddress').value;
-        return fetch("/blogs/signup/" + email, {
-            method: 'post',
-            headers: {
-              'content-type': 'application/json'
-            }
-          }).then(function(res) {
-            return res.json();
-          }).then(function(data) {
-            alert(data.status);
-          });
-    }
-
-    function newsletterSignup_two(){
-        email = document.getElementById('emailAddress_two').value;
-        return fetch("/blogs/signup/" + email, {
-            method: 'post',
-            headers: {
-              'content-type': 'application/json'
-            }
-          }).then(function(res) {
-            return res.json();
-          }).then(function(data) {
-            alert(data.status);
-          });
-    }
-
-    function blogComment(){
-        const userName = document.getElementById('userCommentName').value;
-        const userComment = document.getElementById('userComment').value;
-        const ratingValues = document.querySelectorAll("input[name='rating']");
-        const postName = document.getElementById('postTitle').innerText;
-        let selectedValue;
-        for (const ratingValue of ratingValues){
-            if (ratingValue.checked){
-                selectedValue = ratingValue.value;
-                break;
-            }
-        }
-        return fetch("/blogs/comment/" + userName + "/" + selectedValue + "/" + userComment + "/" + postName, {
-            method: 'post',
-            headers: {
-                'content-type': 'application/json'
-            }
-        }).then(function(res){
-            return res.json();
-        }).then(function(data){
-            alert(data.status)
-        });
-    }
-
-    function mostSimilar(){
-        var pathArray = window.location.pathname.split('/blogs/');
-        console.log(pathArray)
-        const postID = pathArray[1];
-        div = document.getElementById('mostSimilarArticles');
-        return fetch("/api/similar/" + postID, {
-            method: 'post',
-            headers: {
-              'content-type': 'application/json'
-            }
-          }).then(function(res) {
-            return res.json();
-          }).then(function(data) {
-            div.innerHTML = data.status;
-          });
-    }
-</script>
-</body>
-
-</html>
+    </script>
+{% endblock %}
