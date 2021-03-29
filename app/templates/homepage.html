@@ -6,120 +6,70 @@
 {% endblock %}
 {% block list_of_articles %}
 {% if request.MOBILE %}
-    <div class="row col-12 justify-content-center">
+
+    <div class="row w-100 m-auto justify-content-center pt-2 pb-2">
         <picture>
-                    <source srcset="../static/img/logo.webp">
-                    <source srcset="../static/img/logo.jpeg">
-                    <img src="../static/img/logo.webp" style="max-height: 200px" alt="In Wait of Tomorrow" class="m-auto">
-                </picture>
+            <source srcset="../static/img/logo.webp" class="m-auto">
+            <source srcset="../static/img/logo.jpeg" class="m-auto">
+            <img src="../static/img/logo.webp" style="max-height: 200px" alt="In Wait of Tomorrow" class="m-auto">
+        </picture>
     </div>
-        <div class="row col-12 justify-content-center">
-        <h3 class="h3 font-weight-light text-center">Latest articles</h3>
-    </div>
-        {% if posts|length %}
-    <div class="m-auto row" style="max-width: 600px">
-    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-      <ol class="carousel-indicators">
-        <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-        <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-        <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-          <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
-          <li data-target="#carouselExampleIndicators" data-slide-to="4"></li>
-      </ol>
-      <div class="carousel-inner">
-          {% for post in posts %}
-            {% for latest in latest_article %}
-                {% if post.article_id == latest.article_id %}
-                    <div class="carousel-item active">
-                {% else %}
-                    <div class="carousel-item">
-                {% endif %}
-            {% endfor %}
-          <div class="card d-block" itemscope itemtype="https://schema.org/Blog" style="width: 100%">
-                <div class="hovereffect">
-                    <picture>
-                            <source style="max-width: 600px; height: auto" class="card-img-top img-fluid" srcset="..{{ post.Image_root }}" type="image/webp">
-                            <img class="card-img-top img-fluid" itemscope itemtype="https://schema.org/ImageObject" src="..{{ post.Image_iphone }}" alt="{{ post.Title }}" style="max-width: 600px; height: auto">
-                        </picture>
-                    <div class="overlay" id="img_overlay">
-                            <p class="text-white text-left ml-1" style="font-size: small" itemprop="description">{{ post.Description }}<br><a class="text-center bg-transparent border-white btn rounded-0 text-white w-50" style="font-size: x-small" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}">Read more</a></p>
-                        </div>
-                </div>
-              <div class="card-body text-center text-white bg-dark">
-                  <a class="h4" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"><p class="card-text" itemprop="name">{{ post.Title }}</p></a>
-                  <br>
-              </div>
-            </div>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://kit.fontawesome.com/7380e39ab3.js" crossorigin="anonymous"></script>
+    <div class="container-fluid w-100 row m-auto text-center" style="max-width: 600px">
+        <div class="text-center text-dark p-2 col-12 pb-2 w-100 m-auto">
+            <a href="https://www.facebook.com/inwaitoftomorrow/" class="fa fa-facebook"></a>
+            <a href="https://www.instagram.com/inwaitoftomorrow/" class="fa fa-twitter"></a>
+            <a href="https://twitter.com/InWaitofTomorr1" class="fa fa-instagram"></a>
+            <a href="https://www.reddit.com/user/inwaitoftomorrow" class="fa fa-reddit"></a>
         </div>
-          {% endfor %}
-      </div>
-      <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="sr-only">Previous</span>
-      </a>
-      <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="sr-only">Next</span>
-      </a>
+    <h1 class="font-weight-normal text-center col-12 w-100 pt-2 pb-2 m-auto">Latest articles</h1>
+    <div class="col-12 m-auto text-center">
+        <form class="form-row" method="POST" action="" novalidate>
+            {{ form.hidden_tag() }}
+            <div class="form-group rounded-0 col-8">
+                {{ form.Search(class_="form-control form-control-user rounded-0") }}
+            </div>
+            <div class="form-group rounded-0 col-4 pt-1">
+                {{ form.Submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
+            </div>
+        </form>
+    </div>
 
     </div>
+    <br>
+    {% if posts|length %}
+        <div class="container-fluid w-100 row m-auto" style="max-width: 600px;">
+            {% for post in posts %}
+                <div class="col-6 p-1 m-auto text-center">
+                    <a href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}">
+                        <div class="text-left m-auto" style="height: 40vh; background-image: url('..{{ post.Image_iphone }}'); background-size: cover">
+                            <p class="text-white font-weight-bold pl-2" style="bottom: 0; left: 0; max-width: 30vw; position: absolute">{{ post.Title }}</p>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
     {% else %}
     <p>Sorry, no posts are available at this time</p>
     {% endif %}
-    <div class="col-12 pt-2 pb-5">
-                    <div class="text-center text-white font-weight-normal col-12"><a class="font-weight-normal text-white" href="#aboutus"><i class="arrow down text-white"></i></a></div>
-                </div>
-</div>
-</div>
-    <div class="container-fluid w-100 row m-auto" style="max-width: 600px">
-        {% for post in posts %}
-            <div class="col-6 p-1 m-auto text-center">
-                    <div class="text-left m-auto" style="height: 40vh; background-image: url('..{{ post.Image_iphone }}'); background-size: cover">
-                        <p class="text-white font-weight-bold" style="bottom: 0; left: 0; max-width: 30vw; position: absolute">{{ post.Title }}</p>
-                    </div>
-            </div>
-        {% endfor %}
-    </div>
-    <div id="mostPopularArticles" class="col-6 m-auto">
+
+
+    <div id="mostPopularArticles" class="col-12 m-auto">
 
     </div>
+
+
     <div class="m-auto row" style="max-width: 600px">
     <link rel="stylesheet" href="../static/css/title.css">
     <div itemscope itemtype="https://schema.org/AboutPage" class="container-fluid" id="aboutus">
         <div class="container-fluid pt-5" style="min-height: 100vh">
-            <div class="row w-100 m-auto text-center" style="max-width: 600px">
-                <h2 class="h1 m-auto w-100 font-weight-light text-dark text-center mt-5" itemprop="name">About us</h2>
-                <div class="text-center text-dark w-100 m-auto">
-                    <a href="https://www.facebook.com/inwaitoftomorrow/" class="fa fa-facebook"></a>
-                    <a href="https://www.instagram.com/inwaitoftomorrow/" class="fa fa-twitter"></a>
-                    <a href="https://twitter.com/InWaitofTomorr1" class="fa fa-instagram"></a>
-                    <a href="https://www.reddit.com/user/inwaitoftomorrow" class="fa fa-reddit"></a>
-                </div>
-                <p class="w-100 m-auto font-weight-normal text-dark">We present futurology.</p>
+            <div class="row w-100 m-auto text-left" style="max-width: 600px">
+                <h2 class="h1 m-auto w-100 font-weight-light text-dark text-left mt-5" itemprop="name">About us</h2>
+                <p class="w-100 m-auto font-weight-bold text-dark">We write about futurology.</p>
                 <p class="w-100 m-auto font-weight-normal text-dark">In Wait of Tomorrow analyses current trends and discusses what they mean for our future.</p>
                 <p class="w-100 m-auto font-italic font-weight-normal text-dark">How can biotech help avert the climate change crisis? Can artificial intelligence really help avoid deforestation?</p>
-                <div class="w-100 m-auto text-center">
-                    <picture>
-                        <source srcset="../static/img/logo.webp">
-                        <source srcset="../static/img/logo.jpeg">
-                        <img src="../static/img/logo.webp" style="max-height: 200px" alt="In Wait of Tomorrow" class="m-auto">
-                    </picture>
-                </div>
-                <a href="#aboutus_two" class="text-dark text-center w-100 m-auto border-dark btn rounded-0 bg-transparent h3 mt-3" style="border-width: medium; bottom: 10px!important;">LEARN MORE</a>
-            </div>
-        </div>
-    </div>
-    <div itemscope itemtype="https://schema.org/AboutPage" class="container-fluid" id="aboutus_two">
-        <div class="container-fluid pt-5">
-            <div class="row w-100 m-auto text-center" style="max-width: 600px">
-                <h2 class="h1 w-100 m-auto font-weight-light text-dark text-center mt-5" itemprop="name">About us</h2>
-                <div class="text-center text-dark w-100 m-auto">
-                    <a href="https://www.facebook.com/inwaitoftomorrow/" class="fa fa-facebook"></a>
-                    <a href="https://www.instagram.com/inwaitoftomorrow/" class="fa fa-twitter"></a>
-                    <a href="https://twitter.com/InWaitofTomorr1" class="fa fa-instagram"></a>
-                    <a href="https://www.reddit.com/user/inwaitoftomorrow" class="fa fa-reddit"></a>
-                </div>
-                <p class="w-100 font-weight-normal text-dark m-auto">We present futurology.</p>
                 <p class="w-100 m-auto font-weight-normal text-dark">In Wait of Tomorrow brings the most interesting developments from technology and science and explores how they will affect the future of society.</p>
                 <p class="w-100 m-auto font-italic font-weight-normal text-dark"> Where will new technologies lead us? Can AI really be used to read your dreams?</p>
                 <p class="w-100 m-auto font-weight-normal text-dark">The image you see below was captured on 28th February (inwaitoftomorrow's birthday) in 2008 by NASA's Hubble</p>
@@ -193,5 +143,3 @@
 
 
 {% endblock %}
-
-

@@ -68,7 +68,7 @@
     {% else %}
     {% endif %}
 </head>
-<body itemscope itemtype="https://schema.org/WebPage" class="w-100" onscroll="fixed_top()" onload="mostPopular()" style="font-family: 'Cabin', sans-serif; background-color: #dddddd">
+<body itemscope itemtype="https://schema.org/WebPage" class="w-100" onscroll="fixed_top()" onload="mostPopular()" style="font-family: 'Cabin', sans-serif;{% if request.MOBILE %} background-color: white{% else %} background-color: #dddddd{% endif %}">
     {% with messages = get_flashed_messages() %}
             {% if messages %}
                 <div class="text-center m-auto p-5 font-weight-normal fixed-top" id="flashedmessages" style="max-width: 600px; background-color: #dddddd; z-index: 1031; {% if request.MOBILE %}{% else %}top: 60px;{% endif %}">
@@ -138,7 +138,7 @@
             </div>
         </div>
         <div class="row m-auto container-fluid w-100" style="padding-top: 15vh">
-            <div class="col-9">
+            <div class="col-10">
                 <h1 class="font-weight-normal text-dark display-1 text-left ml-5 w-100" itemprop="name">In Wait of Tomorrow</h1>
                 <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11"></script>
                 <div id="typed-strings" class="text-dark" style="max-width: 600px">
@@ -147,11 +147,11 @@
                 </div>
                 <span id="typed" class="pb-5 text-dark ml-5"></span>
             </div>
-            <div class="col-3 text-left">
+            <div class="col-2 text-left">
                 <picture>
-                    <source srcset="../static/img/logo.webp" style="max-width: 200px" class="m-auto">
-                    <source srcset="../static/img/logo.jpeg" style="max-width: 200px" class="m-auto">
-                    <img src="../static/img/logo.webp" style="max-width: 200px" alt="In Wait of Tomorrow" class="m-auto">
+                    <source srcset="../static/img/logo.webp" style="width: 100%; height: auto" class="m-auto">
+                    <source srcset="../static/img/logo.jpeg" style="width: 100%; height: auto" class="m-auto">
+                    <img src="../static/img/logo.webp" style="width: 100%; height: auto" alt="In Wait of Tomorrow" class="m-auto">
                 </picture>
             </div>
         </div>

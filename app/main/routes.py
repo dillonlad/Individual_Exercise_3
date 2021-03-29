@@ -476,18 +476,19 @@ def get_most_popular():
     return jsonify(status=render_template('most_popular.html', posts=most_popular, title="Most popular"))
 
 
-@bp_main.route('/api/similar/<title>', methods=['POST', 'GET'])
-def get_similar_blogs(title):
+@bp_main.route('/api/similar/<post_id>', methods=['POST', 'GET'])
+def get_similar_blogs(post_id):
 
-    post = Blogs.query.filter_by(Title=title).all()
+    post = Blogs.query.filter_by(Post_ID=post_id).all()
+    category_list = []
     for match_post in post:
         category = match_post.category
 
-    if ',' in category:
-        category_list = category.split(', ')
-    else:
-        category_list = [category]
-
+        if ',' in category:
+            category_list = category.split(', ')
+        else:
+            category_list = [category]
+    print(category_list)
     posts = Blogs.query.order_by(desc(Blogs.article_id)).all()
     similar_posts = []
 
@@ -511,7 +512,7 @@ def get_similar_blogs(title):
     sorted_dict = sorted(similar_posts, key=lambda k: k['index'], reverse=True)
     result = []
     for dict in sorted_dict:
-        if (len(result) < 3) and (dict['post'].Title != title):
+        if (len(result) < 3) and (dict['post'].Post_ID != post_id):
             result.append(dict['post'])
 
     return jsonify(status=render_template('most_similar.html', posts=result, title="More like this"))

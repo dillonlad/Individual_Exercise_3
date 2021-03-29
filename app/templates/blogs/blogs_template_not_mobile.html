@@ -398,9 +398,11 @@
     }
 
     function mostSimilar(){
-        const postName = document.getElementById('postTitle').innerText;
+        var pathArray = window.location.pathname.split('/blogs/');
+        console.log(pathArray)
+        const postID = pathArray[1];
         div = document.getElementById('mostSimilarArticles');
-        return fetch("/api/similar/" + postName, {
+        return fetch("/api/similar/" + postID, {
             method: 'post',
             headers: {
               'content-type': 'application/json'
