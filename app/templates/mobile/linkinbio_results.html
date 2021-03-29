@@ -190,11 +190,7 @@
         <a class="text-center col-12" href="{{ next_url }}">Older posts</a>
         {% endif %}
     </div>
-    <footer class="text-center p-5" style="background-color: #dddddd">
-        <p>Made in Leicestershire, with love from London.</p>
-        <p class="text-muted">&copy; 2020 In Wait of Tomorrow</p>
-        <a href="{{ url_for('main.privacy_policies') }}">Privacy & Cookies</a>
-    </footer>
+    {{ footer|safe }}
 
 
 <script>

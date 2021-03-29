@@ -37,7 +37,7 @@
     <meta name="author" content="inwaitoftomorrow">
     <meta name="robots" content="index, follow">
     <link rel="shortcut icon" href="../static/img/favico.ico">
-    {%  if allow_third_party_cookies == "True" %}
+{%  if allow_third_party_cookies == "True" %}
     <!-- Facebook Pixel Code -->
     <script>
     !function(f,b,e,v,n,t,s)
@@ -61,7 +61,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
     <title>{% block title %}{% endblock %}</title>
 </head>
-<body itemscope itemtype="https://schema.org/WebPage" onscroll="change_words()" style="font-family: 'Cabin', sans-serif;">
+<body itemscope itemtype="https://schema.org/WebPage" onscroll="change_words()" onload="mostSimilar()" style="font-family: 'Cabin', sans-serif;">
 <link rel="stylesheet" href="../static/css/newnav.css">
 {{ navigation_page | safe }}
 <div id="newsletter" class="overlay text-dark bg-white" style="height: 50%">
@@ -223,6 +223,7 @@
         </div>
     </form>
 </div>
+<div id="mostSimilarArticles"></div>
 
 </div>
 <footer class="text-center p-5" style="background-color: #dddddd">
@@ -341,6 +342,23 @@
         }).then(function(data){
             alert(data.status)
         });
+    }
+
+    function mostSimilar(){
+        var pathArray = window.location.pathname.split('/blogs/');
+        console.log(pathArray)
+        const postID = pathArray[1];
+        div = document.getElementById('mostSimilarArticles');
+        return fetch("/api/similar/" + postID, {
+            method: 'post',
+            headers: {
+              'content-type': 'application/json'
+            }
+          }).then(function(res) {
+            return res.json();
+          }).then(function(data) {
+            div.innerHTML = data.status;
+          });
     }
 
 </script>

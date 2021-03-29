@@ -1,0 +1,21 @@
+<footer class="text-center row p-5 w-100 m-auto border-top border-dark" style="background-color: #dddddd;">
+    <p class="w-100 m-auto">Made in Leicestershire, with love from London.</p>
+    <p class="text-muted w-100 m-auto">&copy; 2020 In Wait of Tomorrow</p>
+    <div class="w-100 row m-auto pt-5" style="max-width: 600px">
+        <div class="col-4 text-left">
+            <p><a href="{{ url_for('main.index') }}" class="w-100 text-dark">Home</a></p>
+            <p><a href="{{ url_for('main.privacy_policies') }}" class="w-100 text-dark">Privacy & Cookies</a></p>
+            <p><a href="{{ url_for('main.index') }}" class="w-100 text-dark">About Us</a></p>
+        </div>
+        <div class="col-4 text-left">
+            <p class="font-weight-bold">Categories</p>
+            {% for category in categories %}
+                <p><a href="{{ url_for('main.show_blog_category', category=category.category_name) }}" class="w-100 text-dark">{{ category.category_name }}</a></p>
+            {% endfor %}
+        </div>
+        <div class="col-4 text-left">
+            <p><a href="{{ url_for('shop.shop') }}" class="text-dark">Shop</a></p>
+            <p><a href="{{ url_for('shop.shop_item', id="what-next-bro-light") }}" class="text-dark">What Next Bro? Hoodie</a></p>
+        </div>
+    </div>
+</footer>
