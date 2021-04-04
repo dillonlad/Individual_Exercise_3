@@ -45,6 +45,10 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
 
 
+class OTPForm(FlaskForm):
+    otp_code = StringField('OTP Code')
+
+
 class CreateArticle(FlaskForm):
     Title = StringField('Title', validators=[DataRequired()])
     Post_ID = StringField('Post_ID', validators=[DataRequired()])

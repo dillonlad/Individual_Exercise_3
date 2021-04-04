@@ -12,12 +12,13 @@ from sqlalchemy.exc import IntegrityError, OperationalError
 from flask_sqlalchemy import SQLAlchemy
 from os.path import abspath, join, dirname
 from flask_sitemap import Sitemap, sitemap_page_needed
-
+from werkzeug.security import generate_password_hash, safe_str_cmp
 
 import app
 from app import db
 from app.HelloAnalytics import initialize_analyticsreporting, print_response, get_report, get_report_most_popular
-from app.main.forms import SignupForm, LoginForm, PostForm, BlogEditor, CreateArticle, SearchForm
+
+from app.main.forms import SignupForm, LoginForm, PostForm, BlogEditor, CreateArticle, SearchForm, OTPForm
 
 from app.models import Posts_two, Blogs, Profile, Categories, Series, Authors, Comments_dg_tmp, \
     mailing_list, shop_items
@@ -329,7 +330,7 @@ def login():
         if not is_safe_url(next):
             return abort(400)
         profiles = Profile.query.filter(Profile.username != current_user.username).all()
-        return redirect(url_for('main.index'), code=303)
+        return redirect(url_for('main.generate_otp'), code=303)
     else:
         if form.is_submitted():
             form.method = 'POST'
@@ -345,15 +346,86 @@ def login():
                 profiles = Profile.query.filter(Profile.username != current_user.username).all()
                 return redirect(url_for('main.index'), code=303)
             else:
-                return redirect(url_for('main.login'), code=302)
+                return redirect(url_for('main.generate_otp'), code=302)
         else:
             return render_template('login.html', form=form, homepage=homepage)
+
+
+@bp_main.route('/otp-generate', methods=['GET', 'POST'])
+@login_required
+def generate_otp():
+    ADMINS = ['inwaitoftomorrow@gmail.com']
+    import random
+    import string
+    import hmac
+    from hashlib import sha512
+
+    if current_user.is_authenticated:
+        profile = Profile.query.filter(Profile.username == current_user.username).all()
+        letters = string.ascii_uppercase
+        auth_code = ''.join(random.choice(letters) for i in range(6))
+        print(auth_code)
+        key = b'RZdUEoXajGZjbdwDxJun1w'
+        session['auth_code'] = u'{0}|{1}'.format(auth_code, hmac.new(key, auth_code.encode('utf-8'), sha512).hexdigest())
+        email = profile[0].email.split()
+        msg = Message(sender=ADMINS[0], recipients=email)
+        msg.subject = "OTP"
+        msg.body = '{}'.format(auth_code)
+        app.mail.send(msg)
+
+        return redirect(url_for('main.authenticate_user'))
+
+
+@bp_main.route('/authenticate-user', methods=['GET', 'POST'])
+@login_required
+def authenticate_user():
+    form = OTPForm()
+
+    if request.method == 'POST':
+        cookie = session['auth_code']
+        print(cookie)
+        key = b'RZdUEoXajGZjbdwDxJun1w'
+        import hmac
+        from hashlib import sha512
+
+        payload, digest = cookie.rsplit(u'|', 1)
+        if hasattr(digest, 'decode'):
+            digest = digest.decode('ascii')  # pragma: no cover
+            print(digest)
+
+
+        if safe_str_cmp(hmac.new(key, payload.encode('utf-8'), sha512).hexdigest(), digest):
+            if form.otp_code.data == payload:
+                print(payload)
+                print(form.otp_code.data)
+                otp_verified()
+                return redirect(url_for('main.index'))
+
+    return render_template('otp.html', form=form, homepage="no")
+
+
+def otp_verified():
+    session['otp'] = 'pass'
+
+
+def otp_required(func):
+
+    def decorated_view(*args, **kwargs):
+        if session['otp'] != 'pass':
+            if current_user.is_authenticated:
+                logout_user()
+        else:
+            return func(*args, **kwargs)
+
+    return decorated_view
+
 
 
 @bp_main.route('/logout/')
 @login_required
 def logout():
     logout_user()
+    session['otp'] == 'logged off'
     flash('You have successfully logged off')
     return redirect(url_for('main.index'))
 
@@ -414,6 +486,7 @@ def add_post():
 
 @bp_main.route('/new_post/', methods=['POST', 'GET'])
 @login_required
+@otp_required
 def new_post():
     host = request.host
     if '127' not in host:

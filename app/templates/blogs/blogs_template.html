@@ -103,41 +103,49 @@
     }
 
     function newsletterSignup_two(){
-        email = document.getElementById('emailAddress_two').value;
-        return fetch("/blogs/signup/" + email, {
-            method: 'post',
-            headers: {
-              'content-type': 'application/json'
-            }
-          }).then(function(res) {
-            return res.json();
-          }).then(function(data) {
-            alert(data.status);
-          });
+        const email = document.getElementById('emailAddress_two').value;
+        if (email === ""){
+            alert("Email required")
+        } else {
+            return fetch("/blogs/signup/" + email, {
+                method: 'post',
+                headers: {
+                  'content-type': 'application/json'
+                }
+              }).then(function(res) {
+                return res.json();
+              }).then(function(data) {
+                alert(data.status);
+              });
+        }
     }
 
-    function blogComment(){
+    function blogComment() {
         const userName = document.getElementById('userCommentName').value;
         const userComment = document.getElementById('userComment').value;
         const ratingValues = document.querySelectorAll("input[name='rating']");
         const postName = document.getElementById('postTitle').innerText;
         let selectedValue;
-        for (const ratingValue of ratingValues){
-            if (ratingValue.checked){
+        for (const ratingValue of ratingValues) {
+            if (ratingValue.checked) {
                 selectedValue = ratingValue.value;
                 break;
             }
         }
-        return fetch("/blogs/comment/" + userName + "/" + selectedValue + "/" + userComment + "/" + postName, {
-            method: 'post',
-            headers: {
-                'content-type': 'application/json'
-            }
-        }).then(function(res){
-            return res.json();
-        }).then(function(data){
-            alert(data.status)
-        });
+        if (userName === "" || userComment === "" || selectedValue === "") {
+            alert("Missing fields required")
+        } else {
+            return fetch("/blogs/comment/" + userName + "/" + selectedValue + "/" + userComment + "/" + postName, {
+                method: 'post',
+                headers: {
+                    'content-type': 'application/json'
+                }
+            }).then(function (res) {
+                return res.json();
+            }).then(function (data) {
+                alert(data.status)
+            });
+        }
     }
 
     function mostSimilar(){
