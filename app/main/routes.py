@@ -16,6 +16,7 @@ from werkzeug.security import generate_password_hash, safe_str_cmp
 
 import app
 from app import db
+from app.AuthenticationModule import otp_required, otp_verified, is_admin
 from app.HelloAnalytics import initialize_analyticsreporting, print_response, get_report, get_report_most_popular
 
 from app.main.forms import SignupForm, LoginForm, PostForm, BlogEditor, CreateArticle, SearchForm, OTPForm
@@ -400,32 +401,18 @@ def authenticate_user():
                 print(form.otp_code.data)
                 otp_verified()
                 return redirect(url_for('main.index'))
+            else:
+                flash("Incorrect OTP")
+                return redirect(url_for('main.authenticate_user'))
 
     return render_template('otp.html', form=form, homepage="no")
-
-
-def otp_verified():
-    session['otp'] = 'pass'
-
-
-def otp_required(func):
-
-    def decorated_view(*args, **kwargs):
-        if session['otp'] != 'pass':
-            if current_user.is_authenticated:
-                logout_user()
-        else:
-            return func(*args, **kwargs)
-
-    return decorated_view
-
 
 
 @bp_main.route('/logout/')
 @login_required
 def logout():
     logout_user()
-    session['otp'] == 'logged off'
+    session['otp'] = 'logged off'
     flash('You have successfully logged off')
     return redirect(url_for('main.index'))
 
@@ -465,6 +452,8 @@ def register():
 
 @bp_main.route('/add_post/', methods=['POST', 'GET'])
 @login_required
+@otp_required
+@is_admin
 def add_post():
     form = BlogEditor(request.form)
     if request.method == 'POST' and form.validate():
@@ -487,6 +476,7 @@ def add_post():
 @bp_main.route('/new_post/', methods=['POST', 'GET'])
 @login_required
 @otp_required
+@is_admin
 def new_post():
     host = request.host
     if '127' not in host:
@@ -596,8 +586,23 @@ def get_similar_blogs(post_id):
     return jsonify(status=render_template('most_similar.html', posts=result, title="More like this"))
 
 
+@bp_main.route('/api/newsletterpreview/<opening>/<closing>', methods=['POST', 'GET'])
+def preview_newsletter(opening, closing):
+    opening_message = opening
+    closing_message = closing
+    latest_post = Blogs.query.order_by(desc(Blogs.article_id)).limit(1).all()
+    second_latest_post = Blogs.query.order_by(desc(Blogs.article_id)).offset(1).limit(1).all()
+    fella = mailing_list.query.filter(mailing_list.email=="dlad82434@gmail.com").order_by(desc(mailing_list.recipient_id)).all()
+    template = render_template("email.html", latest_post=latest_post, fella=fella[0],
+                               second_latest_post=second_latest_post, opening_message=opening_message,
+                               closing_message=closing_message)
+
+    return jsonify(status=template)
+
+
 @bp_main.route('/admin/analytics', methods=['POST', 'GET'])
 @login_required
+@otp_required
 def show_analytics():
 
     categories = Categories.query.all()

@@ -82,6 +82,7 @@ class Profile(UserMixin, db.Model):
     username = db.Column(db.Text, nullable=False, primary_key=True)
     email = db.Column(db.Text, nullable=False)
     password = db.Column(db.Text, nullable=False)
+    role = db.Column(db.Text)
 
     def set_password(self, password):
         self.password = generate_password_hash(password)

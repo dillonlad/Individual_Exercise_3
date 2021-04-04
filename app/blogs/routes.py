@@ -17,6 +17,7 @@ from flask_sitemap import Sitemap, sitemap_page_needed
 
 import app
 from app import db
+from app.AuthenticationModule import is_admin, otp_required
 from app.HelloAnalytics import initialize_analyticsreporting, print_response, get_report_most_popular
 from app.blogs.forms import CommentForm, SubmitNewsletter, Newsletter
 from app.main.forms import SearchForm
@@ -210,8 +211,12 @@ def post(Post_ID):
 
 @bp_blogs.route('/email', methods=['GET', 'POST'])
 @login_required
+@otp_required
+@is_admin
 def send_newsletter():
     form = SubmitNewsletter(request.form)
+    latest_post = Blogs.query.order_by(desc(Blogs.article_id)).limit(1).all()
+    second_latest_post = Blogs.query.order_by(desc(Blogs.article_id)).offset(1).limit(1).all()
     if request.method == 'POST':
         latest_post = Blogs.query.order_by(desc(Blogs.article_id)).limit(1).all()
         second_latest_post = Blogs.query.order_by(desc(Blogs.article_id)).offset(1).limit(1).all()
@@ -246,13 +251,17 @@ def send_newsletter():
             else:
                 return redirect(url_for('blogs.send_newsletter'), code=302)
         else:
-            return render_template('submit_newsletter.html', form=form)
+            return render_template('submit_newsletter.html', form=form, latest_post=latest_post, second_latest_post=second_latest_post)
 
 
 @bp_blogs.route('/test-email', methods=['GET', 'POST'])
 @login_required
+@otp_required
+@is_admin
 def test_send_newsletter():
     form = SubmitNewsletter(request.form)
+    latest_post = Blogs.query.order_by(desc(Blogs.article_id)).limit(1).all()
+    second_latest_post = Blogs.query.order_by(desc(Blogs.article_id)).offset(1).limit(1).all()
     if request.method == 'POST':
         if form.authenticate.data != "theshowgoeson":
             flash("Incorrect admin password")
@@ -290,7 +299,7 @@ def test_send_newsletter():
             else:
                 return redirect(url_for('blogs.test_send_newsletter'), code=302)
         else:
-            return render_template('submit_newsletter.html', form=form)
+            return render_template('submit_newsletter.html', form=form, latest_post=latest_post, second_latest_post=second_latest_post)
 
 
 @bp_blogs.errorhandler(404)

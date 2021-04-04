@@ -14,8 +14,8 @@ class CommentForm(FlaskForm):
 
 
 class SubmitNewsletter(FlaskForm):
-    specific_message_one = StringField('Opening message: ', validators=[DataRequired()])
-    specific_message_two = StringField('Closing message: ', validators=[DataRequired()])
+    specific_message_one = TextAreaField('Opening message: ', validators=[DataRequired()])
+    specific_message_two = TextAreaField('Closing message: ', validators=[DataRequired()])
     authenticate = StringField('Admin password: ', validators=[DataRequired()])
     Submit = SubmitField('Send Newsletter')
 
