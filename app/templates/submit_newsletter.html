@@ -18,24 +18,24 @@
             </div>
         {% endfor %}
     {% endif %}
-    <div class="row m-auto pt-5" style="max-width: 1200px">
+    <div class="col-12 m-auto pt-5 pb-5 w-100" style="max-width: 1200px">
         <form method="POST" action="" novalidate>
             {{ form.hidden_tag() }}
             {% from "_formhelpers.html" import render_field %}
-            <div class="form-group font-weight-normal">
-                {{ render_field(form.specific_message_one, class="form-control form-control-user rounded-0", id='OpeningMessage', spellcheck="True", onchange="previewNewsletter()") }}
+            <div class="form-group font-weight-normal w-100">
+                {{ render_field(form.specific_message_one, class="form-control form-control-user rounded-0", id='OpeningMessage', spellcheck="True", onchange="previewNewsletter()", placeholder="Opening Message") }}
             </div>
-            <div class="form-group font-weight-normal">
-                {{ render_field(form.specific_message_two, class="form-control form-control-user rounded-0", spellcheck="True", id="ClosingMessage", onchange="previewNewsletter()")}}
+            <div class="form-group font-weight-normal w-100">
+                {{ render_field(form.specific_message_two, class="form-control form-control-user rounded-0", spellcheck="True", id="ClosingMessage", onchange="previewNewsletter()", placeholder="Closing Message")}}
             </div>
-            <div class="form-group font-weight-normal">
-                {{ render_field(form.authenticate, class="form-control form-control-user rounded-0", spellcheck="True")}}
+            <div class="form-group font-weight-normal w-100">
+                {{ render_field(form.authenticate, class="form-control form-control-user rounded-0", spellcheck="True", placeholder="Admin Passcode")}}
             </div>
             {{ form.Submit(class_="btn btn-dark rounded-0 btn-user btn-block col-sm-12") }}
         </form>
     </div>
     <br>
-    <div id="preview">
+    <div id="preview" class="col-12">
         <div style="max-width: 600px; margin: auto; height: 30%; background-color: #6e6e6e">
             <table style="width: 100%">
                 <tr>

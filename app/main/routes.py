@@ -69,56 +69,6 @@ def unauthorized():
     return redirect(url_for('main.login'))
 
 
-@bp_main.route('/robots.txt', methods=['GET'])
-def robots_file():
-    response = make_response(open('robots.txt').read())
-    response.headers["Content-type"] = "text/plain"
-    return response
-
-
-@bp_main.route('/sitemap-index.xml')
-def sitemap_index():
-    return render_template('sitemap_index.xml')
-
-
-@bp_main.route('/articles-sitemap.xml', methods=['GET'])
-def articles_sitemap():
-    categories = Categories.query.all()
-    articles = Blogs.query.all()
-    return render_template('sitemap_blogs.xml', categories=categories, articles=articles)
-
-
-@bp_main.route('/sitemap-news.xml', methods=['GET'])
-def news_sitemap():
-    articles = Blogs.query.all()
-    list_of_articles = []
-    for article in articles:
-        article_dict = {}
-        article_url = article.url_
-        if '_' in article_url:
-            article_url = article_url.replace("_","-")
-        if 'http://' in article_url:
-            article_url = article_url.replace("http://","https://")
-
-        article_dict['url'] = article_url
-        article_dict['Date'] = article.Date
-        article_dict['Title'] = article.Title
-        article_dict['last_mod'] = article.date_mod
-        list_of_articles.append(article_dict)
-    return render_template('news_sitemap.xml', articles=list_of_articles)
-
-
-@bp_main.route('/products-sitemap.xml', methods=['GET'])
-def products_sitemap():
-    products = shop_items.query.all()
-    return render_template('sitemap_products.xml', products=products)
-
-
-@bp_main.route('/e2signi7jnwn91lzisnqiix5uvmc3v.html', methods=['GET'])
-def facebook_verify():
-    return render_template('e2signi7jnwn91lzisnqiix5uvmc3v.html')
-
-
 def cookies_accept():
     if 'cookies_accept' not in session:
         flash(render_template_string("<p>By using our website, you agree to our use of cookies. <a href='{{ url_for('main.privacy_policies') }}'>Click here to find out more and turn off cookies.</a></p>"))
@@ -345,7 +295,7 @@ def login():
                 if not is_safe_url(next):
                     return abort(400)
                 profiles = Profile.query.filter(Profile.username != current_user.username).all()
-                return redirect(url_for('main.index'), code=303)
+                return redirect(url_for('main.generate_otp'), code=303)
             else:
                 return redirect(url_for('main.generate_otp'), code=302)
         else:
@@ -523,81 +473,6 @@ def authors(author_id):
                 person_name.append(geeza.author_name)
             posts = Blogs.query.filter(Blogs.author.contains(person_name[0])).order_by(desc(Blogs.article_id)).all()
             return render_template('author.html', allow_third_party_cookies=allow_third_party_cookies, categories=categories, person=person, posts=posts, navigation_page=navigation_page)
-
-
-@bp_main.route('/api/most-popular', methods=['POST', 'GET'])
-def get_most_popular():
-    analytics = initialize_analyticsreporting()
-    response = get_report_most_popular(analytics)
-    analytics_reports = print_response(response)
-    sorted_dict = sorted(analytics_reports, key=lambda k: k['views'], reverse=True)
-    most_popular = []
-    posts = Blogs.query.order_by(desc(Blogs.article_id)).all()
-    for dict in sorted_dict:
-        for post in posts:
-            if post.Post_ID in dict['page']:
-                if len(most_popular) < 5:
-                    most_popular.append(post)
-                else:
-                    break
-
-    return jsonify(status=render_template('most_popular.html', posts=most_popular, title="Most popular"))
-
-
-@bp_main.route('/api/similar/<post_id>', methods=['POST', 'GET'])
-def get_similar_blogs(post_id):
-
-    post = Blogs.query.filter_by(Post_ID=post_id).all()
-    category_list = []
-    for match_post in post:
-        category = match_post.category
-
-        if ',' in category:
-            category_list = category.split(', ')
-        else:
-            category_list = [category]
-    print(category_list)
-    posts = Blogs.query.order_by(desc(Blogs.article_id)).all()
-    similar_posts = []
-
-    for post in posts:
-        if ',' in post.category:
-            post_categories = post.category.split(', ')
-        else:
-            post_categories = [post.category]
-        similarity_index = 0
-
-        for category in post_categories:
-            if category in category_list:
-                similarity_index += 1
-
-        if similarity_index > 0:
-            similar_post = {}
-            similar_post['index'] = similarity_index
-            similar_post['post'] = post
-            similar_posts.append(similar_post)
-
-    sorted_dict = sorted(similar_posts, key=lambda k: k['index'], reverse=True)
-    result = []
-    for dict in sorted_dict:
-        if (len(result) < 3) and (dict['post'].Post_ID != post_id):
-            result.append(dict['post'])
-
-    return jsonify(status=render_template('most_similar.html', posts=result, title="More like this"))
-
-
-@bp_main.route('/api/newsletterpreview/<opening>/<closing>', methods=['POST', 'GET'])
-def preview_newsletter(opening, closing):
-    opening_message = opening
-    closing_message = closing
-    latest_post = Blogs.query.order_by(desc(Blogs.article_id)).limit(1).all()
-    second_latest_post = Blogs.query.order_by(desc(Blogs.article_id)).offset(1).limit(1).all()
-    fella = mailing_list.query.filter(mailing_list.email=="dlad82434@gmail.com").order_by(desc(mailing_list.recipient_id)).all()
-    template = render_template("email.html", latest_post=latest_post, fella=fella[0],
-                               second_latest_post=second_latest_post, opening_message=opening_message,
-                               closing_message=closing_message)
-
-    return jsonify(status=template)
 
 
 @bp_main.route('/admin/analytics', methods=['POST', 'GET'])
