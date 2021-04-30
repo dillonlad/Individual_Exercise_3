@@ -26,9 +26,12 @@ from app.main.routes import third_party_cookies, cookies_accept, bp_main
 from app.models import Posts_two, Blogs, Profile, Categories, Series, Authors, Comments_dg_tmp, \
     mailing_list, shop_items
 
+from collections import OrderedDict
+
 bp_blogs = Blueprint('blogs', __name__, url_prefix='/blogs')
 ADMINS = ['inwaitoftomorrow@gmail.com']
-NEWSLETTER_TEST = ['dlad82434@gmail.com']
+NEWSLETTER_TEST = [OrderedDict({"recipient_id": 6, "name": "Dillon", "email": "dlad82434@gmail.com"}), OrderedDict({"recipient_id": 16, "name": "Dillon", "email": "dillonlad@live.co.uk"})]
+
 
 
 def structured_data(item_on_page, average_rating, review_count, reviews):
@@ -260,21 +263,25 @@ def send_newsletter():
 @is_admin
 def test_send_newsletter():
     form = SubmitNewsletter(request.form)
-    latest_post = Blogs.query.order_by(desc(Blogs.article_id)).limit(1).all()
-    second_latest_post = Blogs.query.order_by(desc(Blogs.article_id)).offset(1).limit(1).all()
+    latest_posts = Blogs.query.order_by(desc(Blogs.article_id)).all()
+    latest_post = latest_posts[0]
+    second_latest_post = latest_posts[1]
+    third_latest_post = latest_posts[2]
     if request.method == 'POST':
         if form.authenticate.data != "theshowgoeson":
             flash("Incorrect admin password")
             return redirect(url_for('blogs.test_send_newsletter'))
-        latest_post = Blogs.query.order_by(desc(Blogs.article_id)).limit(1).all()
-        second_latest_post = Blogs.query.order_by(desc(Blogs.article_id)).offset(1).limit(1).all()
+        latest_posts = Blogs.query.order_by(desc(Blogs.article_id)).all()
+        latest_post = latest_posts[0]
+        second_latest_post = latest_posts[1]
+        third_latest_post = latest_posts[2]
         opening_message = form.specific_message_one.data
         closing_message = form.specific_message_two.data
         for fella in NEWSLETTER_TEST:
-            recp = fella.split()
+            recp = fella['email'].split()
             msg = Message(sender=ADMINS[0], recipients=recp)
             msg.subject = "Latest | In Wait of Tomorrow"
-            msg.html = render_template("email.html", latest_post=latest_post, fella=fella, second_latest_post=second_latest_post, opening_message=opening_message, closing_message=closing_message)
+            msg.html = render_template("email.html", latest_post=latest_post, fella=fella, second_latest_post=second_latest_post, third_latest_post=third_latest_post, opening_message=opening_message, closing_message=closing_message)
             app.mail.send(msg)
         flash('Your email has been sent, please logout by at https://inwaitoftomorrow.appspot.com/logout')
         return redirect(url_for('main.index'), code=303)
@@ -282,16 +289,18 @@ def test_send_newsletter():
         if form.is_submitted():
             form.method = 'POST'
             if len(form.specific_message_one.data) > 0 and len(form.specific_message_two.data) > 0:
-                latest_post = Blogs.query.order_by(desc(Blogs.article_id)).limit(1).all()
-                second_latest_post = Blogs.query.order_by(desc(Blogs.article_id)).offset(1).limit(1).all()
+                latest_posts = Blogs.query.order_by(desc(Blogs.article_id)).all()
+                latest_post = latest_posts[0]
+                second_latest_post = latest_posts[1]
+                third_latest_post = latest_posts[2]
                 opening_message = form.specific_message_one.data
                 closing_message = form.specific_message_two.data
                 for fella in NEWSLETTER_TEST:
-                    recp = fella.split()
+                    recp = fella["email"].split()
                     msg = Message(sender=ADMINS[0], recipients=recp)
                     msg.subject = "Latest | In Wait of Tomorrow"
                     msg.html = render_template("email.html", latest_post=latest_post, fella=fella,
-                                               second_latest_post=second_latest_post, opening_message=opening_message,
+                                               second_latest_post=second_latest_post, third_latest_post=third_latest_post, opening_message=opening_message,
                                                closing_message=closing_message)
                     app.mail.send(msg)
                 flash('Your email has been sent')
@@ -299,7 +308,7 @@ def test_send_newsletter():
             else:
                 return redirect(url_for('blogs.test_send_newsletter'), code=302)
         else:
-            return render_template('submit_newsletter.html', form=form, latest_post=latest_post, second_latest_post=second_latest_post)
+            return render_template('submit_newsletter.html', form=form, latest_post=latest_post, second_latest_post=second_latest_post, third_latest_post=third_latest_post)
 
 
 @bp_blogs.errorhandler(404)

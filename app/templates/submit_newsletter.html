@@ -35,44 +35,189 @@
         </form>
     </div>
     <br>
+    <style>
+        #emailHeader {
+            max-width: 600px;
+            margin: auto;
+            background-color: #6e6e6e;
+        }
+
+        #name {
+            width: 80%;
+            padding: 5%;
+        }
+
+        #name h1{
+            font-weight: normal;
+            color: white;
+            text-align: left;
+        }
+
+        #logo{
+            padding: 5%;
+        }
+
+        #logo img{
+            text-align: right;
+            max-width: 50px;
+            padding: 5%;
+            float: right;
+        }
+
+        #openingEmail{
+            max-width: 600px;
+            margin: auto;
+        }
+
+        #emailBody{
+            max-width: 600px;
+            margin: auto;
+            padding-top: 10px;
+        }
+
+        .readMore{
+            background-color: #262626;
+            border-radius: 0;
+            color: white;
+            border: none;
+            padding: 10px;
+        }
+
+        #mainArticle{
+            background-image: url('https://inwaitoftomorrow.appspot.com{{ latest_post.Image_iphone }}');
+            background-size: cover;
+            max-height: 400px;
+            width: 100%;
+            height: auto;
+            min-height: 200px;
+        }
+
+        #mainArticle div{
+            min-height: 200px;
+            z-index: 1;
+            overflow: auto;
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        #mainArticle div h5{
+            color: white;
+            bottom: 0;
+            text-align: right;
+        }
+
+        @media screen and (min-width: 600px){
+            .flexDiv{
+                display: flex;
+                padding-top: 10px;
+            }
+
+            .flexOne{
+                flex-grow: 1;
+                width: 30%;
+                top: 0;
+            }
+
+            .flexOne img{
+                max-width: 180px;
+                top: 0;
+            }
+
+            .flexTwo{
+                flex-grow: 2;
+                width: 60%;
+            }
+        }
+
+        .flexDiv{
+            padding: 10px;
+            display: table;
+        }
+
+        .flexOne{
+            padding: 10px;
+            text-align: center;
+            max-width: 600px;
+            display: table-header-group;
+        }
+
+        .flexOne img{
+            width: 100%;
+            height: auto;;
+        }
+
+        .flexTwo{
+            text-align: left;
+            display: table-footer-group;
+        }
+
+        .flexTwo a{
+            color: black;
+        }
+    </style>
     <div id="preview" class="col-12">
-        <div style="max-width: 600px; margin: auto; height: 30%; background-color: #6e6e6e">
+        <div id="emailHeader">
             <table style="width: 100%">
                 <tr>
-                    <td style="width: 80%; padding: 5%"><h1 style="font-weight: normal; color: white; text-align: left">In Wait of Tomorrow</h1></td>
-                    <td style="padding: 5%"><img style="text-align: right; max-width: 50px; padding: 5%; float: right" src="https://inwaitoftomorrow.appspot.com/static/img/logo.jpeg" alt="In Wait of Tomorrow"></td>
+                    <td id="name"><h1>In Wait of Tomorrow</h1></td>
+                    <td id="logo"><img src="https://inwaitoftomorrow.appspot.com/static/img/logo.jpeg" alt="In Wait of Tomorrow"></td>
                 </tr>
             </table>
         </div>
-        <div style="max-width: 600px; margin: auto">
+        <div id="openingEmail">
             <p>Dear Test,</p>
             <p id="openingMessagePrev">{{ opening_message }}</p>
         </div>
-        <div style="max-width: 600px; margin: auto">
-            <table>
+        <div id="emailBody">
+
+            <table style="padding-bottom: 10px">
                 <tr>
-                    <td style="width: 50%"><img style="text-align: center; width: 100%; max-width: 300px" src="https://inwaitoftomorrow.appspot.com{% for post in latest_post %}{{ post.Image_iphone }}{% endfor %}" alt="Latest article"></td>
-                    <td>{% for post in latest_post %}<a href="{{ post.url_ }}"><h2>{{ post.Title }}</h2></a>{% endfor %}
+                    <td id="mainArticle">
+                        <div>
+                            <h5>{{ latest_post.Title }}</h5>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="{{ latest_post.url_ }}" style="color: black;">
+                        <p>{{ latest_post.Description }} | By {{ latest_post.author }}</p>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button class="readMore">READ MORE &rarr;</button>
                     </td>
                 </tr>
             </table>
-            <table>
-                <tr>
-                    <td style="width: 100%"><p>{% for post in latest_post %}{{ post.Description }} | By {{ post.author }}{% endfor %}</p></td>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                    <td>{% for post in second_latest_post %}<a href="{{ post.url_ }}"><h2>{{ post.Title }}</h2></a>{% endfor %}
-                    </td>
-                    <td style="width: 50%"><img style="text-align: center; width: 100%; max-width: 300px" src="https://inwaitoftomorrow.appspot.com{% for post in second_latest_post %}{{ post.Image_iphone }}{% endfor %}" alt="Latest article"></td>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                    <td style="width: 100%"><p>{% for post in second_latest_post %}{{ post.Description }} | By {{ post.author }}{% endfor %}</p></td>
-                </tr>
-            </table>
+            <div class="flexDiv">
+                <div class="flexOne">
+                    <img src="https://inwaitoftomorrow.appspot.com{{ second_latest_post.Image_iphone }}" alt="Latest article">
+                </div>
+                <div class="flexTwo">
+                    <a href="{{ second_latest_post.url_ }}">
+                        <h5>{{ second_latest_post.Title }}</h5>
+                        <p>{{ second_latest_post.Description }} | By {{ second_latest_post.author }}</p>
+                    </a>
+                </div>
+            </div>
+            <div>
+                <button class="readMore">READ MORE &rarr;</button>
+            </div>
+            <div class="flexDiv">
+                <div class="flexTwo">
+                    <a href="{{ third_latest_post.url_ }}">
+                        <h5>{{ third_latest_post.Title }}</h5>
+                        <p>{{ third_latest_post.Description }} | By {{ third_latest_post.author }}</p>
+                    </a>
+                </div>
+                <div class="flexOne">
+                    <img src="https://inwaitoftomorrow.appspot.com{{ third_latest_post.Image_iphone }}" alt="Latest article">
+                </div>
+            </div>
+            <div>
+                <button class="readMore">READ MORE &rarr;</button>
+            </div>
         </div>
         <div style="max-width: 600px; margin: auto; padding-top: 10px">
             <p id="closingMessagePrev"></p>

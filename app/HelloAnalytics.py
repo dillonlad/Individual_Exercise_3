@@ -66,6 +66,26 @@ def get_report_most_popular(analytics):
       }
   ).execute()
 
+def get_report_events(analytics, event_action):
+  """Queries the Analytics Reporting API V4.
+
+  Args:
+    analytics: An authorized Analytics Reporting API V4 service object.
+  Returns:
+    The Analytics Reporting API V4 response.
+  """
+  return analytics.reports().batchGet(
+      body={
+        'reportRequests': [
+        {
+          'viewId': VIEW_ID,
+          'dateRanges': [{'startDate': '2000daysAgo', 'endDate': 'today'}],
+          'metrics': [{'expression': 'ga:totalEvents'}],
+          'dimensions': [{'name': 'ga:eventAction'}]
+        }]
+      }
+  ).execute()
+
 
 def get_report_pageviews(analytics):
   """Queries the Analytics Reporting API V4.
