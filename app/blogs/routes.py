@@ -218,18 +218,20 @@ def post(Post_ID):
 @is_admin
 def send_newsletter():
     form = SubmitNewsletter(request.form)
-    latest_post = Blogs.query.order_by(desc(Blogs.article_id)).limit(1).all()
-    second_latest_post = Blogs.query.order_by(desc(Blogs.article_id)).offset(1).limit(1).all()
+    latest_posts = Blogs.query.order_by(desc(Blogs.article_id)).all()
+    latest_post = latest_posts[0]
+    second_latest_post = latest_posts[1]
+    third_latest_post = latest_posts[2]
     if request.method == 'POST':
-        latest_post = Blogs.query.order_by(desc(Blogs.article_id)).limit(1).all()
-        second_latest_post = Blogs.query.order_by(desc(Blogs.article_id)).offset(1).limit(1).all()
         opening_message = form.specific_message_one.data
         closing_message = form.specific_message_two.data
         for fella in mailing_list.query.order_by(desc(mailing_list.recipient_id)).all():
             recp = fella.email.split()
             msg = Message(sender=ADMINS[0], recipients=recp)
             msg.subject = "Latest | In Wait of Tomorrow"
-            msg.html = render_template("email.html", latest_post=latest_post, fella=fella, second_latest_post=second_latest_post, opening_message=opening_message, closing_message=closing_message)
+            msg.html = render_template("email.html", latest_post=latest_post, fella=fella,
+                                       second_latest_post=second_latest_post, third_latest_post=third_latest_post,
+                                       opening_message=opening_message, closing_message=closing_message)
             app.mail.send(msg)
         flash('Your email has been sent, please logout by at https://inwaitoftomorrow.appspot.com/logout')
         return redirect(url_for('main.index'), code=303)
@@ -237,8 +239,6 @@ def send_newsletter():
         if form.is_submitted():
             form.method = 'POST'
             if len(form.specific_message_one.data) > 0 and len(form.specific_message_two.data) > 0:
-                latest_post = Blogs.query.order_by(desc(Blogs.article_id)).limit(1).all()
-                second_latest_post = Blogs.query.order_by(desc(Blogs.article_id)).offset(1).limit(1).all()
                 opening_message = form.specific_message_one.data
                 closing_message = form.specific_message_two.data
                 for fella in mailing_list.query.order_by(desc(mailing_list.recipient_id)).all():
@@ -246,15 +246,17 @@ def send_newsletter():
                     msg = Message(sender=ADMINS[0], recipients=recp)
                     msg.subject = "Latest | In Wait of Tomorrow"
                     msg.html = render_template("email.html", latest_post=latest_post, fella=fella,
-                                               second_latest_post=second_latest_post, opening_message=opening_message,
-                                               closing_message=closing_message)
+                                               second_latest_post=second_latest_post,
+                                               third_latest_post=third_latest_post,
+                                               opening_message=opening_message, closing_message=closing_message)
                     app.mail.send(msg)
                 flash('Your email has been sent, please logout by at https://inwaitoftomorrow.appspot.com/logout')
                 return redirect(url_for('main.index'), code=303)
             else:
                 return redirect(url_for('blogs.send_newsletter'), code=302)
         else:
-            return render_template('submit_newsletter.html', form=form, latest_post=latest_post, second_latest_post=second_latest_post)
+            return render_template('submit_newsletter.html', form=form, latest_post=latest_post,
+                                   second_latest_post=second_latest_post, third_latest_post=third_latest_post)
 
 
 @bp_blogs.route('/test-email', methods=['GET', 'POST'])
@@ -271,17 +273,15 @@ def test_send_newsletter():
         if form.authenticate.data != "theshowgoeson":
             flash("Incorrect admin password")
             return redirect(url_for('blogs.test_send_newsletter'))
-        latest_posts = Blogs.query.order_by(desc(Blogs.article_id)).all()
-        latest_post = latest_posts[0]
-        second_latest_post = latest_posts[1]
-        third_latest_post = latest_posts[2]
         opening_message = form.specific_message_one.data
         closing_message = form.specific_message_two.data
         for fella in NEWSLETTER_TEST:
             recp = fella['email'].split()
             msg = Message(sender=ADMINS[0], recipients=recp)
             msg.subject = "Latest | In Wait of Tomorrow"
-            msg.html = render_template("email.html", latest_post=latest_post, fella=fella, second_latest_post=second_latest_post, third_latest_post=third_latest_post, opening_message=opening_message, closing_message=closing_message)
+            msg.html = render_template("email.html", latest_post=latest_post, fella=fella,
+                                       second_latest_post=second_latest_post, third_latest_post=third_latest_post,
+                                       opening_message=opening_message, closing_message=closing_message)
             app.mail.send(msg)
         flash('Your email has been sent, please logout by at https://inwaitoftomorrow.appspot.com/logout')
         return redirect(url_for('main.index'), code=303)
@@ -289,10 +289,6 @@ def test_send_newsletter():
         if form.is_submitted():
             form.method = 'POST'
             if len(form.specific_message_one.data) > 0 and len(form.specific_message_two.data) > 0:
-                latest_posts = Blogs.query.order_by(desc(Blogs.article_id)).all()
-                latest_post = latest_posts[0]
-                second_latest_post = latest_posts[1]
-                third_latest_post = latest_posts[2]
                 opening_message = form.specific_message_one.data
                 closing_message = form.specific_message_two.data
                 for fella in NEWSLETTER_TEST:
@@ -300,7 +296,8 @@ def test_send_newsletter():
                     msg = Message(sender=ADMINS[0], recipients=recp)
                     msg.subject = "Latest | In Wait of Tomorrow"
                     msg.html = render_template("email.html", latest_post=latest_post, fella=fella,
-                                               second_latest_post=second_latest_post, third_latest_post=third_latest_post, opening_message=opening_message,
+                                               second_latest_post=second_latest_post,
+                                               third_latest_post=third_latest_post, opening_message=opening_message,
                                                closing_message=closing_message)
                     app.mail.send(msg)
                 flash('Your email has been sent')
@@ -308,7 +305,8 @@ def test_send_newsletter():
             else:
                 return redirect(url_for('blogs.test_send_newsletter'), code=302)
         else:
-            return render_template('submit_newsletter.html', form=form, latest_post=latest_post, second_latest_post=second_latest_post, third_latest_post=third_latest_post)
+            return render_template('submit_newsletter.html', form=form, latest_post=latest_post,
+                                   second_latest_post=second_latest_post, third_latest_post=third_latest_post)
 
 
 @bp_blogs.errorhandler(404)

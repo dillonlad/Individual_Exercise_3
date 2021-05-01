@@ -36,187 +36,95 @@
     </div>
     <br>
     <style>
-        #emailHeader {
-            max-width: 600px;
-            margin: auto;
-            background-color: #6e6e6e;
-        }
 
-        #name {
-            width: 80%;
-            padding: 5%;
-        }
+        @media screen and (max-width: 600px){
 
-        #name h1{
-            font-weight: normal;
-            color: white;
-            text-align: left;
-        }
-
-        #logo{
-            padding: 5%;
-        }
-
-        #logo img{
-            text-align: right;
-            max-width: 50px;
-            padding: 5%;
-            float: right;
-        }
-
-        #openingEmail{
-            max-width: 600px;
-            margin: auto;
-        }
-
-        #emailBody{
-            max-width: 600px;
-            margin: auto;
-            padding-top: 10px;
-        }
-
-        .readMore{
-            background-color: #262626;
-            border-radius: 0;
-            color: white;
-            border: none;
-            padding: 10px;
-        }
-
-        #mainArticle{
-            background-image: url('https://inwaitoftomorrow.appspot.com{{ latest_post.Image_iphone }}');
-            background-size: cover;
-            max-height: 400px;
-            width: 100%;
-            height: auto;
-            min-height: 200px;
-        }
-
-        #mainArticle div{
-            min-height: 200px;
-            z-index: 1;
-            overflow: auto;
-            background: rgba(0, 0, 0, 0.7);
-        }
-
-        #mainArticle div h5{
-            color: white;
-            bottom: 0;
-            text-align: right;
-        }
-
-        @media screen and (min-width: 600px){
             .flexDiv{
-                display: flex;
-                padding-top: 10px;
+                padding-top: 10px !important;
+                padding-bottom: 10px !important;
+                display: table !important;
+                margin: auto !important;
             }
 
             .flexOne{
-                flex-grow: 1;
-                width: 30%;
-                top: 0;
+                padding: 10px !important;
+                text-align: center !important;
+                width: 100% !important;;
+                max-width: 600px !important;
+                display: table-header-group !important;
             }
 
             .flexOne img{
-                max-width: 180px;
-                top: 0;
+                width: 100% !important;
+                max-width: 600px !important;
+                height: auto !important;
             }
 
             .flexTwo{
-                flex-grow: 2;
-                width: 60%;
+                text-align: left !important;
+                display: table-footer-group !important;
             }
         }
 
-        .flexDiv{
-            padding: 10px;
-            display: table;
-        }
-
-        .flexOne{
-            padding: 10px;
-            text-align: center;
-            max-width: 600px;
-            display: table-header-group;
-        }
-
-        .flexOne img{
-            width: 100%;
-            height: auto;;
-        }
-
-        .flexTwo{
-            text-align: left;
-            display: table-footer-group;
-        }
-
-        .flexTwo a{
-            color: black;
-        }
     </style>
     <div id="preview" class="col-12">
-        <div id="emailHeader">
+        <div id="emailHeader" style="max-width: 600px;margin: auto;background-color: #6e6e6e;">
             <table style="width: 100%">
                 <tr>
-                    <td id="name"><h1>In Wait of Tomorrow</h1></td>
-                    <td id="logo"><img src="https://inwaitoftomorrow.appspot.com/static/img/logo.jpeg" alt="In Wait of Tomorrow"></td>
+                    <td id="name" style="width: 80%;padding: 5%;"><h1 style="font-weight: normal;color: white;text-align: left;">In Wait of Tomorrow</h1></td>
+                    <td id="logo" style="padding: 5%;"><img src="https://inwaitoftomorrow.appspot.com/static/img/logo.jpeg" alt="In Wait of Tomorrow" style="text-align: right;max-width: 50px;padding: 5%;float: right;"></td>
                 </tr>
             </table>
         </div>
-        <div id="openingEmail">
+        <div id="openingEmail" style="max-width: 600px;margin: auto;">
             <p>Dear Test,</p>
-            <p id="openingMessagePrev">{{ opening_message }}</p>
+            <p id="openingMessagePrev"></p>
         </div>
-        <div id="emailBody">
+        <div id="emailBody" style="max-width: 600px;margin: auto;padding-top: 10px;">
 
             <table style="padding-bottom: 10px">
                 <tr>
-                    <td id="mainArticle">
-                        <div>
-                            <h5>{{ latest_post.Title }}</h5>
+                    <td id="mainArticle" style="background-image: url('https://inwaitoftomorrow.appspot.com{{ latest_post.Image_iphone }}');">
+                        <div style="min-height: 200px;z-index: 1;overflow: auto;background: rgba(0, 0, 0, 0.7);">
+                            <h3 style="color: white;bottom: 0;text-align: right;">{{ latest_post.Title }}</h3>
                         </div>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <a href="{{ latest_post.url_ }}" style="color: black;">
                         <p>{{ latest_post.Description }} | By {{ latest_post.author }}</p>
-                        </a>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <button class="readMore">READ MORE &rarr;</button>
+                        <a href="{{ latest_post.url_ }}" style="color: white;"><button class="readMore" style="background-color: #262626;border-radius: 0;color: white;border: none;padding: 10px;">READ MORE &rarr;</button></a>
                     </td>
                 </tr>
             </table>
-            <div class="flexDiv">
-                <div class="flexOne">
-                    <img src="https://inwaitoftomorrow.appspot.com{{ second_latest_post.Image_iphone }}" alt="Latest article">
+            <h2 style="font-weight: bold">In case you missed it</h2>
+            <div class="flexDiv" style="display: flex;padding-top: 10px;margin: auto;">
+                <div class="flexOne" style="flex-grow: 1;width: 30%;">
+                    <img src="https://inwaitoftomorrow.appspot.com{{ second_latest_post.Image_iphone }}" alt="Latest article" style="max-width: 180px;">
                 </div>
-                <div class="flexTwo">
-                    <a href="{{ second_latest_post.url_ }}">
-                        <h5>{{ second_latest_post.Title }}</h5>
-                        <p>{{ second_latest_post.Description }} | By {{ second_latest_post.author }}</p>
-                    </a>
-                </div>
-            </div>
-            <div>
-                <button class="readMore">READ MORE &rarr;</button>
-            </div>
-            <div class="flexDiv">
-                <div class="flexTwo">
-                    <a href="{{ third_latest_post.url_ }}">
-                        <h5>{{ third_latest_post.Title }}</h5>
-                        <p>{{ third_latest_post.Description }} | By {{ third_latest_post.author }}</p>
-                    </a>
-                </div>
-                <div class="flexOne">
-                    <img src="https://inwaitoftomorrow.appspot.com{{ third_latest_post.Image_iphone }}" alt="Latest article">
+                <div class="flexTwo" style="flex-grow: 2;width: 65%;">
+                    <h3 style="margin-top: 0!important;">{{ second_latest_post.Title }}</h3>
+                    <p>{{ second_latest_post.Description }} | By {{ second_latest_post.author }}</p>
                 </div>
             </div>
             <div>
-                <button class="readMore">READ MORE &rarr;</button>
+                <a href="{{ second_latest_post.url_ }}" style="color: white;"><button class="readMore" style="background-color: #262626;border-radius: 0;color: white;border: none;padding: 10px;">READ MORE &rarr;</button></a>
+            </div>
+            <div class="flexDiv" style="display: flex;padding-top: 10px;margin: auto;">
+                <div class="flexTwo" style="flex-grow: 2;width: 65%;">
+                    <h3 style="margin-top: 0!important;">{{ third_latest_post.Title }}</h3>
+                    <p>{{ third_latest_post.Description }} | By {{ third_latest_post.author }}</p>
+                </div>
+                <div class="flexOne" style="flex-grow: 1;width: 30%;">
+                    <img src="https://inwaitoftomorrow.appspot.com{{ third_latest_post.Image_iphone }}" alt="Latest article" style="max-width: 180px;">
+                </div>
+            </div>
+            <div>
+                <a href="{{ third_latest_post.url_ }}" style="color: white;"><button class="readMore" style="background-color: #262626;border-radius: 0;color: white;border: none;padding: 10px;">READ MORE &rarr;</button></a>
             </div>
         </div>
         <div style="max-width: 600px; margin: auto; padding-top: 10px">
@@ -224,8 +132,9 @@
             <p><a href="https://inwaitoftomorrow.appspot.com">In Wait of Tomorrow</a></p>
         </div>
         <div style="text-align: center; background-color: #dddddd; max-width: 600px; margin: auto; padding-top: 5px; padding-bottom: 5px">
-            <h3>Don't already follow us?</h3>
-            <p>Click here to find us on <a href="https://www.facebook.com/inwaitoftomorrow/">Facebook</a>, <a href="https://www.instagram.com/inwaitoftomorrow/">Instagram</a> and <a href="https://twitter.com/InWaitofTomorr1">Twitter</a> </p>
+            <a href="https://www.facebook.com/inwaitoftomorrow/" style="display: inline"><img alt="Facebook" style="height: 35px; width: 35px;" src="https://inwaitoftomorrow.appspot.com/static/img/facebook.png"></a>
+            <a href="https://www.instagram.com/inwaitoftomorrow/" style="display: inline"><img alt="Instagram" style="height: 35px; width: 35px;" src="https://inwaitoftomorrow.appspot.com/static/img/instagram.png"></a>
+            <a href="https://twitter.com/InWaitofTomorr1" style="display: inline"><img alt="Twitter" style="height: 35px; width: 35px;" src="https://inwaitoftomorrow.appspot.com/static/img/twitter.png"</a>
         </div>
     </div>
 

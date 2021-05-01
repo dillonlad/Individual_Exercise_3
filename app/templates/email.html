@@ -67,7 +67,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <button class="readMore" style="background-color: #262626;border-radius: 0;color: white;border: none;padding: 10px;"><a href="{{ latest_post.url_ }}" style="color: white;">READ MORE &rarr;</a></button>
+                        <a href="{{ latest_post.url_ }}" style="color: white;"><button class="readMore" style="background-color: #262626;border-radius: 0;color: white;border: none;padding: 10px;">READ MORE &rarr;</button></a>
                     </td>
                 </tr>
             </table>
@@ -82,7 +82,7 @@
                 </div>
             </div>
             <div>
-                <button class="readMore" style="background-color: #262626;border-radius: 0;color: white;border: none;padding: 10px;"><a href="{{ second_latest_post.url_ }}" style="color: white;">READ MORE &rarr;</a></button>
+                <a href="{{ second_latest_post.url_ }}" style="color: white;"><button class="readMore" style="background-color: #262626;border-radius: 0;color: white;border: none;padding: 10px;">READ MORE &rarr;</button></a>
             </div>
             <div class="flexDiv" style="display: flex;padding-top: 10px;margin: auto;">
                 <div class="flexTwo" style="flex-grow: 2;width: 65%;">
@@ -94,17 +94,17 @@
                 </div>
             </div>
             <div>
-                <button class="readMore" style="background-color: #262626;border-radius: 0;color: white;border: none;padding: 10px;"><a href="{{ third_latest_post.url_ }}" style="color: white;">READ MORE &rarr;</a></button>
+                <a href="{{ third_latest_post.url_ }}" style="color: white;"><button class="readMore" style="background-color: #262626;border-radius: 0;color: white;border: none;padding: 10px;">READ MORE &rarr;</button></a>
             </div>
         </div>
         <div style="max-width: 600px; margin: auto; padding-top: 10px">
-            <p id="closingMessagePrev"></p>
+            <p id="closingMessagePrev">{{ closing_message }}</p>
             <p><a href="https://inwaitoftomorrow.appspot.com">In Wait of Tomorrow</a></p>
         </div>
         <div style="text-align: center; background-color: #dddddd; max-width: 600px; margin: auto; padding-top: 5px; padding-bottom: 5px">
-            <h3>Don't already follow us?</h3>
-            <p>Click here to find us on <a href="https://www.facebook.com/inwaitoftomorrow/">Facebook</a>, <a href="https://www.instagram.com/inwaitoftomorrow/">Instagram</a> and <a href="https://twitter.com/InWaitofTomorr1">Twitter</a> </p>
-            <span style="height: 35px; width: 35px; background-image: url('https://facebookbrand.com/wp-content/uploads/2019/04/f_logo_RGB-Hex-Blue_512.png?w=512&h=512'); background-size: cover; border-radius: 50%"></span>
+            <a href="https://www.facebook.com/inwaitoftomorrow/" style="display: inline"><img alt="Facebook" style="height: 35px; width: 35px;" src="https://inwaitoftomorrow.appspot.com/static/img/facebook.png"></a>
+            <a href="https://www.instagram.com/inwaitoftomorrow/" style="display: inline"><img alt="Instagram" style="height: 35px; width: 35px;" src="https://inwaitoftomorrow.appspot.com/static/img/instagram.png"></a>
+            <a href="https://twitter.com/InWaitofTomorr1" style="display: inline"><img alt="Twitter" style="height: 35px; width: 35px;" src="https://inwaitoftomorrow.appspot.com/static/img/twitter.png"</a>
         </div>
 
 </body>
