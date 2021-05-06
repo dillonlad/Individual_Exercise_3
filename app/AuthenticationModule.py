@@ -1,6 +1,6 @@
 from functools import wraps
 
-from flask import flash, url_for, redirect, session
+from flask import flash, url_for, redirect, session, request
 from flask_login import current_user, logout_user
 
 from app.models import Profile
@@ -40,6 +40,20 @@ def otp_required(func):
             if current_user.is_authenticated:
                 flash("Please check your email for the OTP code")
                 return redirect(url_for('main.authenticate_user'))
+        else:
+            return func(*args, **kwargs)
+
+    return decorated_view
+
+
+def url_https(func):
+    @wraps(func)
+    def decorated_view(*args, **kwargs):
+        host = request.host
+        if request.url.startswith('http://') and '127' not in host:
+            url = request.url.replace('http://', 'https://', 1)
+            code = 301
+            return redirect(url, code=code)
         else:
             return func(*args, **kwargs)
 

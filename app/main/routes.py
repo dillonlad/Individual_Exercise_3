@@ -204,24 +204,24 @@ def show_blog():
 
 @bp_main.route('/<category>', methods=['POST', 'GET'])
 def show_blog_category(category):
-        form = SearchForm(request.form)
-        categories = Categories.query.all()
-        navigation_page = render_template('navigation.html', categories=categories)
-        cookies_accept()
-        allow_third_party_cookies = third_party_cookies()
-        footer = render_template('footer.html', categories=categories)
-        if Categories.query.filter(Categories.category_name.contains(category)).all():
-            posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.category.contains(category)).all()
-            if request.method == 'POST':
-                search = form.Search.data
-                return redirect(url_for('main.article_search', search_query=search))
-            elif form.is_submitted():
-                form.method = 'POST'
-                search = form.Search.data
-                return redirect(url_for('main.article_search', search_query=search))
-            article_category = category
-            return render_template("mobile/blog_results.html", allow_third_party_cookies=allow_third_party_cookies, posts=posts, categories=categories,
-                                   article_category=article_category, form=form, navigation_page=navigation_page, footer=footer)
+    form = SearchForm(request.form)
+    categories = Categories.query.all()
+    navigation_page = render_template('navigation.html', categories=categories)
+    cookies_accept()
+    allow_third_party_cookies = third_party_cookies()
+    footer = render_template('footer.html', categories=categories)
+    if Categories.query.filter(Categories.category_name.contains(category)).all():
+        posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.category.contains(category)).all()
+        if request.method == 'POST':
+            search = form.Search.data
+            return redirect(url_for('main.article_search', search_query=search))
+        elif form.is_submitted():
+            form.method = 'POST'
+            search = form.Search.data
+            return redirect(url_for('main.article_search', search_query=search))
+        article_category = category
+        return render_template("mobile/blog_results.html", allow_third_party_cookies=allow_third_party_cookies, posts=posts, categories=categories,
+                               article_category=article_category, form=form, navigation_page=navigation_page, footer=footer)
 
 
 @bp_main.route('/search/<search_query>', methods=['POST', 'GET'])
