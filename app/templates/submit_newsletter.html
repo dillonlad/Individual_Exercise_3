@@ -142,8 +142,8 @@
         function previewNewsletter(){
             const openingMessage = document.getElementById('OpeningMessage').value;
             const closingMessage = document.getElementById('ClosingMessage').value;
-            document.getElementById('openingMessagePrev').innerText = openingMessage
-            document.getElementById('closingMessagePrev').innerText  = closingMessage
+            document.getElementById('openingMessagePrev').innerHTML = openingMessage
+            document.getElementById('closingMessagePrev').innerHTML  = closingMessage
         }
     </script>
 {% endblock %}

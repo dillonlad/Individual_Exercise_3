@@ -48,7 +48,7 @@
         </div>
         <div id="openingEmail" style="max-width: 600px;margin: auto;">
             <p>Dear {{ fella.name }},</p>
-            <p id="openingMessagePrev">{{ opening_message }}</p>
+            <p id="openingMessagePrev">{{ opening_message | safe }}</p>
         </div>
         <div id="emailBody" style="max-width: 600px;margin: auto;padding-top: 10px;">
 
@@ -98,7 +98,7 @@
             </div>
         </div>
         <div style="max-width: 600px; margin: auto; padding-top: 10px">
-            <p id="closingMessagePrev">{{ closing_message }}</p>
+            <p id="closingMessagePrev">{{ closing_message | safe }}</p>
             <p><a href="https://inwaitoftomorrow.appspot.com">In Wait of Tomorrow</a></p>
         </div>
         <div style="text-align: center; background-color: #dddddd; max-width: 600px; margin: auto; padding-top: 5px; padding-bottom: 5px">

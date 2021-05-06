@@ -223,8 +223,8 @@ def send_newsletter():
     second_latest_post = latest_posts[1]
     third_latest_post = latest_posts[2]
     if request.method == 'POST':
-        opening_message = form.specific_message_one.data
-        closing_message = form.specific_message_two.data
+        opening_message = render_template_string(form.specific_message_one.data)
+        closing_message = render_template_string(form.specific_message_two.data)
         for fella in mailing_list.query.order_by(desc(mailing_list.recipient_id)).all():
             recp = fella.email.split()
             msg = Message(sender=ADMINS[0], recipients=recp)
@@ -239,8 +239,8 @@ def send_newsletter():
         if form.is_submitted():
             form.method = 'POST'
             if len(form.specific_message_one.data) > 0 and len(form.specific_message_two.data) > 0:
-                opening_message = form.specific_message_one.data
-                closing_message = form.specific_message_two.data
+                opening_message = render_template_string(form.specific_message_one.data)
+                closing_message = render_template_string(form.specific_message_two.data)
                 for fella in mailing_list.query.order_by(desc(mailing_list.recipient_id)).all():
                     recp = fella.email.split()
                     msg = Message(sender=ADMINS[0], recipients=recp)
@@ -273,8 +273,8 @@ def test_send_newsletter():
         if form.authenticate.data != "theshowgoeson":
             flash("Incorrect admin password")
             return redirect(url_for('blogs.test_send_newsletter'))
-        opening_message = form.specific_message_one.data
-        closing_message = form.specific_message_two.data
+        opening_message = render_template_string(form.specific_message_one.data)
+        closing_message = render_template_string(form.specific_message_two.data)
         for fella in NEWSLETTER_TEST:
             recp = fella['email'].split()
             msg = Message(sender=ADMINS[0], recipients=recp)
@@ -289,8 +289,8 @@ def test_send_newsletter():
         if form.is_submitted():
             form.method = 'POST'
             if len(form.specific_message_one.data) > 0 and len(form.specific_message_two.data) > 0:
-                opening_message = form.specific_message_one.data
-                closing_message = form.specific_message_two.data
+                opening_message = render_template_string(form.specific_message_one.data)
+                closing_message = render_template_string(form.specific_message_two.data)
                 for fella in NEWSLETTER_TEST:
                     recp = fella["email"].split()
                     msg = Message(sender=ADMINS[0], recipients=recp)
