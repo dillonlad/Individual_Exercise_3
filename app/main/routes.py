@@ -16,7 +16,7 @@ from werkzeug.security import generate_password_hash, safe_str_cmp
 
 import app
 from app import db
-from app.AuthenticationModule import otp_required, otp_verified, is_admin
+from app.AuthenticationModule import otp_required, otp_verified, is_admin, url_https, url_homepage
 from app.HelloAnalytics import initialize_analyticsreporting, print_response, get_report, get_report_most_popular
 
 from app.main.forms import SignupForm, LoginForm, PostForm, BlogEditor, CreateArticle, SearchForm, OTPForm
@@ -101,7 +101,9 @@ def privacy_policies():
 
 
 @bp_main.route('/', methods=['POST', 'GET'])
-def index():
+@url_https
+@url_homepage
+def index(categories):
     host = request.host
     if "www" in host:
         return redirect('https://inwaitoftomorrow.appspot.com', code=301)

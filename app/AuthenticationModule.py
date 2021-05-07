@@ -3,7 +3,7 @@ from functools import wraps
 from flask import flash, url_for, redirect, session, request
 from flask_login import current_user, logout_user
 
-from app.models import Profile
+from app.models import Profile, Categories
 
 
 def is_admin(func):
@@ -49,11 +49,26 @@ def otp_required(func):
 def url_https(func):
     @wraps(func)
     def decorated_view(*args, **kwargs):
+
         host = request.host
         if request.url.startswith('http://') and '127' not in host:
             url = request.url.replace('http://', 'https://', 1)
             code = 301
             return redirect(url, code=code)
+        else:
+            return func(*args, **kwargs)
+
+    return decorated_view
+
+
+def url_homepage(func):
+    @wraps(func)
+    def decorated_view(*args, **kwargs):
+        host = request.host
+        if "www" in host:
+            return redirect('https://inwaitoftomorrow.appspot.com', code=301)
+        elif "inwaitoftomorrow.com" in host:
+            return redirect('https://inwaitoftomorrow.appspot.com', code=301)
         else:
             return func(*args, **kwargs)
 
