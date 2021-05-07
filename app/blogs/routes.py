@@ -14,11 +14,11 @@ from flask_sqlalchemy import SQLAlchemy
 from os.path import abspath, join, dirname
 from flask_sitemap import Sitemap, sitemap_page_needed
 
-
 import app
 from app import db
-from app.AuthenticationModule import is_admin, otp_required
+from app.AuthenticationModule import is_admin, otp_required, url_blogs, url_https
 from app.HelloAnalytics import initialize_analyticsreporting, print_response, get_report_most_popular
+from app.LoadingModule import load_templates
 from app.blogs.forms import CommentForm, SubmitNewsletter, Newsletter
 from app.main.forms import SearchForm
 from app.main.routes import third_party_cookies, cookies_accept, bp_main
@@ -30,23 +30,29 @@ from collections import OrderedDict
 
 bp_blogs = Blueprint('blogs', __name__, url_prefix='/blogs')
 ADMINS = ['inwaitoftomorrow@gmail.com']
-NEWSLETTER_TEST = [OrderedDict({"recipient_id": 6, "name": "Dillon", "email": "dlad82434@gmail.com"}), OrderedDict({"recipient_id": 16, "name": "Dillon", "email": "dillonlad@live.co.uk"})]
+NEWSLETTER_TEST = [OrderedDict({"recipient_id": 6, "name": "Dillon", "email": "dlad82434@gmail.com"}),
+                   OrderedDict({"recipient_id": 16, "name": "Dillon", "email": "dillonlad@live.co.uk"})]
 
 
+def structured_data(item_on_page, reviews):
+    item_name = item_on_page[0].Title
+    item_no = item_on_page[0].article_id
+    item_image = "https://inwaitoftomorrow.appspot.com{}".format(item_on_page[0].Image_iphone)
+    item_desc = item_on_page[0].Description
+    item_date = item_on_page[0].Date
+    item_category = item_on_page[0].category
+    item_url = item_on_page[0].url_
+    item_author = item_on_page[0].author
+    item_body = item_on_page[0].Content
+    item_date_mod = item_on_page[0].date_mod
 
-def structured_data(item_on_page, average_rating, review_count, reviews):
-
-    for var in item_on_page:
-        item_name = var.Title
-        item_no = var.article_id
-        item_image = "https://inwaitoftomorrow.appspot.com{}".format(var.Image_iphone)
-        item_desc = var.Description
-        item_date = var.Date
-        item_category = var.category
-        item_url = var.url_
-        item_author = var.author
-        item_body = var.Content
-        item_date_mod = var.date_mod
+    review_count = len(reviews)
+    average_rating = 0
+    if review_count > 0:
+        total_rating = 0
+        for i in reviews:
+            total_rating += int(i.stars)
+        average_rating = total_rating / review_count
 
     aggregate_rating = {
         "@type": "AggregateRating",
@@ -96,11 +102,10 @@ def structured_data(item_on_page, average_rating, review_count, reviews):
     json_structured_data = json.dumps(structured_data_dict)
     html_insert = render_template_string('<script type="application/ld+json">{}</script>'.format(json_structured_data))
 
-    return html_insert
+    return html_insert, review_count
 
 
 def form_send(form, Post_ID):
-
     name = form.name.data
     comment = form.comment.data
     rating = form.rating.data
@@ -122,7 +127,6 @@ def form_send(form, Post_ID):
 
 @bp_blogs.route('/signup/<email>', methods=['POST', 'GET'])
 def newsletter_signup(email):
-
     with app.mail.connect() as conn:
         msg = Message('{} - newsletter sign up'.format(email), sender=ADMINS[0], recipients=ADMINS)
         msg.body = '{} has signed up for email newsletter'.format(email)
@@ -148,68 +152,43 @@ def blog_comment(name, rating, comment, post_title):
 
 
 @bp_blogs.route('/<Post_ID>', methods=['POST', 'GET'])
+@url_https
 def post(Post_ID):
-    host = request.host
+
     if "_" in Post_ID:
-        return redirect(url_for('blogs.post', Post_ID=Post_ID.replace("_","-")), 301)
-    elif request.url.startswith('http://') and '127' not in host:
-        url = request.url.replace('http://', 'https://', 1)
-        code = 301
-        return redirect(url, code=code)
-    else:
-        if Blogs.query.filter(Blogs.Post_ID.contains(Post_ID)).all():
-            categories = Categories.query.all()
-            latest_product = shop_items.query.limit(1).all()
-            for variable in latest_product:
-                product_image = variable.meta_image.replace("http://inwaitoftomorrow.appspot.com", "..")
-            post = Blogs.query.filter_by(Post_ID=Post_ID).all()
-            for var in post:
-                p_author = var.author
-                p_date = var.Date
-            post_author = Authors.query.filter(Authors.author_name.contains(p_author)).all()
-            for var_new in post_author:
-                post_authorid = var_new.author_id
-            date_object = datetime.strptime(p_date, '%Y-%m-%d')
-            new_date = date_object.strftime("%d %b %Y")
-            quiz_of_the_week = render_template('blogs/quiz.html')
-            latest_articles = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Post_ID!=Post_ID).limit(5).all()
-            cookies_accept()
-            allow_third_party_cookies = third_party_cookies()
-            if len(post) == 0:
-                return redirect(url_for('main.show_blog'))
-            comments = Comments_dg_tmp.query.order_by(desc(Comments_dg_tmp.comment_id)).filter(Comments_dg_tmp.blog_name.contains(Post_ID)).all()
-            number_of_comments = len(comments)
-            if number_of_comments > 0 :
-                total_rating = 0
-                for i in comments:
-                    total_rating += int(i.stars)
-                aggregate_rating = total_rating/number_of_comments
-            else:
-                aggregate_rating = 0
-            structured_info = structured_data(post, aggregate_rating, number_of_comments, comments)
-            app.track_event(category="Blog read: {}".format(Post_ID), action='{}'.format(Post_ID))
-            form = CommentForm(request.form)
-            search_form = SearchForm(request.form)
-            navigation_page = render_template('navigation.html', categories=categories, search_form=search_form)
-            newsletter_form = Newsletter(request.form)
-            footer = render_template('footer.html', categories=categories)
-            if request.method == 'POST' and form.validate():
-                form_send(form, Post_ID)
-                return redirect(url_for('blogs.post', Post_ID=Post_ID), code=303)
-            else:
-                if form.is_submitted():
-                    form.method = 'POST'
-                    if (len(form.comment.data) > 0) or (len(form.email.data) > 0):
-                        form_send(form, Post_ID)
-                        return redirect(url_for('blogs.post', Post_ID=Post_ID), code=303)
-                    else:
-                        flash('Please provide the required information')
-                        return redirect(url_for('blogs.post', Post_ID=Post_ID), code=302)
-                else:
-                    return render_template("blogs/post.html", post=post, categories=categories, comments=comments, number_of_comments=number_of_comments, latest_articles=latest_articles, quiz_of_the_week=quiz_of_the_week, form=form, post_authorid=post_authorid, new_date=new_date, navigation_page=navigation_page, structured_info=structured_info, latest_product=latest_product, product_image=product_image, allow_third_party_cookies=allow_third_party_cookies, newsletter_form=newsletter_form, footer=footer)
-        else:
-            flash("The article you tried to find does not exist, at least not with that URL, try using the search box to find what you're looking for")
-            return redirect(url_for('main.show_blog'))
+        return redirect(url_for('blogs.post', Post_ID=Post_ID.replace("_", "-")), 301)
+
+    post = Blogs.query.filter_by(Post_ID=Post_ID).all()
+    if not post:
+        return redirect(abort(404))
+
+    categories, navigation_page, allow_third_party_cookies, footer = load_templates()
+    latest_product = shop_items.query.limit(1).all()
+    product_image = latest_product[0].meta_image.replace("http://inwaitoftomorrow.appspot.com", "..")
+    p_author = post[0].author
+    p_date = post[0].Date
+    post_author = Authors.query.filter(Authors.author_name.contains(p_author)).all()
+    post_authorid = post_author[0].author_id
+    date_object = datetime.strptime(p_date, '%Y-%m-%d')
+    new_date = date_object.strftime("%d %b %Y")
+    latest_articles = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Post_ID != Post_ID).limit(
+        5).all()
+    comments = Comments_dg_tmp.query.order_by(desc(Comments_dg_tmp.comment_id)).filter(
+        Comments_dg_tmp.blog_name.contains(Post_ID)).all()
+
+    structured_info, number_of_comments = structured_data(post, comments)
+    app.track_event(category="Blog read: {}".format(Post_ID), action='{}'.format(Post_ID))
+    form = CommentForm(request.form)
+    newsletter_form = Newsletter(request.form)
+    return render_template("blogs/post.html", post=post, categories=categories, comments=comments,
+                           number_of_comments=number_of_comments, latest_articles=latest_articles,
+                           form=form, post_authorid=post_authorid,
+                           new_date=new_date, navigation_page=navigation_page,
+                           structured_info=structured_info, latest_product=latest_product,
+                           product_image=product_image,
+                           allow_third_party_cookies=allow_third_party_cookies,
+                           newsletter_form=newsletter_form, footer=footer)
+
 
 
 @bp_blogs.route('/email', methods=['GET', 'POST'])

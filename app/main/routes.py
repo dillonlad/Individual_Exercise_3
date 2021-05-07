@@ -18,6 +18,7 @@ import app
 from app import db
 from app.AuthenticationModule import otp_required, otp_verified, is_admin, url_https, url_homepage
 from app.HelloAnalytics import initialize_analyticsreporting, print_response, get_report, get_report_most_popular
+from app.LoadingModule import load_templates
 
 from app.main.forms import SignupForm, LoginForm, PostForm, BlogEditor, CreateArticle, SearchForm, OTPForm
 
@@ -103,77 +104,18 @@ def privacy_policies():
 @bp_main.route('/', methods=['POST', 'GET'])
 @url_https
 @url_homepage
-def index(categories):
-    host = request.host
-    if "www" in host:
-        return redirect('https://inwaitoftomorrow.appspot.com', code=301)
-    elif "inwaitoftomorrow.com" in host:
-        return redirect('https://inwaitoftomorrow.appspot.com', code=301)
-    elif request.url.startswith('http://') and '127' not in host:
-        url = request.url.replace('http://', 'https://', 1)
-        code = 301
-        return redirect(url, code=code)
+def index():
+    if current_user.is_authenticated:
+        profile = Profile.query.filter(Profile.username==current_user.username).all()
+        return render_template('landing.html', profile=profile)
     else:
-        if current_user.is_authenticated:
-            profile = Profile.query.filter(Profile.username==current_user.username).all()
-            return render_template('landing.html', profile=profile)
-        else:
-            app.track_event(category='Homepage', action='Homepage visit')
-            form = SearchForm(request.form)
-            homepage = "yes"
-            categories = Categories.query.all()
-            series = Series.query.all()
-            posts = Blogs.query.order_by(desc(Blogs.article_id)).limit(6).all()
-            latest_article = Blogs.query.order_by(desc(Blogs.article_id)).limit(1).all()
-            navigation_page = render_template('navigation.html', categories=categories)
-            cookies_accept()
-            allow_third_party_cookies = third_party_cookies()
-            footer = render_template('footer.html', categories=categories)
-            if request.method == 'POST':
-                search = form.Search.data
-                return redirect(url_for('main.article_search', search_query=search))
-            elif form.is_submitted():
-                form.method = 'POST'
-                search = form.Search.data
-                return redirect(url_for('main.article_search', search_query=search))
-            return render_template('homepage.html', allow_third_party_cookies=allow_third_party_cookies, latest_article=latest_article, posts=posts, form=form, categories=categories, series=series, homepage=homepage, navigation_page=navigation_page, footer=footer)
-
-
-@bp_main.route('/linkinbio', methods=['GET'])
-def linkinbio():
-    host = request.host
-    if request.url.startswith('http://') and '127' not in host:
-        url = request.url.replace('http://', 'https://', 1)
-        code = 301
-        return redirect(url, code=code)
-    else:
-        categories = Categories.query.all()
-        navigation_page = render_template('navigation.html', categories=categories)
-        cookies_accept()
-        allow_third_party_cookies = third_party_cookies()
-        return render_template('linkinbio.html', allow_third_party_cookies=allow_third_party_cookies, categories=categories, navigation_page=navigation_page)
-
-
-@bp_main.route('/linkinbio/articles', methods=['POST', 'GET'])
-def show_blog_linkinbio():
-    host = request.host
-    if request.url.startswith('http://') and '127' not in host:
-        url = request.url.replace('http://', 'https://', 1)
-        code = 301
-        return redirect(url, code=code)
-    else:
+        app.track_event(category='Homepage', action='Homepage visit')
+        categories, navigation_page, allow_third_party_cookies, footer = load_templates()
         form = SearchForm(request.form)
-        categories = Categories.query.all()
-        page = request.args.get('page', 1, type=int)
-        posts = Blogs.query.order_by(desc(Blogs.article_id)).paginate(page, 6, False)
-        navigation_page = render_template('navigation.html', categories=categories)
-        cookies_accept()
-        footer = render_template('footer.html', categories=categories)
-        allow_third_party_cookies = third_party_cookies()
-        next_url = url_for('main.show_blog_linkinbio', page=posts.next_num) \
-            if posts.has_next else None
-        prev_url = url_for('main.show_blog_linkinbio', page=posts.prev_num) \
-            if posts.has_prev else None
+        homepage = "yes"
+        series = Series.query.all()
+        posts = Blogs.query.order_by(desc(Blogs.article_id)).limit(6).all()
+        latest_article = Blogs.query.order_by(desc(Blogs.article_id)).limit(1).all()
         if request.method == 'POST':
             search = form.Search.data
             return redirect(url_for('main.article_search', search_query=search))
@@ -181,19 +123,44 @@ def show_blog_linkinbio():
             form.method = 'POST'
             search = form.Search.data
             return redirect(url_for('main.article_search', search_query=search))
-        return render_template("mobile/linkinbio_results.html", allow_third_party_cookies=allow_third_party_cookies, posts=posts.items, categories=categories, form=form,
-                               next_url=next_url, prev_url=prev_url, navigation_page=navigation_page, footer=footer)
+        return render_template('homepage.html', allow_third_party_cookies=allow_third_party_cookies, latest_article=latest_article, posts=posts, form=form, categories=categories, series=series, homepage=homepage, navigation_page=navigation_page, footer=footer)
+
+
+@bp_main.route('/linkinbio', methods=['GET'])
+@url_https
+def linkinbio():
+    categories, navigation_page, allow_third_party_cookies, footer = load_templates()
+    return render_template('linkinbio.html', allow_third_party_cookies=allow_third_party_cookies, categories=categories, navigation_page=navigation_page)
+
+
+@bp_main.route('/linkinbio/articles', methods=['POST', 'GET'])
+@url_https
+def show_blog_linkinbio():
+    form = SearchForm(request.form)
+    categories, navigation_page, allow_third_party_cookies, footer = load_templates()
+    page = request.args.get('page', 1, type=int)
+    posts = Blogs.query.order_by(desc(Blogs.article_id)).paginate(page, 6, False)
+    next_url = url_for('main.show_blog_linkinbio', page=posts.next_num) \
+        if posts.has_next else None
+    prev_url = url_for('main.show_blog_linkinbio', page=posts.prev_num) \
+        if posts.has_prev else None
+    if request.method == 'POST':
+        search = form.Search.data
+        return redirect(url_for('main.article_search', search_query=search))
+    elif form.is_submitted():
+        form.method = 'POST'
+        search = form.Search.data
+        return redirect(url_for('main.article_search', search_query=search))
+    return render_template("mobile/linkinbio_results.html", allow_third_party_cookies=allow_third_party_cookies, posts=posts.items, categories=categories, form=form,
+                           next_url=next_url, prev_url=prev_url, navigation_page=navigation_page, footer=footer)
 
 
 @bp_main.route('/articles', methods=['POST', 'GET'])
+@url_https
 def show_blog():
     form = SearchForm(request.form)
-    categories = Categories.query.all()
+    categories, navigation_page, allow_third_party_cookies, footer = load_templates()
     posts = Blogs.query.order_by(desc(Blogs.article_id)).all()
-    navigation_page = render_template('navigation.html', categories=categories)
-    cookies_accept()
-    allow_third_party_cookies = third_party_cookies()
-    footer = render_template('footer.html', categories=categories)
     if request.method == 'POST':
         search = form.Search.data
         return redirect(url_for('main.article_search', search_query=search))
@@ -205,13 +172,10 @@ def show_blog():
 
 
 @bp_main.route('/<category>', methods=['POST', 'GET'])
+@url_https
 def show_blog_category(category):
     form = SearchForm(request.form)
-    categories = Categories.query.all()
-    navigation_page = render_template('navigation.html', categories=categories)
-    cookies_accept()
-    allow_third_party_cookies = third_party_cookies()
-    footer = render_template('footer.html', categories=categories)
+    categories, navigation_page, allow_third_party_cookies, footer = load_templates()
     if Categories.query.filter(Categories.category_name.contains(category)).all():
         posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.category.contains(category)).all()
         if request.method == 'POST':
@@ -227,14 +191,12 @@ def show_blog_category(category):
 
 
 @bp_main.route('/search/<search_query>', methods=['POST', 'GET'])
+@url_https
 def article_search(search_query):
     form = SearchForm(request.form)
-    categories = Categories.query.all()
-    navigation_page = render_template('navigation.html', categories=categories)
+    categories, navigation_page, allow_third_party_cookies, footer = load_templates()
     posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Title.contains(search_query)).all()
     posts_two = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Content.contains(search_query)).all()
-    allow_third_party_cookies = third_party_cookies()
-    footer = render_template('footer.html', categories=categories)
     for post in posts_two:
         if post not in posts:
             posts.append(post)
@@ -250,13 +212,12 @@ def article_search(search_query):
 
 
 @bp_main.route('/series/<series_key>', methods=['POST', 'GET'])
+@url_https
 def show_blog_series(series_key):
     form = SearchForm(request.form)
     form.Search.data = series_key
     request.method = 'POST'
-    categories = Categories.query.all()
-    allow_third_party_cookies = third_party_cookies()
-    navigation_page = render_template('navigation.html', categories=categories)
+    categories, navigation_page, allow_third_party_cookies, footer = load_templates()
     posts = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Title.contains(form.Search.data)).all()
     posts_two = Blogs.query.order_by(desc(Blogs.article_id)).filter(Blogs.Content.contains(form.Search.data)).all()
     for post in posts_two:
@@ -265,8 +226,8 @@ def show_blog_series(series_key):
     return render_template("mobile/blog_results.html", allow_third_party_cookies=allow_third_party_cookies, posts=posts, categories=categories, form=form, navigation_page=navigation_page)
 
 
-
 @bp_main.route('/login', methods=['GET', 'POST'])
+@url_https
 def login():
     if current_user.is_authenticated:
         flash('You are logged in')
@@ -457,24 +418,18 @@ def new_post():
 
 
 @bp_main.route('/author/<author_id>', methods=['POST','GET'])
+@url_https
 def authors(author_id):
-    host = request.host
-    if request.url.startswith('http://') and '127' not in host:
-        url = request.url.replace('http://', 'https://', 1)
-        code = 301
-        return redirect(url, code=code)
+    categories, navigation_page, allow_third_party_cookies, footer = load_templates()
+    if Authors.query.filter(Authors.author_id.contains(author_id)).all():
+        person_name = []
+        person = Authors.query.filter_by(author_id=author_id).all()
+        for geeza in person:
+            person_name.append(geeza.author_name)
+        posts = Blogs.query.filter(Blogs.author.contains(person_name[0])).order_by(desc(Blogs.article_id)).all()
+        return render_template('author.html', allow_third_party_cookies=allow_third_party_cookies, categories=categories, person=person, posts=posts, navigation_page=navigation_page)
     else:
-        if Authors.query.filter(Authors.author_id.contains(author_id)).all():
-            categories = Categories.query.all()
-            navigation_page = render_template('navigation.html', categories=categories)
-            person_name = []
-            person = Authors.query.filter_by(author_id=author_id).all()
-            cookies_accept()
-            allow_third_party_cookies = third_party_cookies()
-            for geeza in person:
-                person_name.append(geeza.author_name)
-            posts = Blogs.query.filter(Blogs.author.contains(person_name[0])).order_by(desc(Blogs.article_id)).all()
-            return render_template('author.html', allow_third_party_cookies=allow_third_party_cookies, categories=categories, person=person, posts=posts, navigation_page=navigation_page)
+        return abort(404)
 
 
 @bp_main.route('/admin/analytics', methods=['POST', 'GET'])

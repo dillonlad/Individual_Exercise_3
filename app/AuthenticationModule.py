@@ -51,6 +51,7 @@ def url_https(func):
     def decorated_view(*args, **kwargs):
 
         host = request.host
+        print(host)
         if request.url.startswith('http://') and '127' not in host:
             url = request.url.replace('http://', 'https://', 1)
             code = 301
@@ -73,3 +74,9 @@ def url_homepage(func):
             return func(*args, **kwargs)
 
     return decorated_view
+
+
+def url_blogs(Post_ID):
+
+    if "_" in Post_ID:
+        return redirect(url_for('blogs.post', Post_ID=Post_ID.replace("_", "-")), 301)
