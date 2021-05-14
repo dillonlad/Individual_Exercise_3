@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template, jsonify
 from sqlalchemy import desc
 
-from app.HelloAnalytics import initialize_analyticsreporting, get_report_most_popular, print_response, get_report_events
+from app.HelloAnalytics import initialize_analyticsreporting, get_report_most_popular, print_response, \
+    get_report_events, get_report_pageviews
 from app.models import Blogs
 
 bp_api = Blueprint('api', __name__, url_prefix='/api')
@@ -66,7 +67,7 @@ def get_similar_blogs(post_id):
             result.append(dict['post'])
 
     analytics = initialize_analyticsreporting()
-    response = get_report_events(analytics, post_id)
+    response = get_report_pageviews(analytics)
     analytics_reports = print_response(response)
     sorted_dict = sorted(analytics_reports, key=lambda k: k['views'], reverse=True)
     views = 0

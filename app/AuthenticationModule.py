@@ -1,11 +1,10 @@
 from functools import wraps
-
 from flask import flash, url_for, redirect, session, request
 from flask_login import current_user, logout_user
-
 from app.models import Profile, Categories
 
 
+# Checks if user is listed as admin in the database
 def is_admin(func):
 
     @wraps(func)
@@ -26,7 +25,7 @@ def is_admin(func):
     return decorated_view
 
 
-
+# Checks a one time passcode has been entered for this session
 def otp_verified():
     session['otp'] = 'pass'
 
@@ -51,7 +50,7 @@ def url_https(func):
     def decorated_view(*args, **kwargs):
 
         host = request.host
-        print(host)
+
         if request.url.startswith('http://') and '127' not in host:
             url = request.url.replace('http://', 'https://', 1)
             code = 301
@@ -59,6 +58,17 @@ def url_https(func):
         else:
             return func(*args, **kwargs)
 
+    return decorated_view
+
+
+def local_only(func):
+    @wraps(func)
+    def decorated_view(*args, **kwargs):
+        host = request.host
+        if '127' not in host:
+            flash('This view is restricted')
+            return redirect(url_for('main.index'))
+        return func(*args, **kwargs)
     return decorated_view
 
 

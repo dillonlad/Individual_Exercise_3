@@ -53,7 +53,7 @@ class CreateArticle(FlaskForm):
     Title = StringField('Title', validators=[DataRequired()])
     Post_ID = StringField('Post_ID', validators=[DataRequired()])
     Description = StringField('Description', validators=[DataRequired()])
-    Image_root = StringField('Image_root (example.webp)', validators=[DataRequired()])
+    Image_root = StringField('Create image filename - use keywords and dashes (example-keyword-filename)', validators=[DataRequired()])
     Content = TextAreaField('Content', validators=[DataRequired()])
     category = StringField('Category', validators=[DataRequired()])
     author = SelectField(u'Author', choices=[('0',''), ('Dillon Lad', 'Dillon Lad'), ('Rajan Kholia','Rajan Kholia')], validators=[DataRequired()])
@@ -64,5 +64,10 @@ class CreateArticle(FlaskForm):
 class SearchForm(FlaskForm):
     Search = StringField('Search for articles:', id="form-search")
     Submit = SubmitField('Search', id="form-submit")
+
+
+class ImageUpload(FlaskForm):
+    filename = StringField("Filename")
+    Submit = SubmitField('Submit', id="form-submit")
 
 

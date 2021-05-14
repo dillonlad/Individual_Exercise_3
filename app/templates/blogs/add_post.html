@@ -18,7 +18,7 @@
 <div class="row">
     <div class="col-2"></div>
     <div class="col-8">
-    <form method="POST" action="" novalidate>
+    <form method="POST" action="" novalidate enctype="multipart/form-data">
                 {{ form.hidden_tag() }}
                 <div class="form-group">
                   {{ form.Title.label }}{{ form.Title(class_="form-control form-control-user") }}
@@ -33,6 +33,9 @@
                   <div class="col-sm-12 mb-3 mb-sm-0">
                     {{ form.Image_root.label }}{{ form.Image_root(class_="form-control form-control-user")}}
                   </div>
+                    <div class="form-group p-1">
+                        <input type="file" name="file">
+                    </div>
                     <div class="col-sm-12">
                     {{ form.Content.label }}{{ form.Content(class_="form-control form-control-user", rows_="15")}}
                   </div>

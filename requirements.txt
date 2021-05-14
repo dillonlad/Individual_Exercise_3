@@ -26,5 +26,6 @@ paypal-checkout-serversdk
 google-api-python-client
 google-api-core
 oauth2client
+Pillow==8.2.0
 
 

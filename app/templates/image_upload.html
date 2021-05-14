@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block list_of_articles %}
+    <div class="row m-auto" style="max-width: 800px">
+        <div class="col-12">
+                <form class="user" method="POST" novalidate enctype="multipart/form-data">
+                    {% from "_formhelpers.html" import render_field %}
+                    {{ form.hidden_tag() }}
+                    {{ form.csrf_token}}
+                    <div class="form-group">
+                      {{ form.filename.label }}{{ render_field(form.filename, class='form-control rounded-0 form-control-user') }}
+                    </div>
+                    <div class="form-group p-1">
+                        <input type="file" name="file">
+                    </div>
+
+                    <!-- LOGIN BUTTON -->
+                    {{ render_field(form.Submit, class="btn btn-secondary btn-user btn-block", id="formSubmit") }}
+                    <hr>
+                </form>
+        </div>
+    </div>
+{% endblock %}

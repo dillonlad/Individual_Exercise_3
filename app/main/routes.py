@@ -1,4 +1,5 @@
 from datetime import timedelta, datetime
+from tkinter import Image
 from urllib.parse import urlparse, urljoin
 
 from flask import render_template, Blueprint, request, flash, redirect, url_for, Flask, make_response, abort, \
@@ -16,17 +17,19 @@ from werkzeug.security import generate_password_hash, safe_str_cmp
 
 import app
 from app import db
-from app.AuthenticationModule import otp_required, otp_verified, is_admin, url_https, url_homepage
+from app.AuthenticationModule import otp_required, otp_verified, is_admin, url_https, url_homepage, local_only
 from app.HelloAnalytics import initialize_analyticsreporting, print_response, get_report, get_report_most_popular
 from app.LoadingModule import load_templates
 
-from app.main.forms import SignupForm, LoginForm, PostForm, BlogEditor, CreateArticle, SearchForm, OTPForm
+from app.main.forms import SignupForm, LoginForm, PostForm, BlogEditor, CreateArticle, SearchForm, OTPForm, ImageUpload
 
 from app.models import Posts_two, Blogs, Profile, Categories, Series, Authors, Comments_dg_tmp, \
     mailing_list, shop_items
+from PIL import Image
 
 bp_main = Blueprint('main', __name__)
 ext = Sitemap()
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp', 'heic'}
 
 
 def pass_through():
@@ -93,6 +96,7 @@ def no_cookies():
 
 
 @bp_main.route('/policy/privacy', methods=['POST', 'GET'])
+@url_https
 def privacy_policies():
     allow_third_party_cookies = third_party_cookies()
     privacy_statement = render_template('privacy_statement.html')
@@ -307,7 +311,6 @@ def authenticate_user():
             digest = digest.decode('ascii')  # pragma: no cover
             print(digest)
 
-
         if safe_str_cmp(hmac.new(key, payload.encode('utf-8'), sha512).hexdigest(), digest):
             if form.otp_code.data == payload:
                 print(payload)
@@ -331,42 +334,39 @@ def logout():
 
 
 @bp_main.route('/register/', methods=['POST', 'GET'])
+@local_only
 def register():
-    host = request.host
-    if '127' not in host:
-        flash('This view is restricted')
+    if current_user.is_authenticated:
+        flash('You are logged in')
         return redirect(url_for('main.index'))
-    else:
-        if current_user.is_authenticated:
-            flash('You are logged in')
-            return redirect(url_for('main.index'))
-        homepage = "no"
-        form = SignupForm(request.form)
-        if request.method == 'POST' and form.validate():
-            user = Profile(username=form.username.data, email=form.email.data, password=form.password.data)
-            user.set_password(form.password.data)
-            try:
-                db.session.add(user)
-                response = make_response(redirect(url_for('main.index')))
-                response.set_cookie("username", form.username.data)
-                user = Profile.query.filter_by(email=form.email.data).first()
-                login_user(user)
-                db.session.commit()
-                flash('registered successfully')
-                return response
-            except IntegrityError:
-                db.session.rollback()
-                flash('Unable to register {}. Please try again.'.format(form.username.data), 'error')
-            except OperationalError:
-                db.session.rollback()
-                flash('Register feature not working')
-        return render_template('register.html', form=form, homepage=homepage)
+    homepage = "no"
+    form = SignupForm(request.form)
+    if request.method == 'POST' and form.validate():
+        user = Profile(username=form.username.data, email=form.email.data, password=form.password.data)
+        user.set_password(form.password.data)
+        try:
+            db.session.add(user)
+            response = make_response(redirect(url_for('main.index')))
+            response.set_cookie("username", form.username.data)
+            user = Profile.query.filter_by(email=form.email.data).first()
+            login_user(user)
+            db.session.commit()
+            flash('registered successfully')
+            return response
+        except IntegrityError:
+            db.session.rollback()
+            flash('Unable to register {}. Please try again.'.format(form.username.data), 'error')
+        except OperationalError:
+            db.session.rollback()
+            flash('Register feature not working')
+    return render_template('register.html', form=form, homepage=homepage)
 
 
 @bp_main.route('/add_post/', methods=['POST', 'GET'])
 @login_required
 @otp_required
 @is_admin
+@local_only
 def add_post():
     form = BlogEditor(request.form)
     if request.method == 'POST' and form.validate():
@@ -390,31 +390,94 @@ def add_post():
 @login_required
 @otp_required
 @is_admin
+@local_only
 def new_post():
-    host = request.host
-    if '127' not in host:
-        abort(404)
-    else:
-        form = CreateArticle(request.form)
-        authors = Authors.query.all()
-        time_date = datetime.now()
-        if request.method == 'POST' and form.validate():
-            post_url = "https://inwaitoftomorrow.appspot.com/blogs/" + form.Post_ID.data
-            post_main_image_root = "/static/img/"+form.Image_root.data
-            post_jpg_image = post_main_image_root.replace(".webp",".jpg")
-            post = Blogs(Title=form.Title.data, Post_ID=form.Post_ID.data, Description=form.Description.data, Image_root=post_main_image_root, url_=post_url, Content=form.Content.data, Time="{}:{}:{}".format(time_date.strftime("%H"), time_date.strftime("%M"), time_date.strftime("%S")), Date="{}-{}-{}".format(time_date.strftime("%Y"), time_date.strftime("%m"), time_date.strftime("%d")), category=form.category.data, author=form.author.data, keywords=form.keywords.data, Image_iphone=post_jpg_image)
-            try:
-                db.session.add(post)
-                response = make_response(redirect(url_for('main.index')))
-                db.session.commit()
-                return response
-            except IntegrityError:
-                db.session.rollback()
-                flash('did not work')
-            except OperationalError:
-                db.session.rollback()
-                flash('did not work')
-        return render_template("blogs/add_post.html", form=form, authors=authors)
+    form = CreateArticle(request.form)
+    author_choices =[('0', '')]
+    authors = Authors.query.all()
+    for author in authors:
+        author_choices.append((author.author_name, author.author_name))
+    form.author.choices = author_choices
+    time_date = datetime.now()
+    if request.method == 'POST' and form.validate():
+
+        image_filename = form.Image_root.data
+        uploaded_file = request.files.get('file')
+
+        validate_filename = uploaded_file.filename.split(".")
+        img_extension = validate_filename[1]
+
+        if not uploaded_file:
+            return 'No file uploaded.', 400
+
+        if img_extension not in ALLOWED_EXTENSIONS:
+            flash('{} is an unsupported type of image. Please upload images of the following file types: {}'.format(
+                uploaded_file.filename, ALLOWED_EXTENSIONS))
+            return redirect(url_for('main.upload_image'), code=303)
+
+        image = Image.open(uploaded_file)
+        w, h = image.size
+        aspect_ratio = w / h
+        max_image_height = 600 / aspect_ratio
+        image.thumbnail((600, max_image_height))
+
+        jpeg_filetype = '/static/img/{}-small.jpg'.format(image_filename)
+        webp_filetype = '/static/img/{}-small.webp'.format(image_filename)
+
+        image.save('app' + jpeg_filetype)
+        image.save('app' + webp_filetype)
+
+        post_url = "https://inwaitoftomorrow.appspot.com/blogs/" + form.Post_ID.data
+        post_main_image_root = webp_filetype
+        post_jpg_image = jpeg_filetype
+        post = Blogs(Title=form.Title.data, Post_ID=form.Post_ID.data, Description=form.Description.data, Image_root=post_main_image_root, url_=post_url, Content=form.Content.data, Time="{}:{}:{}".format(time_date.strftime("%H"), time_date.strftime("%M"), time_date.strftime("%S")), Date="{}-{}-{}".format(time_date.strftime("%Y"), time_date.strftime("%m"), time_date.strftime("%d")), category=form.category.data, author=form.author.data, keywords=form.keywords.data, Image_iphone=post_jpg_image)
+        try:
+            db.session.add(post)
+            response = make_response(redirect(url_for('main.index')))
+            db.session.commit()
+            return response
+        except IntegrityError:
+            db.session.rollback()
+            flash('did not work')
+        except OperationalError:
+            db.session.rollback()
+            flash('did not work')
+    return render_template("blogs/add_post.html", form=form, authors=authors)
+
+
+@bp_main.route('/upload-image/', methods=['POST', 'GET'])
+@login_required
+@otp_required
+@is_admin
+@local_only
+def upload_image():
+    form = ImageUpload(request.form)
+    if request.method == "POST":
+        image_filename = form.filename.data
+        uploaded_file = request.files.get('file')
+
+        validate_filename = uploaded_file.filename.split(".")
+        img_extension = validate_filename[1]
+        print(img_extension)
+
+        if not uploaded_file:
+            return 'No file uploaded.', 400
+
+        if img_extension not in ALLOWED_EXTENSIONS:
+            flash('{} is an unsupported type of image. Please upload images of the following file types: {}'.format(
+                uploaded_file.filename, ALLOWED_EXTENSIONS))
+            return redirect(url_for('main.upload_image'), code=303)
+
+        image = Image.open(uploaded_file)
+        w, h = image.size
+        aspect_ratio = w/h
+        max_image_height = 600/aspect_ratio
+        image.thumbnail((600, max_image_height))
+        image.save('app/static/img/{}-small.jpg'.format(image_filename))
+        image.save('app/static/img/{}-small.webp'.format(image_filename))
+
+        flash("Image successfully uploaded")
+    return render_template("image_upload.html", form=form, homepage="no")
 
 
 @bp_main.route('/author/<author_id>', methods=['POST','GET'])

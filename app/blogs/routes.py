@@ -190,7 +190,6 @@ def post(Post_ID):
                            newsletter_form=newsletter_form, footer=footer)
 
 
-
 @bp_blogs.route('/email', methods=['GET', 'POST'])
 @login_required
 @otp_required

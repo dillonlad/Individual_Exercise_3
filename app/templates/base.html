@@ -183,7 +183,7 @@
 
         <!--Fixed top navbar-->
         {% if homepage == "yes" %}
-            <div class="text-center text-dark p-2 border-dark border-bottom w-100 container-fluid bg-white" id="homepagefixedtop">
+            <div class="text-center text-dark p-2 w-100 container-fluid bg-white" id="homepagefixedtop">
                 {% for category in categories %}
                     {% if category.category_name != "Blog" %}
                         <a class="p-2 text-dark" href="{{ url_for('main.show_blog_category', category=category.category_name) }}">{{ category.category_name }}</a>

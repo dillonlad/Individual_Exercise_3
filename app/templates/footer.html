@@ -1,4 +1,4 @@
-<footer class="text-center row p-5 w-100 m-auto border-top border-dark" style="background-color: #dddddd;">
+<footer class="text-center row p-5 w-100 m-auto bg-dark text-white">
     <p class="w-100 m-auto">Made in Leicestershire, with love from London.</p>
     <p class="text-muted w-100 m-auto">&copy; 2020 In Wait of Tomorrow</p>
     <div class="w-100 row m-auto pt-5" style="max-width: 600px">
@@ -6,17 +6,17 @@
         <!--Mobile version-->
         {% if request.MOBILE %}
             <div class="col-6 text-left">
-                <p><a href="{{ url_for('main.index') }}" class="w-100 text-dark">Home</a></p>
-                <p><a href="{{ url_for('main.privacy_policies') }}" class="w-100 text-dark">Privacy & Cookies</a></p>
-                <p><a href="{{ url_for('main.index') }}" class="w-100 text-dark">About Us</a></p>
-                <p><a href="{{ url_for('shop.shop') }}" class="text-dark pt-2">Shop</a></p>
-                <p><a href="{{ url_for('shop.shop_item', id="what-next-bro-light") }}" class="text-dark">What Next Bro? Hoodie</a></p>
+                <p><a href="{{ url_for('main.index') }}" class="w-100 text-white">Home</a></p>
+                <p><a href="{{ url_for('main.privacy_policies') }}" class="w-100 text-white">Privacy & Cookies</a></p>
+                <p><a href="{{ url_for('main.index') }}" class="w-100 text-white">About Us</a></p>
+                <p><a href="{{ url_for('shop.shop') }}" class="pt-2 text-white">Shop</a></p>
+                <p><a href="{{ url_for('shop.shop_item', id="what-next-bro-light") }}" class="text-white">What Next Bro? Hoodie</a></p>
             </div>
             <div class="col-6 text-left">
                 <p class="font-weight-bold">Categories</p>
                 {% for category in categories %}
                     {% if category.category_name != "Blog" %}
-                        <p><a href="{{ url_for('main.show_blog_category', category=category.category_name) }}" class="w-100 text-dark">{{ category.category_name }}</a></p>
+                        <p><a href="{{ url_for('main.show_blog_category', category=category.category_name) }}" class="w-100 text-white">{{ category.category_name }}</a></p>
                     {% else %}
                     {% endif %}
                 {% endfor %}
@@ -25,22 +25,22 @@
         <!--Not mobile version-->
         {% else %}
             <div class="col-4 text-left">
-                <p><a href="{{ url_for('main.index') }}" class="w-100 text-dark">Home</a></p>
-                <p><a href="{{ url_for('main.privacy_policies') }}" class="w-100 text-dark">Privacy & Cookies</a></p>
-                <p><a href="{{ url_for('main.index') }}" class="w-100 text-dark">About Us</a></p>
+                <p><a href="{{ url_for('main.index') }}" class="w-100 text-white">Home</a></p>
+                <p><a href="{{ url_for('main.privacy_policies') }}" class="w-100 text-white">Privacy & Cookies</a></p>
+                <p><a href="{{ url_for('main.index') }}" class="w-100 text-white">About Us</a></p>
             </div>
             <div class="col-4 text-left">
                 <p class="font-weight-bold">Categories</p>
                 {% for category in categories %}
                     {% if category.category_name != "Blog" %}
-                        <p><a href="{{ url_for('main.show_blog_category', category=category.category_name) }}" class="w-100 text-dark">{{ category.category_name }}</a></p>
+                        <p><a href="{{ url_for('main.show_blog_category', category=category.category_name) }}" class="w-100 text-white">{{ category.category_name }}</a></p>
                     {% else %}
                     {% endif %}
                 {% endfor %}
             </div>
             <div class="col-4 text-left">
-                <p><a href="{{ url_for('shop.shop') }}" class="text-dark">Shop</a></p>
-                <p><a href="{{ url_for('shop.shop_item', id="what-next-bro-light") }}" class="text-dark">What Next Bro? Hoodie</a></p>
+                <p><a href="{{ url_for('shop.shop') }}" class="text-white">Shop</a></p>
+                <p><a href="{{ url_for('shop.shop_item', id="what-next-bro-light") }}" class="text-white">What Next Bro? Hoodie</a></p>
             </div>
         {% endif %}
 
