@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {%  if allow_third_party_cookies == "True" %}
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-159574205-1"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'UA-159574205-1');
+        </script>
+    {% else %}
+    {% endif %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="In Wait of Tomorrow - Write For Us"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="https://inwaitoftomorrow.appspot.com/write-for-us"/>
+    <meta property="og:description" content="Become a part of the IWoT team!"/>
+    <meta property="og:image" content="http://inwaitoftomorrow.appspot.com/static/img/logo.jpeg"/>
+    <meta property="fb:app_id" content="2681838985277439"/>
+    <meta name="twitter:title" content="In Wait of Tomorrow - Write For Us"/>
+    <meta name="twitter:description" content="Become a part of the IWoT team!"/>
+    <meta name="twitter:image" content="http://inwaitoftomorrow.appspot.com/static/img/logo.jpeg"/>
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:url" content="https://inwaitoftomorrow.appspot.com/write-for-us"/>
+    <meta name="description" content="Become a part of the IWoT team!"/>
+    <script src="../static/bootstrap-4.0.0/js/tests/vendor/jquery-1.9.1.min.js" defer></script>
+    <script src="../static/bootstrap-4.0.0/dist/js/bootstrap.bundle.js" defer></script>
+    <script src="../static/bootstrap-4.0.0/assets/js/vendor/popper.min.js" defer></script>
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
+    <link rel="stylesheet" href="../static/bootstrap-4.0.0/dist/css/bootstrap.min.css">
+    <meta name="keywords" content="inwaitoftomorrow, In Wait of Tomorrow, futurology, Contribute, write for us">
+    <meta name="author" content="inwaitoftomorrow">
+    <meta name="robots" content="index, follow">
+    <link rel="shortcut icon" href="../static/img/favico.ico">
+    {%  if allow_third_party_cookies == "True" %}
+        <!-- Facebook Pixel Code -->
+        <script>
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window, document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '363987458380932');
+        fbq('track', 'PageView');
+        </script>
+        <noscript><img height="1" width="1" style="display:none"
+        src="https://www.facebook.com/tr?id=363987458380932&ev=PageView&noscript=1"
+        /></noscript>
+        <!-- End Facebook Pixel Code -->
+    {% else %}
+    {% endif %}
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+    <title>In Wait of Tomorrow - Write For Us</title>
+</head>
+<body itemscope itemtype="https://schema.org/WebPage" onload="loadUp()" style="font-family: 'Cabin', sans-serif;{% if request.MOBILE %}{% else %} font-size: 18px!important;{% endif %}">
+
+            {% if request.MOBILE %}
+
+
+
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div class="text-center m-auto p-5 font-weight-normal fixed-top" id="flashedmessages" style="max-width: 600px; background-color: #dddddd; z-index: 1031">
+                            {% for message in messages %}
+                                {{ message | safe }}
+                            {% endfor %}
+                        <a class='border border-dark text-dark rounded-0 w-100 pt-1 pb-1 pl-5 pr-5' href='javascript:void(0)' onclick="closeflash()">OK</a>
+                        </div>
+                    {% endif %}
+                {% endwith %}
+                <link rel="stylesheet" href="../static/css/newnav.css">
+                {{ navigation_page | safe }}
+                <div class="container-fluid">
+                    <div style="display: block" class="row">
+                        <div class="col-12">
+                            <nav class="navbar navbar-dark fixed-top bg-dark" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
+                                    <a id="home_link" href="{{url_for('main.index')}}"><span class="navbar-brand text-white navbar-dark mb-0 h1 font-weight-normal">In Wait of Tomorrow</span></a>
+                                    <div class="dropdown dropleft show btn-group">
+                                      <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
+                                      </button>
+                                    </div>
+                            </nav>
+                        </div>
+                    </div>
+                    <div class="row m-auto text-center w-100" style="max-width: 600px;">
+                        <div class="col-12 text-center w-100" style="margin-top: 15%">
+                            <picture class="w-100">
+                                 <source style="max-width: 200px; height: auto" srcset="../static/img/logo.webp" type="image/webp">
+                                 <img itemscope itemtype="https://schema.org/ImageObject" src="../static/img/logo.jpeg" alt="Logo" style="max-width: 200px; height: auto">
+                            </picture>
+                        </div>
+                    </div>
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+                    <script src="https://kit.fontawesome.com/7380e39ab3.js" crossorigin="anonymous"></script>
+                    <div class="container-fluid w-100 row m-auto text-center" style="max-width: 600px">
+                        <div class="text-center text-dark p-2 col-12 pb-2 w-100 m-auto">
+                            <a href="https://www.facebook.com/inwaitoftomorrow/" class="fa fa-facebook"></a>
+                            <a href="https://www.instagram.com/inwaitoftomorrow/" class="fa fa-twitter"></a>
+                            <a href="https://twitter.com/InWaitofTomorr1" class="fa fa-instagram"></a>
+                            <a href="https://www.reddit.com/user/inwaitoftomorrow" class="fa fa-reddit"></a>
+                        </div>
+                    </div>
+
+                    <h1 class="row w-100 ml-0 mt-3 h1 display-4 font-weight-normal" id="postTitle" itemprop="name">Write For Us</h1>
+
+                    <div class="row pb-3">
+                        <img itemtype="primaryImageOfPage, image" src="../static/img/write-for-us-small.jpg" class="w-100" alt="Write For Us">
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-12 font-weight-normal pl-0 ml-0 w-100">
+
+                            <p>Would you like to write for us about science and technology? At In Wait of Tomorrow we’re constantly looking to grow our team. We are a news and blog website that write mainly about science and technology, we work hard to try and write content that people enjoy and that we enjoy talking about. </p>
+                            <p>Our website is coded, designed and developed completely from scratch, we have a following on Instagram, Facebook and Twitter as well as an email newsletter! With all the hard work put into maintaining the website and social media pages, there’s less time for the actual writing, which is why we would love more people to contribute! If you’d like to join our team and become a regular writer, or publish a guest post, we would love to hear from you. You can choose your own content - the topics we and our fans like the most include (but not limited to):<p>
+                            <ul>
+                                <li>Environment & Conservation</li>
+                                <li>Biotechnology</li>
+                                <li>Science Fiction film/tv/book articles</li>
+                                <li>Healthcare</li>
+                                <li>Technology & AI</li>
+                            </ul>
+                            <h2 class=“font-weight-normal”>Why write for us?</h2>
+                            <p>It’s a great thing to do in your spare time, if you’ve got a message you want people to hear and you want to build up a following, join us! If you write for us, you’ll get your own Author page, with a link that you can share with friends, family and also include in your CV and any applications. The page will contain your own short description, links to your chosen social media profiles and a list of all the articles you’ve written. </p>
+                            <p>If you’re interested, drop us an email at inwaitoftomorrow@gmail.com, or use the contact form below!</p>
+
+                        </div>
+                    </div>
+
+                    <div class="row m-auto w-100 pb-2 pt-3" style="max-width: 800px">
+                        <!--Contact form-->
+                        <form class="user w-100 text-left pb-4" method="POST" novalidate id="contactForm" enctype="multipart/form-data">
+                            <h3 class="ml-0 pl-0 pb-4">Contact</h3>
+                            {{ form.hidden_tag() }}
+                            {% from "_formhelpers.html" import render_field %}
+                            <div class="form-group font-weight-normal">
+                                {{ render_field(form.name, class="form-control form-control-user rounded-0", placeholder="Full Name", id='userName', onchange="validateField('userName')") }}
+                            </div>
+                            <div class="form-group font-weight-normal">
+                                {{ render_field(form.email, class="form-control form-control-user rounded-0", placeholder="Email", id='userEmail', onchange="validateEmail()") }}
+                            </div>
+                            <div class="form-group font-weight-normal">
+                              {{ render_field(form.message, class="form-control form-control-user rounded-0", placeholder="Message", id='userMessage', rows="3", id='userMessage', onchange="validateField('userMessage')") }}
+                            </div>
+                            <div class="form-group font-weight-normal">
+                                <input type="file" name="file">
+                            </div>
+                            {{ render_field(form.submit, class="btn btn-dark btn-user btn-block rounded-0", id="formSubmit") }}
+                        </form>
+                    </div>
+                </div>
+            {% else %}
+
+                <div class="row m-auto pt-3">
+                    <link rel="stylesheet" href="../static/css/newnav.css">
+                    {{ navigation_page | safe }}
+                    <div class="container-fluid" style="max-width: 1000px">
+
+                        <!-- Navigation bar-->
+                        <div class="container-fluid" id="navigation">
+                            <div id="nav_one" style="display: block" class="row">
+                                <div class="col-12">
+                                    <nav class="navbar navbar-dark fixed-top bg-dark" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
+                                        <a id="home_link" href="{{url_for('main.index')}}"><span class="navbar-brand text-white navbar-dark mb-0 h1 font-weight-normal">In Wait of Tomorrow</span></a>
+                                        <div>
+                                            <i class="fas fa-search text-white" onclick="openNav()" style="border: none"></i>
+                                            <div class="dropdown dropleft show btn-group">
+                                              <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
+                                              </button>
+                                            </div>
+                                        </div>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="container-fluid m-auto" style="max-width: 80vw;">
+
+                            <!--Top logo-->
+                            <div class="text-center text-dark p-2" style="margin-top:5%">
+                                <div class="col-12 text-center w-100">
+                                    <picture class="w-100">
+                                         <source style="max-width: 200px; height: auto" srcset="../static/img/logo.webp" type="image/webp">
+                                         <img itemscope itemtype="https://schema.org/ImageObject" src="../static/img/logo.jpeg" alt="Logo" style="max-width: 200px; height: auto">
+                                    </picture>
+                                </div>
+
+                                <!-- Displays flashed messages on a page -->
+                                {% with messages = get_flashed_messages() %}
+                                        {% if messages %}
+                                            <div class="text-center m-auto p-5 font-weight-normal fixed-top" id="flashedmessages" style="max-width: 600px; background-color: #dddddd; z-index: 1031">
+                                                {% for message in messages %}
+                                                    {{ message | safe }}
+                                                {% endfor %}
+                                            <a class='border border-dark text-dark rounded-0 w-100 pt-1 pb-1 pl-5 pr-5' href='javascript:void(0)' onclick="closeflash()">OK</a>
+                                            </div>
+                                        {% endif %}
+                                {% endwith %}
+                            </div>
+                            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+                            <script src="https://kit.fontawesome.com/7380e39ab3.js" crossorigin="anonymous"></script>
+                            <div class="container-fluid w-100 row m-auto text-center" style="max-width: 600px">
+                                <div class="text-center text-dark p-2 col-12 pb-2 w-100 m-auto">
+                                    <a href="https://www.facebook.com/inwaitoftomorrow/" class="fa fa-facebook"></a>
+                                    <a href="https://www.instagram.com/inwaitoftomorrow/" class="fa fa-twitter"></a>
+                                    <a href="https://twitter.com/InWaitofTomorr1" class="fa fa-instagram"></a>
+                                    <a href="https://www.reddit.com/user/inwaitoftomorrow" class="fa fa-reddit"></a>
+                                </div>
+                            </div>
+
+                            <!--Main title-->
+                            <h1 class="row w-100 ml-3 mr-3 mt-3 h1 display-4 font-weight-normal" style="max-width: 80vw" id="postTitle" itemprop="name">Write For Us</h1>
+                            <div class="dropdown-divider text-center mb-0 pb-4" style="max-width: 70vw"></div>
+                        </div>
+
+                        <!--Main body-->
+                        <div class="container-fluid row m-auto" style="max-width: 80vw">
+                            <div class="container-fluid col-8">
+                                <div class="pb-3">
+                                    <img itemtype="primaryImageOfPage, image"  src="../static/img/write-for-us-small.jpg" alt="Write For Us" style="max-height: 75vh" class="col-12">
+                                </div>
+                                <div class="col-12 pl-0 ml-0 font-weight-normal">
+                                    <p>Would you like to write for us about science and technology? At In Wait of Tomorrow we’re constantly looking to grow our team. We are a news and blog website that write mainly about science and technology, we work hard to try and write content that people enjoy and that we enjoy talking about. </p>
+                                    <p>Our website is coded, designed and developed completely from scratch, we have a following on Instagram, Facebook and Twitter as well as an email newsletter! With all the hard work put into maintaining the website and social media pages, there’s less time for the actual writing, which is why we would love more people to contribute! If you’d like to join our team and become a regular writer, or publish a guest post, we would love to hear from you. You can choose your own content - the topics we and our fans like the most include (but not limited to):<p>
+                                    <ul>
+                                        <li>Environment & Conservation</li>
+                                        <li>Biotechnology</li>
+                                        <li>Science Fiction film/tv/book articles</li>
+                                        <li>Healthcare</li>
+                                        <li>Technology & AI</li>
+                                    </ul>
+                                    <h2 class=“font-weight-normal”>Why write for us?</h2>
+                                    <p>It’s a great thing to do in your spare time, if you’ve got a message you want people to hear and you want to build up a following, join us! If you write for us, you’ll get your own Author page, with a link that you can share with friends, family and also include in your CV and any applications. The page will contain your own short description, links to your chosen social media profiles and a list of all the articles you’ve written. </p>
+                                    <p>If you’re interested, drop us an email at inwaitoftomorrow@gmail.com, or use the contact form below!</p>
+                                </div>
+                                <div class="col-12 m-auto font-weight-normal">
+                                    <!--Contact form-->
+                                    <form class="user w-100 text-left pb-4" method="POST" novalidate id="contactForm" enctype="multipart/form-data">
+                                        <h3 class="ml-0 pl-0 pb-4">Contact</h3>
+                                        {{ form.hidden_tag() }}
+                                        {% from "_formhelpers.html" import render_field %}
+                                        <div class="form-group font-weight-normal">
+                                            {{ render_field(form.name, class="form-control form-control-user rounded-0", placeholder="Full Name", id='userName', onchange="validateField('userName')") }}
+                                        </div>
+                                        <div class="form-group font-weight-normal">
+                                            {{ render_field(form.email, class="form-control form-control-user rounded-0", placeholder="Email", id='userEmail', onchange="validateEmail()") }}
+                                        </div>
+                                        <div class="form-group font-weight-normal">
+                                          {{ render_field(form.message, class="form-control form-control-user rounded-0", placeholder="Message", id='userMessage', rows="3", id='userMessage', onchange="validateField('userMessage')") }}
+                                        </div>
+                                        <div class="form-group font-weight-normal">
+                                            <input type="file" name="file">
+                                        </div>
+                                        {{ render_field(form.submit, class="btn btn-dark btn-user btn-block rounded-0", id="formSubmit") }}
+                                    </form>
+                                </div>
+
+                            </div>
+                            <div class="col-4 pt-2 mr-0 ml-0" id="articles">
+
+                                <!--Recent articles-->
+                                <h3 class="font-weight-normal text-left ml-0 pt-4">Recent posts {% if article_category|length %}in {{ article_category }}{% endif %}</h3>
+                                {% if latest_articles|length %}
+                                    <div class="m-auto" style="max-width: 600px">
+                                        {% for post in latest_articles %}
+                                            <link rel="stylesheet" href="../../static/css/hovering.css">
+                                            <div class="card mb-3 rounded-0" style="width: 100%" itemscope itemtype="https://schema.org/Blog">
+                                                <div class="hovereffect">
+                                                    <picture>
+                                                        <source style="max-width: 600px; height: auto" class="card-img-top img-fluid" srcset="..{{ post.Image_root }}" type="image/webp">
+                                                        <img class="card-img-top img-fluid" itemscope itemtype="https://schema.org/ImageObject" src="..{{ post.Image_iphone }}" alt="{{ post.Title }}" style="max-width: 600px; height: auto">
+                                                    </picture>
+                                                        <div class="overlay" id="img_overlay">
+                                                        <p class="text-white text-left ml-1" style="font-size: small" itemprop="description">{{ post.Description }}<br><a class="text-center bg-transparent border-white btn rounded-0 text-white w-50" style="font-size: x-small" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}">Read more</a></p>
+                                                    </div>
+                                                </div>
+                                              <div class="card-body">
+                                                  <h6 class="card-subtitle mb-2 text-muted font-weight-normal ml-0">{{ post.author }} | {{ post.Date }}</h6>
+                                                  <a class="mb-2 ml-0" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"><p class="card-text mb-2 ml-0" itemprop="name">{{ post.Title }}</p></a>
+                                                  <p class="card-subtitle mb-2 text-muted font-weight-normal ml-0">{{ post.category }} | 4 min read</p>
+                                              </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <p>Sorry, no posts are available at this time</p>
+                                {% endif %}
+                            </div>
+                        </div>
+            {% endif %}
+        </div>
+    </div>
+{{ footer|safe }}
+<script>
+
+    function loadUp(){
+        document.getElementById('formSubmit').disabled = true;
+    }
+
+    function openNav() {
+      document.getElementById("myNav").style.width = "100%";
+      document.getElementById("articles").style.visibility = "hidden"
+    }
+
+
+    function closeNav() {
+      document.getElementById("myNav").style.width = "0%";
+      document.getElementById("articles").style.visibility = "visible"
+    }
+
+    function closeflash(){
+        document.getElementById('flashedmessages').style.visibility = "hidden";
+    }
+
+    function validateField(fieldName){
+        let userName = document.getElementById(fieldName).value;
+        if (!userName){
+            document.getElementById(fieldName).classList.add("border-danger");
+            document.getElementById('formSubmit').disabled = true;
+        }
+        else {
+            document.getElementById(fieldName).classList.remove("border-danger");
+            document.getElementById('formSubmit').disabled = false;
+        }
+
+    }
+
+    function validateEmail(){
+        let userEmail = document.getElementById('userEmail').value;
+        validateField('userEmail');
+        if (!userEmail.includes('@') || !userEmail.includes('.')){
+            document.getElementById('userEmail').classList.add("border-danger");
+            document.getElementById('formSubmit').disabled = true;
+        }
+        else {
+            document.getElementById('userEmail').classList.remove("border-danger");
+            document.getElementById('formSubmit').disabled = false;
+        }
+    }
+
+</script>
+</body>
+</html>

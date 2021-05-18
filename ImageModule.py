@@ -11,4 +11,4 @@ def image_resize(filename):
 
 
 if __name__ == "__main__":
-    image_resize('test.jpg')
+    image_resize('write-for-us.jpg')

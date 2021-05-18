@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        {%  if allow_third_party_cookies == "True" %}
-        <!-- Global site tag (gtag.js) - Google Analytics -->
+<head>
+    {%  if allow_third_party_cookies == "True" %}
+    <!-- Global site tag (gtag.js) - Google Analytics -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=UA-159574205-1"></script>
         <script>
           window.dataLayer = window.dataLayer || [];
@@ -13,7 +13,6 @@
         </script>
     {% else %}
     {% endif %}
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta property="og:title" content="In Wait of Tomorrow"/>
@@ -67,8 +66,13 @@
         <!-- End Facebook Pixel Code -->
     {% else %}
     {% endif %}
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
 </head>
-<body style="font-family: 'Cabin', sans-serif;">
+
+<body style="background-color: #dddddd; font-family: 'Cabin', sans-serif;" itemscope itemtype="https://schema.org/WebPage">
+
+    <!-- Flashed messages -->
     {% with messages = get_flashed_messages() %}
             {% if messages %}
                 <div class="text-center m-auto p-5 font-weight-normal fixed-top" id="flashedmessages" style="max-width: 600px; background-color: #dddddd; z-index: 1031">
@@ -79,129 +83,164 @@
                 </div>
             {% endif %}
     {% endwith %}
-  <div id="myNav" class="overlay">
-      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-      <div class="overlay-content">
-          <a href="{{ url_for('main.show_blog') }}">Latest articles</a>
-          <div class="dropdown-divider text-center align-self-center m-auto" style="max-width: 600px"></div>
-          {% for category in categories %}
-            {% if category.category_name != "Blog" %}
-                <a href="{{ url_for('main.show_blog_category', category=category.category_name) }}">{{ category.category_name }}</a>
+
+    <link rel="stylesheet" href="../../static/css/newnav.css">
+    {{ navigation_page| safe }}
+
+    <!-- Mobile design-->
+
+    {% if request.MOBILE %}
+        <div class="container-fluid mainimage opacity-5" style="background-color: white">
+
+            <!-- Navbar -->
+            <div style="display: block" class="row">
+                <div class="col-12">
+                    <nav class="navbar navbar-dark fixed-top bg-white" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
+                        <a id="home_link" href="{{url_for('main.index')}}"><span class="navbar-brand text-dark navbar-dark mb-0 h1 font-weight-normal">In Wait of Tomorrow</span></a>
+                        <div class="dropdown dropleft show btn-group">
+                              <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
+                              </button>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Social media and search-->
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+            <script src="https://kit.fontawesome.com/7380e39ab3.js" crossorigin="anonymous"></script>
+            <div class="container-fluid w-100 row m-auto text-center" style="padding-top: 10vh; max-width: 600px">
+                <div class="col-12 text-center w-100">
+                    <picture class="w-100">
+                            <img itemscope itemtype="https://schema.org/ImageObject" src="../static/img/{% for persona in person %}{{ persona.carikita }}{% endfor %}" alt="Caricature" style="max-width: 200px; height: auto">
+                    </picture>
+                </div>
+                <div class="row w-100 m-auto text-center pb-5" style="max-width: 600px">
+            		<h2 class="font-weight-normal mt-2 text-center w-100 m-auto">{% for persona in person %}{{ persona.author_name }}{% endfor %}</h2>
+            		<p class="font-weight-normal text-center w-100 m-auto">Roles: {% for persona in person %}{{ persona.roles }}{% endfor %}</p>
+            		<p class="font-weight-normal text-center w-100 m-auto">{% for persona in person %}{{ persona.description }}{% endfor %} Check out my articles below!</p>
+                    <span class="w-100 m-auto text-center"><a class="text-dark" href="https://twitter.com/{% for persona in person %}{{ persona.twitter }}{% endfor %}"><i class="fab fa-twitter-square" style="border: none"></i></a> <a class="text-dark" href="https://www.linkedin.com/in/{% for persona in person %}{{ persona.linkedin }}{% endfor %}/"><i style="border: none" class="fab fa-linkedin-in"></i></a></span>
+        	    </div>
+            </div>
+            <br>
+        </div>
+
+        <!-- Articles-->
+        <div class="container-fluid w-100 pt-5">
+            {% if posts|length %}
+                <div class="m-auto" style="max-width: 600px">
+                    {% for post in posts %}
+                        <link rel="stylesheet" href="../../static/css/hovering.css">
+                        <div class="card mb-3 rounded-0" style="width: 100%" itemscope itemtype="https://schema.org/Blog">
+                            <div class="hovereffect rounded-0 bg-transparent">
+                                <picture>
+                                    <source style="max-width: 600px; height: auto" class="card-img-top img-fluid" srcset="..{{ post.Image_root }}" type="image/webp">
+                                    <img class="card-img-top img-fluid" itemscope itemtype="https://schema.org/ImageObject" src="..{{ post.Image_iphone }}" alt="{{ post.Title }}" style="max-width: 600px; height: auto; border-radius: 0!important;">
+                                </picture>
+                                <div class="overlay" id="img_overlay">
+                                    <p class="text-white text-left ml-1" style="font-size: small" itemprop="description">{{ post.Description }}<br><a class="text-center bg-transparent border-white btn rounded-0 text-white w-50" style="font-size: x-small" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}">Read more</a></p>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2 text-muted font-weight-normal">{{ post.author }} | {{ post.Date }}</h6>
+                                <a class="h4 mb-2 font-weight-normal ml-0" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"><p class="card-text mb-2" itemprop="name">{{ post.Title }}</p></a>
+                                <p class="card-subtitle mb-2 text-muted font-weight-normal">{{ post.category }} | 4 min read</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>Sorry, no posts are available at this time</p>
             {% endif %}
-          {% endfor %}
-      </div>
-  </div>
-    <div class="container-fluid">
-        <div class="row">
-            <nav class="navbar navbar-dark bg-dark container-fluid" itemscope itemtype="https://schema.org/SiteNavigationElement">
-                <a href="{{url_for('main.index')}}"><span class="navbar-brand text-white mb-0 h1 font-weight-normal">In Wait of Tomorrow</span></a>
-                <div class="dropdown dropleft show btn-group">
-                  <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
-                  </button>
-                </div>
-            </nav>
         </div>
-    {% if request.MOBILE %}
-        <div class="row w-100 card m-auto text-center" style="max-width: 600px">
-            <img class="card-img-top img-fluid w-100 h-auto" src="../static/img/{% for persona in person %}{{ persona.carikita }}{% endfor %}" alt="carikatures">
-            <div class="card-footer"><a href="https://carikita.nw.r.appspot.com">Get your caricatures drawn now by Carikita!</a></div>
-        </div>
-        <script type="text/javascript" src="https://platform.linkedin.com/badges/js/profile.js" async defer></script>
-        <div class="row w-100 m-auto text-left pb-5" style="background-color: #dddddd; max-width: 600px">
-            <h2 class="font-weight-normal mt-5">{% for persona in person %}{{ persona.author_name }}{% endfor %}</h2>
-            <p>Roles: {% for persona in person %}{{ persona.roles }}{% endfor %}</p>
-            <p>{% for persona in person %}{{ persona.description }}{% endfor %} Check out my articles below!</p>
-            <div class="ml-3"><div class="LI-profile-badge" data-version="v1" data-size="medium" data-locale="en_US" data-type="horizontal" data-theme="dark" data-vanity="{% for persona in person %}{{ persona.linkedin }}{% endfor %}"><a class="LI-simple-link" href='https://uk.linkedin.com/in/{% for persona in person %}{{ persona.linkedin }}{% endfor %}?trk=profile-badge'>{% for persona in person %}{{ persona.author_name }}{% endfor %}</a></div></div>
-        </div>
+
+        {{ footer|safe }}
+
+    <!--Computer design-->
     {% else %}
-        <div class="row mt-5 ml-auto mr-auto mb-auto pb-5 w-100" style="max-width: 1000px">
-            <div class="col-4 card">
-                <img class="card-img" src="../static/img/{% for persona in person %}{{ persona.carikita }}{% endfor %}" style="max-width:300px" alt="carikatures">
-                <div class="card-footer"><a href="https://carikita.nw.r.appspot.com">Get your caricatures drawn now by Carikita!</a></div>
+        <div class="container-fluid mainimage opacity-5" style="background-color: white">
+            <!--Navbar-->
+            <div style="display: block" class="row">
+                <div class="col-12">
+                    <nav class="navbar navbar-dark fixed-top bg-white" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
+                            <a id="home_link" href="{{url_for('main.index')}}"><span class="navbar-brand text-dark navbar-dark mb-0 h1 font-weight-normal">In Wait of Tomorrow</span></a>
+                            <div class="dropdown dropleft show btn-group">
+                              <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
+                              </button>
+                            </div>
+                    </nav>
+                </div>
             </div>
-            <script type="text/javascript" src="https://platform.linkedin.com/badges/js/profile.js" async defer></script>
-            <div class="col-8 text-left pb-5" style="background-color: #dddddd">
-                <h2 class="font-weight-normal mt-5">{% for persona in person %}{{ persona.author_name }}{% endfor %}</h2>
-                <p>Roles: {% for persona in person %}{{ persona.roles }}{% endfor %}</p>
-                <p>{% for persona in person %}{{ persona.description }}{% endfor %} Check out my articles below!</p>
-                <div class="ml-2"><div class="LI-profile-badge" data-version="v1" data-size="medium" data-locale="en_US" data-type="horizontal" data-theme="dark" data-vanity="{% for persona in person %}{{ persona.linkedin }}{% endfor %}"><a class="LI-simple-link" href='https://uk.linkedin.com/in/{% for persona in person %}{{ persona.linkedin }}{% endfor %}?trk=profile-badge'>{% for persona in person %}{{ persona.author_name }}{% endfor %}</a></div></div>
+
+            <!--Social media, categories and search-->
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+            <script src="https://kit.fontawesome.com/7380e39ab3.js" crossorigin="anonymous"></script>
+            <div class="container-fluid w-100 row m-auto" style="min-height: 50vh;">
+                <div class="col-12 text-center w-100 mt-5 ml-auto mr-auto">
+                    <picture class="w-100">
+                            <img itemscope itemtype="https://schema.org/ImageObject" src="../static/img/{% for persona in person %}{{ persona.carikita }}{% endfor %}" alt="Caricature" style="max-width: 200px; height: auto">
+                    </picture>
+                </div>
+                <div class="row w-100 m-auto text-center pb-5" style="max-width: 600px">
+            		<h2 class="font-weight-normal mt-2 text-center w-100 m-auto">{% for persona in person %}{{ persona.author_name }}{% endfor %}</h2>
+            		<p class="font-weight-normal text-center w-100 m-auto">Roles: {% for persona in person %}{{ persona.roles }}{% endfor %}</p>
+            		<p class="font-weight-normal text-center w-100 m-auto">{% for persona in person %}{{ persona.description }}{% endfor %} Check out my articles below!</p>
+                    <span class="w-100 m-auto text-center"><a class="text-dark" href="https://twitter.com/{% for persona in person %}{{ persona.twitter }}{% endfor %}"><i class="fab fa-twitter-square" style="border: none"></i></a> <a class="text-dark" href="https://www.linkedin.com/in/{% for persona in person %}{{ persona.linkedin }}{% endfor %}/"><i style="border: none" class="fab fa-linkedin-in"></i></a></span>
+        	    </div>
             </div>
         </div>
-    {% endif %}
-    {% if request.MOBILE %}
-    <h3 class="font-weight-normal text-center align-self-center align-content-center w-100 mt-2">Articles by {% for author in person %}{{ author.author_name }}{% endfor %}</h3>
-    {% if posts|length %}
-        <div class="row m-auto w-100" style="max-width: 600px">
-            {% for post in posts %}
+        <!-- Articles-->
+        {% if posts|length %}
+            <div class="row m-auto container-fluid pt-5" id="cards">
                 <link rel="stylesheet" href="../../static/css/hovering.css">
-                <div class="card mb-3 rounded-0" style="width: 100%" itemscope itemtype="https://schema.org/Blog">
-                    <div class="hovereffect">
-                        <picture>
-                            <source style="max-width: 600px; height: auto" class="card-img-top img-fluid" srcset="..{{ post.Image_root }}" type="image/webp">
-                            <img class="card-img-top img-fluid" itemscope itemtype="https://schema.org/ImageObject" src="..{{ post.Image_iphone }}" alt="{{ post.Title }}" style="max-width: 600px; height: auto">
-                        </picture>
-                            <div class="overlay" id="img_overlay">
-                            <p class="text-white" itemprop="description">{{ post.Description }}...<br><a class="h4 text-white" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"> Read more...</a></p>
+                {% for post in posts %}
+                    <div class="col-3">
+                        <div class="card mb-3 rounded-0" style="border-color: #dddddd" itemscope itemtype="https://schema.org/Blog">
+                            <div class="hovereffect" style="min-height: 400px">
+                                <picture>
+                                    <source style="max-width: 600px; height: auto" class="card-img-top img-fluid" srcset="..{{ post.Image_root }}" type="image/webp">
+                                    <img class="card-img-top img-fluid" itemscope itemtype="https://schema.org/ImageObject" src="..{{ post.Image_iphone }}" alt="{{ post.Title }}" style="max-width: 600px; height: auto">
+                                </picture>
+                                <div class="overlay" id="img_overlay">
+                                    <p class="text-white text-left ml-1" style="font-size: small" itemprop="description">{{ post.Description }}<br><a class="text-center bg-transparent border-white btn rounded-0 text-white w-50" style="font-size: x-small" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}">Read more</a></p>
+                                </div>
+                            </div>
+                          <div class="card-body" style="min-height: 200px">
+                              <h6 class="card-subtitle mb-2 text-muted font-weight-normal">{{ post.author }} | {{ post.Date }}</h6>
+                              <a class="text-dark font-weight-normal h-5 mb-2" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"><p class="card-text mb-2" itemprop="name">{{ post.Title }}</p></a>
+                              <h6 class="card-subtitle mb-2 text-muted font-weight-normal">{{ post.category }} | 4 min read</h6>
+                          </div>
                         </div>
                     </div>
-                  <div class="card-body">
-                      <h6 class="card-subtitle mb-2 text-muted font-weight-normal ml-0">{{ post.author }} | {{ post.Date }}</h6>
-                      <a class="h4 mb-2 font-weight-normal ml-0" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"><p class="card-text mb-2 font-weight-normal ml-0" itemprop="name">{{ post.Title }}</p></a>
-                      <p class="card-subtitle mb-2 text-muted font-weight-normal ml-0">{{ post.category }} | 4 min read</p>
-                  </div>
-                </div>
-            {% endfor %}
-        </div>
-    {% else %}
-    <p>Sorry, no posts are available at this time</p>
-    {% endif %}
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>Sorry, no posts are available at this time</p>
+        {% endif %}
 
-{% else %}
-    <h3 class="font-weight-normal text-center align-self-center align-content-center mt-5">Articles by {% for author in person %}{{ author.author_name }}{% endfor %}</h3>
-    {% if posts|length %}
-        <div class="row m-2 w-100" id="cards">
-        <link rel="stylesheet" href="../../static/css/hovering.css">
-            {% for post in posts %}
-                <div class="col-4">
-                <div class="card mb-3 rounded-0" style="border-color: #dddddd" itemscope itemtype="https://schema.org/Blog">
-                    <div class="hovereffect">
-                        <picture>
-                            <source style="max-width: 600px; height: auto" class="card-img-top img-fluid" srcset="..{{ post.Image_root }}" type="image/webp">
-                            <img class="card-img-top img-fluid" itemscope itemtype="https://schema.org/ImageObject" src="..{{ post.Image_iphone }}" alt="{{ post.Title }}" style="max-width: 600px; height: auto">
-                        </picture>
-                        <div class="overlay" id="img_overlay">
-                            <p class="text-white" itemprop="description">{{ post.Description }}...<br><a class="text-white" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"> Read more...</a></p>
-                        </div>
-                    </div>
-                  <div class="card-body">
-                      <h6 class="card-subtitle mb-2 text-muted font-weight-normal">{{ post.author }} | {{ post.Date }}</h6>
-                      <a class="text-dark font-weight-normal h-5 mb-2" href="{{ url_for('blogs.post', Post_ID = post.Post_ID) }}"><p class="card-text mb-2" itemprop="name">{{ post.Title }}</p></a>
-                      <h6 class="card-subtitle mb-2 text-muted font-weight-normal">{{ post.category }} | 4 min read</h6>
-                  </div>
-                </div>
-                </div>
-            {% endfor %}
-        </div>
-    {% else %}
-    <p>Sorry, no posts are available at this time</p>
-    {% endif %}
+        {{ footer|safe }}
 
     {% endif %}
-    </div>
+
+
+
 <script>
     function openNav() {
       document.getElementById("myNav").style.width = "100%";
+      document.getElementById("img_overlay").className = document.getElementById("img_overlay").className.replace( /(?:^|\s)overlay(?!\S)/g , '' )
       document.getElementById("cards").style.visibility = "hidden"
     }
 
     function closeNav() {
       document.getElementById("myNav").style.width = "0%";
+      document.getElementById("img_overlay").className = document.getElementById("img_overlay").className.replace( /(?:^|\s)(?!\S)/g , 'overlay' )
       document.getElementById("cards").style.visibility = "visible"
+
     }
 
     function closeflash(){
         document.getElementById('flashedmessages').style.visibility = "hidden";
     }
+
 </script>
 </body>
 </html>

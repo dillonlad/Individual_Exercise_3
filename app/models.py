@@ -11,6 +11,7 @@ class Authors(db.Model):
     roles = db.Column(db.Text)
     description = db.Column(db.Text)
     carikita = db.Column(db.Text)
+    twitter = db.Column(db.Text)
 
 
 class Comments_dg_tmp(db.Model):

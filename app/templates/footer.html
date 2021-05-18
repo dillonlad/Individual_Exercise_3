@@ -9,6 +9,7 @@
                 <p><a href="{{ url_for('main.index') }}" class="w-100 text-white">Home</a></p>
                 <p><a href="{{ url_for('main.privacy_policies') }}" class="w-100 text-white">Privacy & Cookies</a></p>
                 <p><a href="{{ url_for('main.index') }}" class="w-100 text-white">About Us</a></p>
+                <p><a href="{{ url_for('main.write_for_us') }}" class="pt-2 text-white">Join the team!</a></p>
                 <p><a href="{{ url_for('shop.shop') }}" class="pt-2 text-white">Shop</a></p>
                 <p><a href="{{ url_for('shop.shop_item', id="what-next-bro-light") }}" class="text-white">What Next Bro? Hoodie</a></p>
             </div>
@@ -26,6 +27,7 @@
         {% else %}
             <div class="col-4 text-left">
                 <p><a href="{{ url_for('main.index') }}" class="w-100 text-white">Home</a></p>
+                <p><a href="{{ url_for('main.write_for_us') }}" class="w-100 text-white">Join the team!</a></p>
                 <p><a href="{{ url_for('main.privacy_policies') }}" class="w-100 text-white">Privacy & Cookies</a></p>
                 <p><a href="{{ url_for('main.index') }}" class="w-100 text-white">About Us</a></p>
             </div>

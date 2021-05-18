@@ -1,5 +1,5 @@
+import io
 from datetime import timedelta, datetime
-from tkinter import Image
 from urllib.parse import urlparse, urljoin
 
 from flask import render_template, Blueprint, request, flash, redirect, url_for, Flask, make_response, abort, \
@@ -21,7 +21,8 @@ from app.AuthenticationModule import otp_required, otp_verified, is_admin, url_h
 from app.HelloAnalytics import initialize_analyticsreporting, print_response, get_report, get_report_most_popular
 from app.LoadingModule import load_templates
 
-from app.main.forms import SignupForm, LoginForm, PostForm, BlogEditor, CreateArticle, SearchForm, OTPForm, ImageUpload
+from app.main.forms import SignupForm, LoginForm, PostForm, BlogEditor, CreateArticle, SearchForm, OTPForm, ImageUpload, \
+    ContactForm
 
 from app.models import Posts_two, Blogs, Profile, Categories, Series, Authors, Comments_dg_tmp, \
     mailing_list, shop_items
@@ -29,7 +30,14 @@ from PIL import Image
 
 bp_main = Blueprint('main', __name__)
 ext = Sitemap()
+ADMINS = ['inwaitoftomorrow@gmail.com']
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp', 'heic'}
+FILE_UPLOAD_MIMETYPES = [
+    {"Extension": ".docx", "Mimetype": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"},
+    {"Extension": ".doc", "Mimetype": "application/msword"},
+    {"Extension": ".txt", "Mimetype": "text/plain"},
+    {"Extension": ".pdf", "Mimetype": "application/pdf"}
+]
 
 
 def pass_through():
@@ -213,6 +221,48 @@ def article_search(search_query):
         return redirect(url_for('main.article_search', search_query=search))
     return render_template("mobile/blog_results.html", allow_third_party_cookies = allow_third_party_cookies, posts=posts, categories=categories, form=form, article_category=search_query,
                        navigation_page=navigation_page, footer=footer)
+
+
+@bp_main.route('/write-for-us', methods=['POST', 'GET'])
+@url_https
+def write_for_us():
+    categories, navigation_page, allow_third_party_cookies, footer = load_templates()
+    latest_articles = Blogs.query.order_by(desc(Blogs.article_id)).limit(5).all()
+    form = ContactForm(request.form)
+    if request.method == "POST":
+
+        uploaded_file = request.files.get('file')
+        file_allowed = False
+        if uploaded_file:
+            file_allowed = any(file_type["Extension"] in uploaded_file.filename for file_type in FILE_UPLOAD_MIMETYPES)
+            print(file_allowed)
+
+            if not file_allowed:
+                flash(render_template_string("""<p>File type not supported, please upload file in: </p> 
+                    <ul><li>.docx</li> <li>.doc</li> <li>.pdf</li> <li>.txt</li></ul>"""))
+                return redirect(url_for('main.write_for_us'))
+
+        with app.mail.connect() as conn:
+
+            msg = Message('Contact - Write For Us', sender=ADMINS[0], recipients=["dlad82434@gmail.com"])
+            msg.html = """
+                <p>Name: {}</p>
+                <p>Email: {}</p>
+                <p>Message: {}</p>
+            """.format(form.name.data, form.email.data, form.message.data)
+            if file_allowed:
+                attachment_bytes = io.BytesIO(uploaded_file.read())
+                attachment_buffer = attachment_bytes.getvalue()
+                mime_type = next((file_type["Mimetype"] for file_type in FILE_UPLOAD_MIMETYPES if file_type["Extension"]
+                                 in uploaded_file.filename), None)
+                msg.attach(uploaded_file.filename, mime_type, attachment_buffer)
+            conn.send(msg)
+
+            return "COMPLETED"
+
+    return render_template('writeforus.html', categories=categories, navigation_page=navigation_page,
+                           allow_third_party_cookies=allow_third_party_cookies, footer=footer,
+                           latest_articles=latest_articles, form=form)
 
 
 @bp_main.route('/series/<series_key>', methods=['POST', 'GET'])
@@ -490,7 +540,7 @@ def authors(author_id):
         for geeza in person:
             person_name.append(geeza.author_name)
         posts = Blogs.query.filter(Blogs.author.contains(person_name[0])).order_by(desc(Blogs.article_id)).all()
-        return render_template('author.html', allow_third_party_cookies=allow_third_party_cookies, categories=categories, person=person, posts=posts, navigation_page=navigation_page)
+        return render_template('author.html', allow_third_party_cookies=allow_third_party_cookies, categories=categories, person=person, posts=posts, navigation_page=navigation_page, footer=footer)
     else:
         return abort(404)
 

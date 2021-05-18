@@ -70,4 +70,10 @@ class ImageUpload(FlaskForm):
     filename = StringField("Filename")
     Submit = SubmitField('Submit', id="form-submit")
 
+class ContactForm(FlaskForm):
+    name = StringField("Name")
+    email = StringField("Email")
+    message = TextAreaField("Message")
+    submit = SubmitField("Submit")
+
 

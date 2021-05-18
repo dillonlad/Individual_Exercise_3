@@ -28,15 +28,16 @@
                     </div>
                 {% else %}
                 {% endif %}
-                  <a href="{{ url_for('main.show_blog') }}">Latest articles</a>
+                    <a href="{{ url_for('main.show_blog') }}">Latest articles</a>
+                    <a href="{{ url_for('main.write_for_us') }}">Join the team!</a>
                     <a href="{{ url_for('shop.shop') }}">SHOP</a>
-                  <div class="dropdown-divider text-center align-self-center m-auto" style="max-width: 600px"></div>
-                  {% for category in categories %}
-                    {% if category.category_name != "Blog" %}
-                        <a href="{{ url_for('main.show_blog_category', category=category.category_name) }}">{{ category.category_name }}</a>
-                    {% endif %}
-                  {% endfor %}
-              </div>
+                    <div class="dropdown-divider text-center align-self-center m-auto" style="max-width: 600px"></div>
+                    {% for category in categories %}
+                        {% if category.category_name != "Blog" %}
+                            <a href="{{ url_for('main.show_blog_category', category=category.category_name) }}">{{ category.category_name }}</a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
         {% else %}
                 <div class="overlay-content mt-0 row ml-auto mr-auto" style="max-width: 800px">
                 {% if '/blogs/' in request.url %}
@@ -59,18 +60,23 @@
                     </div>
                 {% else %}
                 {% endif %}
-                <div class="col-6 border-white border-right">
+                <div class="col-4 p-3" style="text-align: left!important; font-size: 20px!important;">
                     <a href="{{ url_for('main.index') }}">Homepage</a>
                     <a href="{{ url_for('main.show_blog') }}">Latest articles</a>
-                    <a href="{{ url_for('shop.shop') }}">SHOP</a>
+                    <a href="{{ url_for('main.write_for_us') }}">Join the team!</a>
+
                 </div>
-                  <div class="col-6">
-                  {% for category in categories %}
-                    {% if category.category_name != "Blog" %}
-                        <a href="{{ url_for('main.show_blog_category', category=category.category_name) }}">{{ category.category_name }}</a>
-                    {% endif %}
-                  {% endfor %}
+                  <div class="col-4 p-3" style="text-align: left!important; font-size: 20px!important;">
+                      {% for category in categories %}
+                        {% if category.category_name != "Blog" %}
+                            <a href="{{ url_for('main.show_blog_category', category=category.category_name) }}">{{ category.category_name }}</a>
+                        {% endif %}
+                      {% endfor %}
                   </div>
+                <div class="col-4 p-3" style="text-align: left!important; font-size: 20px!important;">
+                    <a href="{{ url_for('shop.shop') }}">SHOP</a>
+                    <a href="{{ url_for('shop.shop_item', id="what-next-bro-light") }}">What Next Bro? Hoodie</a>
+                </div>
               </div>
         {% endif %}
         </div>
