@@ -231,6 +231,14 @@ def write_for_us():
     form = ContactForm(request.form)
     if request.method == "POST":
 
+        if not form.name.data or not form.email.data:
+            flash("Please enter a valid name and email")
+            return redirect(url_for('main.write_for_us'))
+
+        if '@' not in form.email.data or '.' not in form.email.data:
+            flash("Please enter a valid email address")
+            return redirect(url_for('main.write_for_us'))
+
         uploaded_file = request.files.get('file')
         file_allowed = False
         if uploaded_file:
@@ -244,7 +252,7 @@ def write_for_us():
 
         with app.mail.connect() as conn:
 
-            msg = Message('Contact - Write For Us', sender=ADMINS[0], recipients=["dlad82434@gmail.com"])
+            msg = Message('Contact - Write For Us', sender=ADMINS[0], recipients=ADMINS)
             msg.html = """
                 <p>Name: {}</p>
                 <p>Email: {}</p>
@@ -258,7 +266,9 @@ def write_for_us():
                 msg.attach(uploaded_file.filename, mime_type, attachment_buffer)
             conn.send(msg)
 
-            return "COMPLETED"
+            flash(render_template_string("<p>Thanks for your message, we'll be in contact!</p>"))
+
+            return redirect(url_for('main.write_for_us'))
 
     return render_template('writeforus.html', categories=categories, navigation_page=navigation_page,
                            allow_third_party_cookies=allow_third_party_cookies, footer=footer,
