@@ -142,7 +142,8 @@ def index():
 @url_https
 def linkinbio():
     categories, navigation_page, allow_third_party_cookies, footer = load_templates()
-    return render_template('linkinbio.html', allow_third_party_cookies=allow_third_party_cookies, categories=categories, navigation_page=navigation_page)
+    words = ["Technology", "Environment", "Science", "Film", "Healthcare", "AI", "FinTech", "BioTech", "Computing"]
+    return render_template('linkinbio.html', allow_third_party_cookies=allow_third_party_cookies, categories=categories, navigation_page=navigation_page, words=words)
 
 
 @bp_main.route('/linkinbio/articles', methods=['POST', 'GET'])
@@ -545,12 +546,11 @@ def upload_image():
 def authors(author_id):
     categories, navigation_page, allow_third_party_cookies, footer = load_templates()
     if Authors.query.filter(Authors.author_id.contains(author_id)).all():
-        person_name = []
-        person = Authors.query.filter_by(author_id=author_id).all()
-        for geeza in person:
-            person_name.append(geeza.author_name)
-        posts = Blogs.query.filter(Blogs.author.contains(person_name[0])).order_by(desc(Blogs.article_id)).all()
-        return render_template('author.html', allow_third_party_cookies=allow_third_party_cookies, categories=categories, person=person, posts=posts, navigation_page=navigation_page, footer=footer)
+        person = Authors.query.filter_by(author_id=author_id).all()[0]
+        posts = Blogs.query.filter(Blogs.author.contains(person.author_name)).order_by(desc(Blogs.article_id)).all()
+        return render_template('author.html', allow_third_party_cookies=allow_third_party_cookies,
+                               categories=categories, person=person, posts=posts, navigation_page=navigation_page,
+                               footer=footer)
     else:
         return abort(404)
 

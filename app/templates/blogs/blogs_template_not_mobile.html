@@ -47,10 +47,17 @@
                 <div class="text-center text-dark p-2" {% if request.MOBILE %}style="margin-top: 50px" {% else %}style="margin-top:5%"{% endif %}>
                     <script src="https://kit.fontawesome.com/7380e39ab3.js" crossorigin="anonymous"></script>
                     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-                    <a href="https://www.facebook.com/inwaitoftomorrow/" class="fa fa-facebook"></a>
-                    <a href="https://www.instagram.com/inwaitoftomorrow/" class="fa fa-twitter"></a>
-                    <a href="https://twitter.com/InWaitofTomorr1" class="fa fa-instagram"></a>
-                    <a href="https://www.reddit.com/user/inwaitoftomorrow" class="fa fa-reddit"></a>
+                    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11"></script>
+                    <div id="typed-strings">
+                        <p class="lead w-100">^1000Check out our social media...^1000</p>
+                    </div>
+                    <span id="typed" class="pb-5 text-dark"></span>
+                    <div class="w-100 m-auto pt-3">
+                        <a href="https://www.facebook.com/inwaitoftomorrow/"><i class="fa fa-facebook" style="border: none; color: black; background-color: transparent"></i></a>
+                        <a href="https://www.instagram.com/inwaitoftomorrow/"><i class="fa fa-twitter" style="border: none; color: black; background-color: transparent"></i></a>
+                        <a href="https://twitter.com/InWaitofTomorr1"><i class="fa fa-instagram" style="border: none; color: black; background-color: transparent"></i></a>
+                        <a href="https://www.reddit.com/user/inwaitoftomorrow"><i class="fa fa-reddit" style="border: none; color: black; background-color: transparent"></i></a>
+                    </div>
 
                     <!-- Displays flashed messages on a page -->
                     {% with messages = get_flashed_messages() %}
@@ -230,6 +237,16 @@
 
 {% endblock %}
 {% block custom_scripts %}
+
+    <script>
+      var typed = new Typed('#typed', {
+        stringsElement: '#typed-strings',
+        typeSpeed: 25,
+        backDelay: 100,
+        backspeed: 20,
+        loop: true
+      });
+    </script>
     <script>
 
         function change_words(){

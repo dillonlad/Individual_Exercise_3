@@ -5,6 +5,8 @@ from app.HelloAnalytics import initialize_analyticsreporting, get_report_most_po
     get_report_events, get_report_pageviews
 from app.models import Blogs
 
+abbreviations = [{"abbrev": "tech", "full": "technology"}, {"abbrev": "ai", "full": "artificial intelligence"}]
+
 bp_api = Blueprint('api', __name__, url_prefix='/api')
 
 
@@ -78,3 +80,65 @@ def get_similar_blogs(post_id):
     print(views)
 
     return jsonify(status=render_template('most_similar.html', posts=result, title="More like this"), views=views)
+
+@bp_api.route('/prepare-reading/<search_terms>', methods=['GET', 'POST'])
+def prepare_reading(search_terms):
+    terms = search_terms.lower()
+    search_list = terms.split(',')
+    print(search_list)
+
+    matching_posts = []
+    posts = Blogs.query.order_by(desc(Blogs.article_id)).all()
+
+    for post in posts:
+        similar_post = {}
+        similarity_index = 0
+        categories = post.category.lower()
+        keywords = post.keywords.lower()
+
+        if ',' in categories:
+            post_categories = categories.split(', ')
+        else:
+            post_categories = [categories]
+
+        if ',' in keywords:
+            post_keywords = keywords.split(',')
+        else:
+            post_keywords = [keywords]
+
+        for term in search_list:
+
+            if "-" in term:
+                term = term.replace("-", " ")
+
+            abbrev = next((dict_["abbrev"] for dict_ in abbreviations if dict_["full"] == term), None)
+            full = next((dict_["full"] for dict_ in abbreviations if dict_["abbrev"] == term), None)
+
+            if term in post_categories or (abbrev and abbrev in post_categories) or (full and full in post_categories):
+                similarity_index += 1
+
+            if term in post_keywords or (abbrev and abbrev in post_keywords) or (full and full in post_keywords):
+                similarity_index += 1
+
+            if term in post.Title.lower() or (abbrev and abbrev in post.Title.lower()) or (full and full in post.Title.lower()):
+                similarity_index += 1
+
+            if term in post.Description.lower() or (abbrev and abbrev in post.Description.lower()) or (full and full in post.Description.lower()):
+                similarity_index += 1
+
+        if similarity_index > 0:
+            similar_post['index'] = similarity_index
+            similar_post['post'] = post
+            matching_posts.append(similar_post)
+
+    sorted_dict = sorted(matching_posts, key=lambda k: k['index'], reverse=True)
+    results = []
+
+    while len(results) <= 5:
+        for dict_ in sorted_dict:
+            results.append(dict_['post'])
+        break
+
+    for result in results:
+        print(result.Title)
+    return jsonify(status="hi")
