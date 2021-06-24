@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>In Wait of Tomorrow</title>
+</head>
+<body style="font-family: Arial,sans-serif">
+    <div style="max-width: 600px; margin: auto">
+        <h1>Here's the reading you asked for!</h1>
+        {% for post in posts %}
+            <div style="width: 100%; border-style: solid; border-width: 0 0 1px 0;">
+                <a href="{{ post.url_ }}"><h3 style="width: 100%">{{ post.Title }}</h3></a>
+                <p style="width: 100%">{{ post.Description }}</p>
+            </div>
+        {% endfor %}
+    </div>
+</body>

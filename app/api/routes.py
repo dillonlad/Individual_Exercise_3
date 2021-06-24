@@ -1,12 +1,16 @@
-from flask import Blueprint, render_template, jsonify
+from flask import Blueprint, render_template, jsonify, request, abort
 from sqlalchemy import desc
-
+import app
 from app.HelloAnalytics import initialize_analyticsreporting, get_report_most_popular, print_response, \
     get_report_events, get_report_pageviews
+from app.blogs.routes import newsletter_signup
+from app.main.forms import EmailToMeForm
 from app.models import Blogs
+from flask_mail import Mail, Message
 
 abbreviations = [{"abbrev": "tech", "full": "technology"}, {"abbrev": "ai", "full": "artificial intelligence"}]
 
+ADMINS = ['inwaitoftomorrow@gmail.com']
 bp_api = Blueprint('api', __name__, url_prefix='/api')
 
 
@@ -81,6 +85,7 @@ def get_similar_blogs(post_id):
 
     return jsonify(status=render_template('most_similar.html', posts=result, title="More like this"), views=views)
 
+
 @bp_api.route('/prepare-reading/<search_terms>', methods=['GET', 'POST'])
 def prepare_reading(search_terms):
     terms = search_terms.lower()
@@ -102,7 +107,7 @@ def prepare_reading(search_terms):
             post_categories = [categories]
 
         if ',' in keywords:
-            post_keywords = keywords.split(',')
+            post_keywords = keywords.split(', ')
         else:
             post_keywords = [keywords]
 
@@ -133,12 +138,52 @@ def prepare_reading(search_terms):
 
     sorted_dict = sorted(matching_posts, key=lambda k: k['index'], reverse=True)
     results = []
+    posts_ids = []
 
-    while len(results) <= 5:
+    while len(results) <= 10:
         for dict_ in sorted_dict:
             results.append(dict_['post'])
+            posts_ids.append(dict_['post'].Post_ID)
         break
+    form = EmailToMeForm(request.form)
+    template = render_template('prepared_reading.html', posts=results, form=form)
+    return jsonify(status=template, type=posts_ids)
 
-    for result in results:
-        print(result.Title)
-    return jsonify(status="hi")
+
+@bp_api.route('/send-articles/', methods=['POST', 'GET'])
+def send_articles():
+
+    if not request.get_json():
+        return abort(404)
+
+    email_address = request.get_json()['emailAddress']
+    article_ids = request.get_json()['articleIds'].split(",")
+
+    if email_address == "" or '@' not in email_address or '.' not in email_address:
+        return jsonify(status="Please enter a valid email address")
+
+    if request.get_json()['signUp']:
+        newsletter_signup(email_address)
+    posts = []
+
+    blogs = Blogs.query.all()
+
+    for blog in blogs:
+        if blog.Post_ID in article_ids:
+            posts.append(blog)
+
+    msg = Message(sender=ADMINS[0], recipients=email_address.split())
+    msg.html = render_template('prepared_reading_to_email.html', posts=posts)
+    msg.subject = "Here's what we found for you"
+    app.mail.send(msg)
+    return jsonify(status="Check your emails!")
+
+
+@bp_api.errorhandler(404)
+def pnf_404(error):
+    return render_template("404.html"), 404
+
+
+@bp_api.errorhandler(500)
+def pnf_500(error):
+    return render_template("500.html"), 500

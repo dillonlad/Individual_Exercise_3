@@ -77,3 +77,8 @@ class ContactForm(FlaskForm):
     submit = SubmitField("Submit")
 
 
+class EmailToMeForm(FlaskForm):
+    email = StringField('Email')
+    keep_updated = RadioField('Keep me updated!', choices=[('Yes', 'Yes'), ('No', 'No')])
+    Submit = SubmitField('Submit')
+
