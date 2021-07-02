@@ -32,7 +32,6 @@
     <script src="../static/bootstrap-4.0.0/assets/js/vendor/popper.min.js"></script>
     <link rel="stylesheet" href="../static/css/bootstrapnew.min.css">
     <link rel="stylesheet" href="../static/css/hovering.min.css">
-
     <link rel="stylesheet" href="../static/css/newnav.min.css">
     <link rel="canonical" href="https://inwaitoftomorrow.appspot.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
@@ -45,6 +44,7 @@
     <meta name="author" content="inwaitoftomorrow">
     <meta name="robots" content="index, follow">
     <link rel="preconnect" href="https://fonts.gstatic.com">
+    <!--styles for the added keywords-->
     <style>
         article {
           position: relative;
@@ -94,28 +94,30 @@
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
     <title>Latest from Instagram</title>
-{%  if allow_third_party_cookies == "True" %}
-     <!-- Facebook Pixel Code -->
-    <script>
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window, document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '363987458380932');
-    fbq('track', 'PageView');
-    </script>
-    <noscript><img height="1" width="1" style="display:none"
-    src="https://www.facebook.com/tr?id=363987458380932&ev=PageView&noscript=1"
-    /></noscript>
-    <!-- End Facebook Pixel Code -->
-{% else %}
-{% endif %}
+    {%  if allow_third_party_cookies == "True" %}
+         <!-- Facebook Pixel Code -->
+        <script>
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window, document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '363987458380932');
+        fbq('track', 'PageView');
+        </script>
+        <noscript><img height="1" width="1" style="display:none"
+        src="https://www.facebook.com/tr?id=363987458380932&ev=PageView&noscript=1"
+        /></noscript>
+        <!-- End Facebook Pixel Code -->
+    {% else %}
+    {% endif %}
 </head>
 <body class="w-100" style="font-family: 'Cabin', sans-serif;">
+
+    <!--Flashed messages-->
     {% with messages = get_flashed_messages() %}
             {% if messages %}
                 <div class="text-center m-auto p-5 font-weight-normal fixed-top" id="flashedmessages" style="max-width: 600px; background-color: #dddddd; z-index: 1031">
@@ -126,170 +128,177 @@
                 </div>
             {% endif %}
     {% endwith %}
-  {{ navigation_page | safe }}
+    {{ navigation_page | safe }}
+
+    <!--Main container-->
     <div class="container-fluid">
-    <div style="display: block" class="row">
-        <div class="col-12">
-            <nav class="navbar navbar-dark fixed-top bg-dark" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
-                    <a id="home_link" href="{{url_for('main.index')}}"><span class="navbar-brand text-white navbar-dark mb-0 h1 font-weight-normal">In Wait of Tomorrow</span></a>
-                    <div class="dropdown dropleft show btn-group">
-                      <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
-                      </button>
-                    </div>
-            </nav>
-        </div>
-    </div>
 
-    <script src="https://kit.fontawesome.com/7380e39ab3.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-<div class="row m-auto text-center w-100" style="max-width: 600px; margin-top: 20vh!important;">
-    <span class="col-12 font-weight-light h5 w-100">Welcome to</span>
-    <span class="col-12 font-weight-bold h3 w-100">In Wait of Tomorrow</span>
-    <div class="col-12 text-center w-100">
-        <picture class="w-100">
-             <source style="max-width: 200px; height: auto" srcset="../static/img/logo.webp" type="image/webp">
-             <img itemscope itemtype="https://schema.org/ImageObject" src="../static/img/logo.jpeg" alt="Logo" style="max-width: 200px; height: auto">
-        </picture>
-    </div>
-
-    <a class="btn w-100 btn-dark text-white rounded-0 ml-3 mr-3 mb-2 pt-3 pb-3" href="{{ url_for('main.show_blog_linkinbio') }}"><i style="border: none" class="fab fa-readme pr-3 text-white bg-dark"></i>Read our latest articles</a>
-    <a class="btn w-100 btn-danger text-white rounded-0 ml-3 mr-3 mb-2 pt-3 pb-3" href="https://www.youtube.com/channel/UCiExUJ3xlv-GngQ8rbBocCQ/?guided_help_flow=5"><i style="border: none;" class="fab fa-youtube text-white bg-danger pr-3"></i>Go to our YouTube</a>
-    <a class="btn w-100 btn btn-secondary text-white rounded-0 ml-3 mr-3 mb-2 pt-3 pb-3" href="{{ url_for('main.write_for_us') }}"><i style="border: none" class="fas fa-pen pr-3"></i>Join the team!</a>
-    <a class="btn w-100 btn bg-transparent border-dark text-dark rounded-0 ml-3 mr-3 mb-2 pt-3 pb-3" href="{{ url_for('shop.shop') }}" style="border-width: medium"><i style="border: none" class="fas fa-shopping-bag pr-3"></i>SHOP WITH US</a>
-
-    <h3 class="w-100 pt-3 font-weight-normal ml-3 mr-3">What are you most interested in?</h3>
-    <ul style="list-style-type: none;" id="addedWords" class="w-100 ml-3 mr-3"></ul>
-    <div class="form-row w-100 ml-3 mr-3">
-
-        <div class="form-group col-10">
-            <input type="text" id="wordAddText" class="form-control bg-transparent rounded-0 form-control-user font-weight-bold border-bottom" placeholder="Add words...">
-        </div>
-        <div class="form-group col-2">
-            <button type="submit" class="btn btn-dark btn-user btn-block rounded-0 form-control form-control-user" onclick="addFromInput()"><i class="fas fa-arrow-right" style="border: none"></i></button>
-        </div>
-    </div>
-<div class="w-100 ml-3 mr-3">
-    {% for word in words %}
-        <article class="{{ word }}">
-            <input type="checkbox" id="{{ word }}" onclick="addWords('{{ word }}')" value="{{ word }}"/>
-            <div>
-              <span>{{ word }}</span>
+        <!--Navigation bar-->
+        <div style="display: block" class="row">
+            <div class="col-12">
+                <nav class="navbar navbar-dark fixed-top bg-dark" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
+                        <a id="home_link" href="{{url_for('main.index')}}"><span class="navbar-brand text-white navbar-dark mb-0 h1 font-weight-normal">In Wait of Tomorrow</span></a>
+                        <div class="dropdown dropleft show btn-group">
+                          <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
+                          </button>
+                        </div>
+                </nav>
             </div>
-        </article>
-    {% endfor %}
-</div>
-    <button type="submit" class="btn btn-dark btn-user btn-block rounded-0 form-control form-control-user ml-3 mr-3" onclick="searchWords()">Search <i class="fas fa-arrow-right" style="border: none"></i></button>
-</div>
-    <div id="preparedReading" style="margin-top: 200vh; display: none"></div>
+        </div>
+
+        <script src="https://kit.fontawesome.com/7380e39ab3.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+        <!--Main heading, logo and title-->
+        <div class="row m-auto text-center w-100" style="max-width: 600px; margin-top: 20vh!important;">
+            <span class="col-12 font-weight-light h5 w-100">Welcome to</span>
+            <span class="col-12 font-weight-bold h3 w-100">In Wait of Tomorrow</span>
+            <div class="col-12 text-center w-100">
+                <picture class="w-100">
+                     <source style="max-width: 200px; height: auto" srcset="../static/img/logo.webp" type="image/webp">
+                     <img itemscope itemtype="https://schema.org/ImageObject" src="../static/img/logo.jpeg" alt="Logo" style="max-width: 200px; height: auto">
+                </picture>
+            </div>
+
+            <!--Button links-->
+            <a class="btn w-100 btn-dark text-white rounded-0 ml-3 mr-3 mb-2 pt-3 pb-3" href="{{ url_for('main.show_blog_linkinbio') }}"><i style="border: none" class="fab fa-readme pr-3 text-white bg-dark"></i>Read our latest articles</a>
+            <a class="btn w-100 btn-danger text-white rounded-0 ml-3 mr-3 mb-2 pt-3 pb-3" href="https://www.youtube.com/channel/UCiExUJ3xlv-GngQ8rbBocCQ/?guided_help_flow=5"><i style="border: none;" class="fab fa-youtube text-white bg-danger pr-3"></i>Go to our YouTube</a>
+            <a class="btn w-100 btn btn-secondary text-white rounded-0 ml-3 mr-3 mb-2 pt-3 pb-3" href="{{ url_for('main.write_for_us') }}"><i style="border: none" class="fas fa-pen pr-3"></i>Join the team!</a>
+            <a class="btn w-100 btn bg-transparent border-dark text-dark rounded-0 ml-3 mr-3 mb-2 pt-3 pb-3" href="{{ url_for('shop.shop') }}" style="border-width: medium"><i style="border: none" class="fas fa-shopping-bag pr-3"></i>SHOP WITH US</a>
+
+            <!--What are you most interested in feature-->
+            <h3 class="w-100 pt-3 font-weight-normal ml-3 mr-3">What are you most interested in?</h3>
+            <ul style="list-style-type: none;" id="addedWords" class="w-100 ml-3 mr-3"></ul>
+            <div class="form-row w-100 ml-3 mr-3">
+
+                <div class="form-group col-10">
+                    <input type="text" id="wordAddText" class="form-control bg-transparent rounded-0 form-control-user font-weight-bold border-bottom" placeholder="Add words...">
+                </div>
+                <div class="form-group col-2">
+                    <button type="submit" class="btn btn-dark btn-user btn-block rounded-0 form-control form-control-user" onclick="addFromInput()"><i class="fas fa-arrow-right" style="border: none"></i></button>
+                </div>
+            </div>
+            <div class="w-100 ml-3 mr-3">
+                {% for word in words %}
+                    <article class="{{ word }}">
+                        <input type="checkbox" id="{{ word }}" onclick="addWords('{{ word }}')" value="{{ word }}"/>
+                        <div>
+                          <span>{{ word }}</span>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+            <button type="submit" class="btn btn-dark btn-user btn-block rounded-0 form-control form-control-user ml-3 mr-3" onclick="searchWords()">Search <i class="fas fa-arrow-right" style="border: none"></i></button>
+        </div>
+        <div id="preparedReading" style="margin-top: 200vh; display: none"></div>
     </div>
-<script src="../static/js/EasePack.min.js"></script>
-<script src="../static/js/TweenLite.min.js"></script>
-<script src="../static/js/demo.js"></script>
-<script src="../static/js/newstyles.min.js"></script>
-<script>
-    let wordslist = [];
-    let wordsShows = [];
-    let articleIds = [];
+    <script src="../static/js/EasePack.min.js"></script>
+    <script src="../static/js/TweenLite.min.js"></script>
+    <script src="../static/js/demo.js"></script>
+    <script src="../static/js/newstyles.min.js"></script>
+    <script>
+        let wordslist = [];
+        let wordsShows = [];
+        let articleIds = [];
 
-    function openNav() {
-      document.getElementById("myNav").style.width = "100%";
-      document.getElementById("cards").style.visibility = "hidden"
-    }
-
-    function closeNav() {
-      document.getElementById("myNav").style.width = "0%";
-      document.getElementById("cards").style.visibility = "visible"
-    }
-
-    function closeflash(){
-        document.getElementById('flashedmessages').style.visibility = "hidden";
-    }
-
-    function addWords(word){
-        wordslist.push(word)
-        showWords();
-    }
-
-    function addFromInput(){
-        var word = document.getElementById('wordAddText').value;
-        if (word) {
-            if (word.indexOf(" ") !== -1) wordslist.push(word.replace(" ", "-"))
-            else wordslist.push(word)
+        function openNav() {
+          document.getElementById("myNav").style.width = "100%";
+          document.getElementById("cards").style.visibility = "hidden"
         }
-        showWords()
-        document.getElementById('wordAddText').value = "";
-    }
 
-    function showWords(){
-        for (let word of wordslist) {
-            if (wordsShows.indexOf(word) === -1) {
-                var node = document.createElement("LI");
-                node.id = "node" + word;
-                node.className = "nodeList"
-                var functionName = "removeWord('" + word + "')"
-                node.innerHTML = "<a href='javascript:void(0)' onclick=" + functionName + ">&times;</a>    "
-                var textnode = document.createTextNode(word);
-                node.appendChild(textnode);
-                document.getElementById("addedWords").appendChild(node);
-                wordsShows.push(word)
+        function closeNav() {
+          document.getElementById("myNav").style.width = "0%";
+          document.getElementById("cards").style.visibility = "visible"
+        }
+
+        function closeflash(){
+            document.getElementById('flashedmessages').style.visibility = "hidden";
+        }
+
+        function addWords(word){
+            wordslist.push(word)
+            showWords();
+        }
+
+        function addFromInput(){
+            var word = document.getElementById('wordAddText').value;
+            if (word) {
+                if (word.indexOf(" ") !== -1) wordslist.push(word.replace(" ", "-"))
+                else wordslist.push(word)
+            }
+            showWords()
+            document.getElementById('wordAddText').value = "";
+        }
+
+        function showWords(){
+            for (let word of wordslist) {
+                if (wordsShows.indexOf(word) === -1) {
+                    var node = document.createElement("LI");
+                    node.id = "node" + word;
+                    node.className = "nodeList"
+                    var functionName = "removeWord('" + word + "')"
+                    node.innerHTML = "<a href='javascript:void(0)' onclick=" + functionName + ">&times;</a>    "
+                    var textnode = document.createTextNode(word);
+                    node.appendChild(textnode);
+                    document.getElementById("addedWords").appendChild(node);
+                    wordsShows.push(word)
+                }
             }
         }
-    }
 
-    function removeWord(word){
-        var nodeIndex = wordsShows.indexOf(word)
-        var wordsIndex = wordslist.indexOf(word)
-        console.log(nodeIndex, wordsIndex)
-        var list = document.getElementById("addedWords")
-        list.removeChild(list.childNodes[nodeIndex])
-        wordsShows.splice(nodeIndex, 1)
-        wordslist.splice(wordsIndex, 1)
-        if (document.getElementById(word)) document.getElementById(word).checked = false;
-    }
+        function removeWord(word){
+            var nodeIndex = wordsShows.indexOf(word)
+            var wordsIndex = wordslist.indexOf(word)
+            console.log(nodeIndex, wordsIndex)
+            var list = document.getElementById("addedWords")
+            list.removeChild(list.childNodes[nodeIndex])
+            wordsShows.splice(nodeIndex, 1)
+            wordslist.splice(wordsIndex, 1)
+            if (document.getElementById(word)) document.getElementById(word).checked = false;
+        }
 
-    function searchWords(){
-        var stringWords = wordsShows.toString()
-        var div = document.getElementById('preparedReading')
-        return fetch("/api/prepare-reading/" + stringWords, {
-            method: 'post',
-            headers: {
-                'content-type': 'application/json'
-            }
-        }).then(function (res) {
-            return res.json();
-        }).then(function (data) {
-            div.innerHTML = data.status;
-            div.style.display = "block"
-            div.scrollIntoView()
-            for (let i of data.type){
-                articleIds.push(i)
-            }
-        });
-    }
+        function searchWords(){
+            var stringWords = wordsShows.toString()
+            var div = document.getElementById('preparedReading')
+            return fetch("/api/prepare-reading/" + stringWords, {
+                method: 'post',
+                headers: {
+                    'content-type': 'application/json'
+                }
+            }).then(function (res) {
+                return res.json();
+            }).then(function (data) {
+                div.innerHTML = data.status;
+                div.style.display = "block"
+                div.scrollIntoView()
+                for (let i of data.type){
+                    articleIds.push(i)
+                }
+            });
+        }
 
-    function sendtoEmail(){
-        var email = document.getElementById('emailAddress').value;
-        var ArticleIds = articleIds.toString()
-        var keepUpdated = false
-        if (document.getElementById("keep_updated-0").checked) keepUpdated = true
-        return fetch("/api/send-articles/", {
-            method: 'post',
-            headers: {
-                'content-type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-                emailAddress: email,
-                articleIds: ArticleIds,
-                signUp: keepUpdated
+        function sendtoEmail(){
+            var email = document.getElementById('emailAddress').value;
+            var ArticleIds = articleIds.toString()
+            var keepUpdated = false
+            if (document.getElementById("keep_updated-0").checked) keepUpdated = true
+            return fetch("/api/send-articles/", {
+                method: 'post',
+                headers: {
+                    'content-type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    emailAddress: email,
+                    articleIds: ArticleIds,
+                    signUp: keepUpdated
+                })
+            }).then(function (res){
+                return res.json();
+            }).then(function (data){
+                alert(data.status)
             })
-        }).then(function (res){
-            return res.json();
-        }).then(function (data){
-            alert(data.status)
-        })
-    }
-</script>
+        }
+    </script>
 </body>
 </html>
