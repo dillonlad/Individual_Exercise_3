@@ -163,6 +163,7 @@ def post(Post_ID):
         return redirect(abort(404))
 
     categories, navigation_page, allow_third_party_cookies, footer = load_templates()
+    
     latest_product = shop_items.query.limit(1).all()
     product_image = latest_product[0].meta_image.replace("http://inwaitoftomorrow.appspot.com", "..")
     p_author = post[0].author

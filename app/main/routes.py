@@ -143,7 +143,8 @@ def index():
 def linkinbio():
     categories, navigation_page, allow_third_party_cookies, footer = load_templates()
     words = ["Technology", "Environment", "Science", "Film", "Healthcare", "AI", "FinTech", "BioTech", "Computing"]
-    return render_template('linkinbio.html', allow_third_party_cookies=allow_third_party_cookies, categories=categories, navigation_page=navigation_page, words=words)
+    user_interests = render_template("user_interests.html", words=words)
+    return render_template('linkinbio.html', allow_third_party_cookies=allow_third_party_cookies, categories=categories, navigation_page=navigation_page, user_interests=user_interests)
 
 
 @bp_main.route('/linkinbio/articles', methods=['POST', 'GET'])

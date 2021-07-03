@@ -1,3 +1,4 @@
+import json
 from flask import Blueprint, render_template, jsonify, request, abort
 from sqlalchemy import desc
 import app
@@ -14,6 +15,7 @@ ADMINS = ['inwaitoftomorrow@gmail.com']
 bp_api = Blueprint('api', __name__, url_prefix='/api')
 
 
+# Query Google Analytics API to get the most popular articles in the last 14 days
 @bp_api.route('/most-popular', methods=['POST', 'GET'])
 def get_most_popular():
     analytics = initialize_analyticsreporting()
@@ -33,6 +35,7 @@ def get_most_popular():
     return jsonify(status=render_template('most_popular.html', posts=most_popular, title="Most popular"))
 
 
+# Get the most similar articles to the one currently open and also gets the number of views for current article
 @bp_api.route('/similar/<post_id>', methods=['POST', 'GET'])
 def get_similar_blogs(post_id):
 
@@ -177,6 +180,13 @@ def send_articles():
     msg.subject = "Here's what we found for you"
     app.mail.send(msg)
     return jsonify(status="Check your emails!")
+
+
+@bp_api.route('/userinterests/', methods=['POST', 'GET'])
+def api_get_user_interests():
+    words = ["Technology", "Environment", "Science", "Film", "Healthcare", "AI", "FinTech", "BioTech", "Computing"]
+    user_interests = render_template("user_interests.html", words=words)
+    return jsonify(status=user_interests)
 
 
 @bp_api.errorhandler(404)
