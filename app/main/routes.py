@@ -38,7 +38,7 @@ FILE_UPLOAD_MIMETYPES = [
     {"Extension": ".txt", "Mimetype": "text/plain"},
     {"Extension": ".pdf", "Mimetype": "application/pdf"}
 ]
-
+url_endings = ["login", "logout", "write-for-us", "otp-generate", "linkinbio", "articles", "authenticate-user", "register", "new_post", "add_post"]
 
 def pass_through():
     pass
@@ -202,6 +202,8 @@ def show_blog_category(category):
         article_category = category
         return render_template("mobile/blog_results.html", allow_third_party_cookies=allow_third_party_cookies, posts=posts, categories=categories,
                                article_category=article_category, form=form, navigation_page=navigation_page, footer=footer)
+    elif category not in url_endings:
+        return abort(404)
 
 
 @bp_main.route('/search/<search_query>', methods=['POST', 'GET'])
@@ -492,7 +494,7 @@ def new_post():
         post_url = "https://inwaitoftomorrow.appspot.com/blogs/" + form.Post_ID.data
         post_main_image_root = webp_filetype
         post_jpg_image = jpeg_filetype
-        post = Blogs(Title=form.Title.data, Post_ID=form.Post_ID.data, Description=form.Description.data, Image_root=post_main_image_root, url_=post_url, Content=form.Content.data, Time="{}:{}:{}".format(time_date.strftime("%H"), time_date.strftime("%M"), time_date.strftime("%S")), Date="{}-{}-{}".format(time_date.strftime("%Y"), time_date.strftime("%m"), time_date.strftime("%d")), category=form.category.data, author=form.author.data, keywords=form.keywords.data, Image_iphone=post_jpg_image)
+        post = Blogs(Title=form.Title.data, Post_ID=form.Post_ID.data, Description=form.Description.data, Image_root=post_main_image_root, url_=post_url, Content=form.Content.data, Time="{}:{}:{}".format(time_date.strftime("%H"), time_date.strftime("%M"), time_date.strftime("%S")), Date="{}-{}-{}".format(time_date.strftime("%Y"), time_date.strftime("%m"), time_date.strftime("%d")), category=form.category.data, author=form.author.data, keywords=form.keywords.data, Image_iphone=post_jpg_image, date_mod="{}-{}-{}".format(time_date.strftime("%Y"), time_date.strftime("%m"), time_date.strftime("%d")))
         try:
             db.session.add(post)
             response = make_response(redirect(url_for('main.index')))
