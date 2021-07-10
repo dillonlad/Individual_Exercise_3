@@ -468,11 +468,11 @@ def new_post():
         image_filename = form.Image_root.data
         uploaded_file = request.files.get('file')
 
-        validate_filename = uploaded_file.filename.split(".")
-        img_extension = validate_filename[1]
-
         if not uploaded_file:
             return 'No file uploaded.', 400
+
+        validate_filename = uploaded_file.filename.split(".")
+        img_extension = validate_filename[1]
 
         if img_extension not in ALLOWED_EXTENSIONS:
             flash('{} is an unsupported type of image. Please upload images of the following file types: {}'.format(
@@ -494,7 +494,13 @@ def new_post():
         post_url = "https://inwaitoftomorrow.appspot.com/blogs/" + form.Post_ID.data
         post_main_image_root = webp_filetype
         post_jpg_image = jpeg_filetype
-        post = Blogs(Title=form.Title.data, Post_ID=form.Post_ID.data, Description=form.Description.data, Image_root=post_main_image_root, url_=post_url, Content=form.Content.data, Time="{}:{}:{}".format(time_date.strftime("%H"), time_date.strftime("%M"), time_date.strftime("%S")), Date="{}-{}-{}".format(time_date.strftime("%Y"), time_date.strftime("%m"), time_date.strftime("%d")), category=form.category.data, author=form.author.data, keywords=form.keywords.data, Image_iphone=post_jpg_image, date_mod="{}-{}-{}".format(time_date.strftime("%Y"), time_date.strftime("%m"), time_date.strftime("%d")))
+        post = Blogs(Title=form.Title.data, Post_ID=form.Post_ID.data, Description=form.Description.data,
+                    Image_root=post_main_image_root, url_=post_url, Content=form.Content.data, 
+                    Time="{}:{}:{}".format(time_date.strftime("%H"), time_date.strftime("%M"), time_date.strftime("%S")), 
+                    Date="{}-{}-{}".format(time_date.strftime("%Y"), time_date.strftime("%m"), time_date.strftime("%d")), 
+                    category=form.category.data, author=form.author.data, 
+                    keywords=form.keywords.data, Image_iphone=post_jpg_image, 
+                    date_mod="{}-{}-{}".format(time_date.strftime("%Y"), time_date.strftime("%m"), time_date.strftime("%d")))
         try:
             db.session.add(post)
             response = make_response(redirect(url_for('main.index')))
