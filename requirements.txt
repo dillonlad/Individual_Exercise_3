@@ -16,7 +16,7 @@ flask-wysiwyg==0.1
 Flask-Login==0.5.0
 Flask-MySQLdb==0.2.0
 email-validator==1.0.5
-requests==2.18.0
+requests==2.20.0
 flask-mobility==1.0.0
 flask-mail==0.9.1
 urlfetch==1.2.1
