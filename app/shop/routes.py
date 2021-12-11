@@ -1,5 +1,8 @@
+import re
+from app.AuthenticationModule import url_homepage, url_https
 from datetime import timedelta, datetime
 from urllib.parse import urlparse, urljoin
+from app.LoadingModule import load_templates
 
 import flask
 from flask import render_template, Blueprint, request, flash, redirect, url_for, Flask, make_response, abort, \
@@ -61,12 +64,11 @@ client = PayPalHttpClient(environment)
 
 def structured_data(item_on_page, average_rating, review_count, reviews):
 
-    for var in item_on_page:
-        item_name = var.item_name
-        item_no = var.item_number
-        item_price = float(var.price)
-        item_image = var.meta_image
-        item_desc = var.meta_description
+    item_name = item_on_page.item_name
+    item_no = item_on_page.item_number
+    item_price = float(item_on_page.price)
+    item_image = item_on_page.meta_image
+    item_desc = item_on_page.meta_description
 
     reviews_data = []
 
@@ -114,55 +116,73 @@ def structured_data(item_on_page, average_rating, review_count, reviews):
 
 
 @bp_shop.route('/', methods=['GET'])
+@url_https
+@url_homepage
 def shop():
-    host = request.host
-    if "www" in host:
-        return redirect('https://inwaitoftomorrow.appspot.com/shop/', code=301)
-    elif "inwaitoftomorrow.com" in host:
-        return redirect('https://inwaitoftomorrow.appspot.com/shop/', code=301)
-    elif request.url.startswith('http://') and '127' not in host:
-        url = request.url.replace('http://', 'https://', 1)
-        code = 301
-        return redirect(url, code=code)
-    else:
-        categories = Categories.query.all()
-        navigation_page = render_template('navigation.html', categories=categories)
-        items = shop_items.query.all()
-        cookies_accept()
-        allow_third_party_cookies = third_party_cookies()
-        return render_template('shop.html', items=items, allow_third_party_cookies=allow_third_party_cookies, categories=categories, navigation_page=navigation_page)
+    categories, navigation_page, allow_third_party_cookies, footer = load_templates()
+    items = shop_items.query.all()
+    return render_template('shop.html', items=items, allow_third_party_cookies=allow_third_party_cookies, 
+                            categories=categories, navigation_page=navigation_page, footer=footer)
 
 
 @bp_shop.route('/<id>', methods=['GET', 'POST'])
+@url_https
 def shop_item(id):
-    host = request.host
-    if request.url.startswith('http://') and '127' not in host:
-        url = request.url.replace('http://', 'https://', 1)
-        code = 301
-        return redirect(url, code=code)
-    else:
-        if shop_items.query.filter(shop_items.item_id.contains(id)).all():
-            categories = Categories.query.all()
-            navigation_page = render_template('navigation.html', categories=categories)
-            item_on_page = shop_items.query.filter_by(item_id=id).all()
-            privacy_policy = render_template('privacy_statement.html')
-            for var in item_on_page:
-                item_name = var.item_name
-                item_no = var.item_number
-                item_price = float(var.price)
-            reviews = item_reviews.query.order_by(desc(item_reviews.review_id)).filter(item_reviews.item_id==item_no).all()
-            stars_total = 0
-            number_of_reviews = len(reviews)
-            for var_review in reviews:
-                item_stars = var_review.stars
-                stars_total += item_stars
-            avg_rating = stars_total/number_of_reviews
-            int_avg_rating = int(avg_rating)
-            data_structure = structured_data(item_on_page, int_avg_rating, number_of_reviews, reviews)
-            testshopform = testShop(request.form)
-            cookies_accept()
-            allow_third_party_cookies = third_party_cookies()
-            if request.method == 'POST':
+    
+    if shop_items.query.filter(shop_items.item_id.contains(id)).all():
+        categories, navigation_page, allow_third_party_cookies, footer = load_templates()
+        privacy_policy = render_template('privacy_statement.html')
+
+        item_on_page = shop_items.query.filter_by(item_id=id).all()[0]
+        item_name = item_on_page.item_name
+        item_no = item_on_page.item_number
+        item_price = float(item_on_page.price)
+        json_insert = json.dumps({"item_id":id, "item_name": item_name, "item_no":item_no, "item_price":item_price})
+        reviews = item_reviews.query.order_by(desc(item_reviews.review_id)).filter(item_reviews.item_id==item_no).all()
+        
+        stars_total = sum(var_review.stars for var_review in reviews)
+        stars_total = 0
+        number_of_reviews = len(reviews)
+        for var_review in reviews:
+            item_stars = var_review.stars
+            stars_total += item_stars
+        avg_rating = stars_total/number_of_reviews
+        int_avg_rating = int(avg_rating)
+        data_structure = structured_data(item_on_page, int_avg_rating, number_of_reviews, reviews)
+        
+        testshopform = testShop(request.form)
+        if request.method == 'POST':
+            if testshopform.colour.data == "Please select":
+                flash('Invalid colour request')
+                return redirect(url_for('shop.shop_item', id=id))
+            elif testshopform.size.data == "Please select":
+                flash('Invalid size request')
+                return redirect(url_for('shop.shop_item', id=id))
+            else:
+                if 'size' not in session:
+                    session['size'] = []
+                if 'quantity' not in session:
+                    session['quantity'] = []
+                if 'colour' not in session:
+                    session['colour'] = []
+                if 'item_number' not in session:
+                    session['item_number'] = []
+                if 'itemprice' not in session:
+                    session['itemprice'] = []
+                session['size'].append(testshopform.size.data)
+                session['colour'].append(testshopform.colour.data)
+                session['quantity'].append(float(testshopform.quantity.data))
+                session['item_number'].append(item_no)
+                session['itemprice'].append(float(item_price))
+                items_in_cart = session.get('itemprice', [])
+                counter = len(items_in_cart)
+                message = Markup(render_template_string(
+                    "<!DOCTYPE html><html lang='en'><span>You have added an item to your cart</span><br><span><a href='add-to-cart/{}'>Please click to confirm</a></span></html>".format(
+                        id)))
+                flash(message)
+                return redirect(url_for('shop.shop_item', id=id), code=303)
+        else:
+            if testshopform.is_submitted():
                 if testshopform.colour.data == "Please select":
                     flash('Invalid colour request')
                     return redirect(url_for('shop.shop_item', id=id))
@@ -170,6 +190,7 @@ def shop_item(id):
                     flash('Invalid size request')
                     return redirect(url_for('shop.shop_item', id=id))
                 else:
+                    testshopform.method = 'POST'
                     if 'size' not in session:
                         session['size'] = []
                     if 'quantity' not in session:
@@ -184,7 +205,7 @@ def shop_item(id):
                     session['colour'].append(testshopform.colour.data)
                     session['quantity'].append(float(testshopform.quantity.data))
                     session['item_number'].append(item_no)
-                    session['itemprice'].append(float(item_price))
+                    session['itemprice'].append(item_price)
                     items_in_cart = session.get('itemprice', [])
                     counter = len(items_in_cart)
                     message = Markup(render_template_string(
@@ -192,39 +213,11 @@ def shop_item(id):
                             id)))
                     flash(message)
                     return redirect(url_for('shop.shop_item', id=id), code=303)
-            else:
-                if testshopform.is_submitted():
-                    if testshopform.colour.data == "Please select":
-                        flash('Invalid colour request')
-                        return redirect(url_for('shop.shop_item', id=id))
-                    elif testshopform.size.data == "Please select":
-                        flash('Invalid size request')
-                        return redirect(url_for('shop.shop_item', id=id))
-                    else:
-                        testshopform.method = 'POST'
-                        if 'size' not in session:
-                            session['size'] = []
-                        if 'quantity' not in session:
-                            session['quantity'] = []
-                        if 'colour' not in session:
-                            session['colour'] = []
-                        if 'item_number' not in session:
-                            session['item_number'] = []
-                        if 'itemprice' not in session:
-                            session['itemprice'] = []
-                        session['size'].append(testshopform.size.data)
-                        session['colour'].append(testshopform.colour.data)
-                        session['quantity'].append(float(testshopform.quantity.data))
-                        session['item_number'].append(item_no)
-                        session['itemprice'].append(item_price)
-                        items_in_cart = session.get('itemprice', [])
-                        counter = len(items_in_cart)
-                        message = Markup(render_template_string(
-                            "<!DOCTYPE html><html lang='en'><span>You have added an item to your cart</span><br><span><a href='add-to-cart/{}'>Please click to confirm</a></span></html>".format(
-                                id)))
-                        flash(message)
-                        return redirect(url_for('shop.shop_item', id=id), code=303)
-            return render_template("item_shop.html", allow_third_party_cookies=allow_third_party_cookies, testshopform=testshopform, categories=categories, item_on_page=item_on_page, privacy_policy=privacy_policy, navigation_page=navigation_page, reviews=reviews, number_of_reviews=number_of_reviews, average_rating=int_avg_rating, data_structure=data_structure)
+        return render_template("item_shop.html", allow_third_party_cookies=allow_third_party_cookies, 
+                            testshopform=testshopform, categories=categories, item_on_page=[item_on_page], 
+                            privacy_policy=privacy_policy, navigation_page=navigation_page, reviews=reviews, 
+                            number_of_reviews=number_of_reviews, average_rating=int_avg_rating, 
+                            data_structure=data_structure, json_insert=json_insert)
 
 
 @bp_shop.route('/add-to-cart/<id>', methods=['GET', 'POST'])
@@ -242,10 +235,10 @@ def add_to_cart(id):
 
 
 @bp_shop.route('/cart', methods=['GET', 'POST'])
+@url_https
 def shop_cart():
-    categories = Categories.query.all()
-    navigation_page = render_template('navigation.html', categories=categories)
     privacy_policy = render_template('privacy_statement.html')
+    categories, navigation_page, allow_third_party_cookies, footer = load_templates()
     if 'cart' in session:
         items_in_cart = session['cart']
         colours_in_cart = session['colour']
@@ -255,8 +248,6 @@ def shop_cart():
         counter = len(items_in_cart)
         cost_list = []
         new_quantities = []
-        cookies_accept()
-        allow_third_party_cookies = third_party_cookies()
         for i in range(counter):
             cost = quantities_in_cart[i]*prices_in_cart[i]
             cost_list.append(cost)
@@ -270,7 +261,12 @@ def shop_cart():
             shipping_cost = 0.00
             shipping_msg = "Free Delivery, UK ONLY"
         final_with_shipping = round(final_cost + shipping_cost, 2)
-        return render_template('cart-live.html', allow_third_party_cookies=allow_third_party_cookies, categories=categories, final_cost=final_cost, counter=counter, items=items_in_cart, colours=colours_in_cart, quantities=new_quantities, sizes=sizes_in_cart, prices=prices_in_cart, cost_list=cost_list, final_with_shipping=final_with_shipping, privacy_policy=privacy_policy, shipping_cost=shipping_cost, navigation_page=navigation_page, shipping_msg=shipping_msg)
+        return render_template('cart-live.html', allow_third_party_cookies=allow_third_party_cookies, 
+                            categories=categories, final_cost=final_cost, counter=counter, items=items_in_cart,
+                            colours=colours_in_cart, quantities=new_quantities, sizes=sizes_in_cart, 
+                            prices=prices_in_cart, cost_list=cost_list, final_with_shipping=final_with_shipping, 
+                            privacy_policy=privacy_policy, shipping_cost=shipping_cost, navigation_page=navigation_page, 
+                            shipping_msg=shipping_msg)
     else:
         flash('You have no items in your cart')
         return redirect(url_for('shop.shop'))
@@ -283,10 +279,7 @@ def card_payment():
         counter = len(items_in_cart)
         items_to_buy = []
         price_amount_list = []
-        if 'abroad_delivery' in session:
-            shipping_cost = 32.91
-        else:
-            shipping_cost = 0.00
+        shipping_cost = 32.91 if 'abroad_delivery' in session else 0.00
         for it in range(counter):
             item_details = {
                 "name": "{}, size: {}, colour: {}".format(session['cart'][it], session['size'][it],
@@ -442,7 +435,6 @@ def stock_checker(id, item_number, Colour, Size):
         else:
             status = "In stock"
         return jsonify(stock_status=status)
-
 
 @bp_shop.errorhandler(404)
 def pnf_404(error):

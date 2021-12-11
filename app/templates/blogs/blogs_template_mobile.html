@@ -3,7 +3,7 @@
 
     <link rel="stylesheet" href="../static/css/newnav.css">
     {{ navigation_page | safe }}
-    <div class="container-fluid">
+    <div class="container-fluid mb-2">
         <div class="container-fluid" id="navigation">
 
             <!--Top navigation bar-->
@@ -87,7 +87,7 @@
             </div>
         </div>
         <div class="row m-auto" style="max-width: 800px">
-            <div class="col-12 font-weight-normal h6 ml-0 pl-0 mr-0 pr-0" itemtype="datePublished, author">{% block time_and_date %}{% endblock %}{% if number_of_comments > 0 %} | <i class="fas fa-comment" style="border: none"></i>{{ number_of_comments }} {% else %}{% endif %}<strong class="font-weight-normal text-muted" id="Views"></strong><span class="text-right mr-0" style="float: right;"><a class="text-dark" href="https://api.whatsapp.com/send?text={% for post in post %}{{ post.url_ | safe }}{% endfor %}"><i style="border: none" class="fab fa-whatsapp"></i></a> <a class="text-dark" href="http://www.facebook.com/sharer.php?u={% for post in post %}{{ post.url_ | safe }}{% endfor %}"><i class="fab fa-facebook-square" style="border: none"></i></a> <a class="text-dark" href="https://twitter.com/intent/tweet?url={% for post in post %}{{ post.url_ | safe }}{% endfor %}&text={% for post in post %}{{ post.Title | safe }}{% endfor %}"><i class="fab fa-twitter-square" style="border: none"></i></a> <a class="text-dark" href="https://www.linkedin.com/sharing/share-offsite/?url={% for post in post %}{{ post.url_ | safe }}{% endfor %}"><i style="border: none" class="fab fa-linkedin-in"></i></a></span>
+            <div class="col-12 font-weight-normal h6 ml-0 pl-0 mr-0 pr-0" itemtype="datePublished, author">{% block time_and_date %}{% endblock %}{% if number_of_comments > 0 %} | <i class="fas fa-comment" style="border: none"></i>{{ number_of_comments }} {% else %}{% endif %}<strong class="font-weight-normal text-muted" id="Views"></strong><span class="text-right mr-0" style="float: right;"><button class="bg-transparent" style="border: none;" onclick="shareButton()"><i style="border: none" class="fas fa-share-alt"></i></button></span>
             </div>
         </div>
 
@@ -119,15 +119,15 @@
                 <div class="form-group font-weight-normal">
                   {{ render_field(form.comment, class="form-control form-control-user rounded-0", placeholder="Comment", id='userComment', rows="3") }}
                 </div>
-                <div class="form-group">
+                <!-- <div class="form-group">
                      {{ form.rating.label }}
-                </div>
-                <div class="form-group form-check-inline">
+                </div> -->
+                <!-- <div class="form-group form-check-inline">
                         {% for subfield in form.rating %}
                             {{ subfield(class_="form-check-input") }}
-                            {{ subfield.label(class_="form-check-label pr-5") }}
+                            {{ subfield.label(class_="form-check-label pr-1") }}
                         {% endfor %}
-                    </div>
+                    </div> -->
                 {{ form.Submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
             </form>
             <!--Comments display-->
@@ -157,19 +157,23 @@
         <div id="mostSimilarArticles" class="pt-3"></div>
         <!--Bottom newsletter form-->
         <div class="row m-auto pt-5 w-100" style="max-width: 800px">
-            <h3 class="font-weight-normal">Sign up to our newsletter!</h3>
-            <form class="user col-12 w-100 text-left" action="javascript:newsletterSignup_two()" novalidate>
-                {{ newsletter_form.hidden_tag() }}
-                {% from "_formhelpers.html" import render_field %}
-                <div class="form-row">
-                    <div class="form-group col-8">
-                    {{ render_field(newsletter_form.user_email, class="form-control form-control-user rounded-0", placeholder="Email Address", id='emailAddress_two') }}
-                    </div>
-                    <div class="form-group col-4 pt-1">
-                        {{ newsletter_form.Submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
-                    </div>
+            <div class="card col-12">
+                <div class="card-body">
+                    <h5 class="font-weight-normal card-title">Don't miss out on our latest content!</h5>
+                    <form class="user col-12 w-100 text-left" action="javascript:newsletterSignup_two()" novalidate>
+                        {{ newsletter_form.hidden_tag() }}
+                        {% from "_formhelpers.html" import render_field %}
+                        <div class="form-row">
+                            <div class="form-group col-8">
+                            {{ render_field(newsletter_form.user_email, class="form-control form-control-user rounded-0", placeholder="Email Address", id='emailAddress_two') }}
+                            </div>
+                            <div class="form-group col-4 pt-1">
+                                {{ newsletter_form.Submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
+                            </div>
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
 
 
@@ -187,6 +191,20 @@
                     document.getElementById("nav_one").style.display = "block";
                     document.getElementById("nav_two").style.display = "none";
                 }
+        }
+
+        function shareButton(){
+            const shareData = {
+                title: '{% for post in post %}{{ post.Title }}{% endfor %}',
+                text: '{% for post in post %}{{ post.Description }}{% endfor %}',
+                url: '{% for post in post %}{{ post.url_ }}{% endfor %}'
+            }
+            try {
+                navigator.share(shareData)
+                console.log('Article shared successfully')
+            } catch(err) {
+                console.log('Error: ' + err)
+            }
         }
     </script>
 {% endblock %}

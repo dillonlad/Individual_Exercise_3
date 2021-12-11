@@ -577,6 +577,7 @@ def show_analytics():
     analytics_reports = print_response(response)
 
     total_website_views = 0
+    #total_website_views = sum(web_report['views'] for web_report in analytics_reports)
     for web_report in analytics_reports:
         total_website_views += web_report['views']
 
@@ -584,8 +585,11 @@ def show_analytics():
     blog_titles = []
 
     posts = Blogs.query.order_by(desc(Blogs.article_id)).all()
+    #blog_titles = [post.Title for post in posts]
+    #blog_views = [sum(report['views'] for report in analytics_reports if post.Post_ID in report['page']) for post in posts]
     for post in posts:
         blog_titles.append(post.Title)
+        #total_views = sum(report['views'] for report in analytics_reports if post.Post_ID in report['page'])
         total_views = 0
         for report in analytics_reports:
             if post.Post_ID in report['page']:
@@ -593,8 +597,8 @@ def show_analytics():
         blog_views.append(total_views)
 
     total = sum(blog_views)
+    #blog_list = [{'Blog_title': blog_titles[i], 'article_views': blog_views[i]} for i in range(len(blog_titles))]
     blog_list = []
-
     for i in range(len(blog_titles)):
         blog_dict = {'Blog_title': blog_titles[i], 'article_views': blog_views[i]}
         blog_list.append(blog_dict)
@@ -603,8 +607,11 @@ def show_analytics():
     product_views = []
 
     products = shop_items.query.all()
+    #product_names = [product.item_name for product in products]
+    #product_views = [sum(new_report['views'] for new_report in analytics_reports if product.item_id in new_report['page']) for product in products]
     for product in products:
         product_names.append(product.item_name)
+        #total_views = sum(new_report['views'] for new_report in analytics_reports if product.item_id in new_report['page'])
         total_views = 0
         for new_report in analytics_reports:
             if product.item_id in new_report['page']:
@@ -612,12 +619,15 @@ def show_analytics():
         product_views.append(total_views)
 
     product_list = []
-
+    #product_list = [{'product_name': product_names[i], 'product_views': product_views[i]} for i in range(len(product_names))]
     for i in range(len(product_names)):
         product_dict = {'product_name': product_names[i], 'product_views': product_views[i]}
         product_list.append(product_dict)
 
-    return render_template('analytics.html', analytics_reports=analytics_reports, blog_views=blog_views, posts=posts, total=total, blog_list=blog_list, categories=categories, navigation_page=navigation_page, product_list=product_list, total_website_views=total_website_views)
+    return render_template('analytics.html', analytics_reports=analytics_reports, blog_views=blog_views, 
+                            posts=posts, total=total, blog_list=blog_list, categories=categories, 
+                            navigation_page=navigation_page, product_list=product_list, 
+                            total_website_views=total_website_views)
 
 
 @bp_main.errorhandler(404)

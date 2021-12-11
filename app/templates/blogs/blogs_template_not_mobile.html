@@ -103,7 +103,7 @@
             <div class="container-fluid row m-auto" style="max-width: 80vw">
 
                 <!--Main image and article, left hand side column-->
-                <div class="container-fluid col-8">
+                <div class="container-fluid col-8 mb-2">
                     <div class="pb-3">
                         <img itemtype="primaryImageOfPage, image" src="{% block image_header_tw0 %}{% endblock %}" alt="{% for post in posts %}{{ post.Title }}{% endfor %}" style="max-height: 75vh" class="col-12">
                     </div>
@@ -162,19 +162,23 @@
                     </div>
                     <!--Bottom of page sign up form-->
                     <div class="row m-auto w-100" style="max-width: 800px">
-                        <h3 class="font-weight-normal">Enjoy what you're reading? Sign up for email alerts!</h3>
-                        <form class="user col-12 w-100 text-left" action="javascript:newsletterSignup()" novalidate>
-                            {{ newsletter_form.hidden_tag() }}
-                            {% from "_formhelpers.html" import render_field %}
-                            <div class="form-row">
-                                <div class="form-group col-8">
-                                {{ render_field(newsletter_form.user_email, class="form-control form-control-user rounded-0", placeholder="Email Address", id='emailAddress') }}
-                                </div>
-                                <div class="form-group col-4">
-                                    {{ newsletter_form.Submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
-                                </div>
+                        <div class="card col-12">
+                            <div class="card-body">
+                                <h5 class="font-weight-normal card-title">Enjoy what you're reading? Sign up for email alerts!</h5>
+                                <form class="user row w-100 m-auto text-left" action="javascript:newsletterSignup()" novalidate>
+                                    {{ newsletter_form.hidden_tag() }}
+                                    {% from "_formhelpers.html" import render_field %}
+                                    <div class="form-row col-12 mt-2 mb-2">
+                                        <div class="form-group">
+                                            {{ render_field(newsletter_form.user_email, class="form-control form-control-user rounded-0 mt-0", placeholder="Email Address", id='emailAddress') }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ newsletter_form.Submit(class_="btn btn-dark btn-user btn-block rounded-0 form-control-user") }}
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
 
@@ -183,14 +187,19 @@
 
                     <!--Right side newsletter sign up-->
                     <div class="row m-auto pt-3" style="max-width: 800px">
-                        <form class="user col-12 text-left" action="javascript:newsletterSignup_two()" novalidate>
-                            {{ newsletter_form.hidden_tag() }}
-                            {% from "_formhelpers.html" import render_field %}
-                            <div class="form-group">
-                            {{ render_field(newsletter_form.user_email, class="form-control form-control-user rounded-0", placeholder="Sign up to our newsletter!", id='emailAddress_two') }}
+                        <div class="card col-12">
+                            <div class="card-body">
+                                <h5 class="card-title">Don't miss out on our latest content!</h5>
+                                <form class="user col-12 text-left" action="javascript:newsletterSignup_two()" novalidate>
+                                    {{ newsletter_form.hidden_tag() }}
+                                    {% from "_formhelpers.html" import render_field %}
+                                    <div class="form-group">
+                                    {{ render_field(newsletter_form.user_email, style="border: none", class="form-control form-control-user rounded-0 border-dark border-bottom", placeholder="Email address", id='emailAddress_two') }}
+                                    </div>
+                                    {{ render_field(newsletter_form.Submit, class="btn btn-dark btn-user btn-block rounded-0") }}
+                                </form>
                             </div>
-                            {{ render_field(newsletter_form.Submit, class="btn btn-dark btn-user btn-block rounded-0") }}
-                        </form>
+                        </div>
                     </div>
                     <!--Shop now button-->
                     <h3 class="font-weight-normal text-left ml-0 pt-4">SHOP NOW</h3>

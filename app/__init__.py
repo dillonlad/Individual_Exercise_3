@@ -69,6 +69,9 @@ def create_app():
     from app.sitemaps.routes import bp_sitemaps
     app.register_blueprint(bp_sitemaps)
 
+    from app.book.routes import bp_book
+    app.register_blueprint(bp_book)
+
 
     from app.main.routes import ext
     app.config['SITEMAP_MAX_URL_COUNT'] = 10000
