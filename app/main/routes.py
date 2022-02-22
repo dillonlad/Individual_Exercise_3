@@ -1,7 +1,8 @@
 import io
 from datetime import timedelta, datetime
 from urllib.parse import urlparse, urljoin
-
+import requests
+import json
 from flask import render_template, Blueprint, request, flash, redirect, url_for, Flask, make_response, abort, \
     render_template_string, session, jsonify
 from flask_login import login_required, current_user, logout_user, login_user
@@ -17,7 +18,8 @@ from werkzeug.security import generate_password_hash, safe_str_cmp
 
 import app
 from app import db
-from app.AuthenticationModule import otp_required, otp_verified, is_admin, url_https, url_homepage, local_only
+from app.AuthenticationModule import otp_required, otp_verified, is_admin, url_https, url_homepage, local_only, apiAuth
+
 from app.HelloAnalytics import initialize_analyticsreporting, print_response, get_report, get_report_most_popular
 from app.LoadingModule import load_templates
 
@@ -119,7 +121,21 @@ def privacy_policies():
 def index():
     if current_user.is_authenticated:
         profile = Profile.query.filter(Profile.username==current_user.username).all()
-        return render_template('landing.html', profile=profile)
+        jsonBody = {"postId": ""}
+        res = requests.get("https://lowdhampharmacy.pythonanywhere.com/get-all-comments", json=jsonBody, auth=apiAuth)
+        requestResults = json.loads(res.text)
+        formattedComments = []
+        commentsHtml = ""
+        for comment in requestResults["status"]:
+            print(comment)
+            formattedComment = {}
+            formattedComment["ID"] = comment[0]
+            formattedComment["Name"] = comment[1]
+            formattedComment["Comment"] = comment[2]
+            formattedComment["Date"] = datetime.strptime(comment[3], '%a, %d %b %Y %H:%M:%S %Z').strftime('%d/%m/%y') if comment[3] else ""
+            formattedComments.append(formattedComment)
+            commentsHtml = render_template('comments.html', comments=formattedComments, forApproval=True)
+        return render_template('landing.html', profile=profile, commentsHtml=commentsHtml)
     else:
         app.track_event(category='Homepage', action='Homepage visit')
         categories, navigation_page, allow_third_party_cookies, footer = load_templates()

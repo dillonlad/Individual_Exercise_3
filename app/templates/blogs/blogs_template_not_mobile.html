@@ -27,26 +27,41 @@
             <div class="container-fluid" id="navigation">
                 <div id="nav_one" style="display: block" class="row">
                     <div class="col-12">
-                        <nav class="navbar navbar-dark fixed-top bg-dark" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
-                            <a id="home_link" href="{{url_for('main.index')}}"><span class="navbar-brand text-white navbar-dark mb-0 h1 font-weight-normal">In Wait of Tomorrow</span></a>
-                            <div>
-                                <i class="fas fa-search text-white" onclick="openNav()" style="border: none"></i>
+                        <nav class="navbar fixed-top bg-transparent" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
+                            <a id="home_link" class="col-4 ml-0 pl-0" href="{{url_for('main.index')}}"><span class="navbar-brand text-dark navbar-dark mb-0 h1 font-weight-normal">In Wait of Tomorrow</span></a>
+                            <div class="col-4 p-0 m-auto text-center">
+                                <script src="https://kit.fontawesome.com/7380e39ab3.js" crossorigin="anonymous"></script>
+                                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+                                <a href="https://www.facebook.com/inwaitoftomorrow/"><i class="fa fa-facebook" style="border: none; color: black; background-color: transparent"></i></a>
+                                <a href="https://www.instagram.com/inwaitoftomorrow/"><i class="fa fa-twitter" style="border: none; color: black; background-color: transparent"></i></a>
+                                <a href="https://twitter.com/InWaitofTomorr1"><i class="fa fa-instagram" style="border: none; color: black; background-color: transparent"></i></a>
+                                <a href="https://www.reddit.com/user/inwaitoftomorrow"><i class="fa fa-reddit" style="border: none; color: black; background-color: transparent"></i></a>
+                            </div>
+                            <div class="col-4 mr-0 pr-0 text-right">
+                                <i class="fas fa-search text-dark" onclick="openNav()" style="border: none"></i>
                                 <div class="dropdown dropleft show btn-group">
-                                  <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
+                                  <button class="btn btn-dark rounded-0" type="button" onclick="openNav()">&#9776;
                                   </button>
                                 </div>
                             </div>
                         </nav>
                     </div>
                 </div>
-                <div id="nav_two" style="display: none" class="row">
+                <div id="nav_two" style="display: none;" class="row border border-dark">
                     <div class="col-12">
-                        <nav id="navbar" class="navbar navbar-dark fixed-top bg-dark" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
-                                <span id="new_words" class="navbar-brand text-white navbar-dark mb-0"><a href="javascript:void(0)" onclick="displayUserInterests('block')" class="text-white"><strong>Click here</strong> to find the content you're interested in!</a></span>
-                                <div class="dropdown dropleft show btn-group">
-                                  <button class="btn btn-dark" type="button" onclick="openNav()">&#9776;
-                                  </button>
-                                </div>
+                        <nav id="navbar" class="navbar fixed-top bg-white border-dark border-bottom" style="width: 100%" itemscope itemtype="https://schema.org/SiteNavigationElement">
+                            <span id="new_words" class="navbar-brand text-white navbar-dark mb-0"><a href="javascript:void(0)" onclick="displayUserInterests('block')" class="text-dark">For you</a></span>
+                            <div>
+                                {% for category in categories %}
+                                    {% if category.category_name != "Blog" %}
+                                        <a href="{{ url_for('main.show_blog_category', category=category.category_name) }}"><span class="navbar-brand mb-0 h1 font-weight-normal text-dark">{{ category.category_name }}</span></a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div class="dropdown dropleft show btn-group">
+                                <button class="btn btn-dark rounded-0" type="button" onclick="openNav()">&#9776;
+                                </button>
+                            </div>
                         </nav>
                     </div>
                 </div>
@@ -58,49 +73,45 @@
             </div>
 
 
-            <div class="container-fluid m-auto" style="max-width: 80vw;">
+            <div class="container-fluid m-auto" style="max-width: 90vw;">
 
                 <!--Top social media links-->
                 <div class="text-center text-dark p-2" {% if request.MOBILE %}style="margin-top: 50px" {% else %}style="margin-top:5%"{% endif %}>
-                    <script src="https://kit.fontawesome.com/7380e39ab3.js" crossorigin="anonymous"></script>
-                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-                    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11"></script>
-                    <div id="typed-strings">
-                        <p class="lead w-100">^1000Check out our social media...^1000</p>
-                    </div>
-                    <span id="typed" class="pb-5 text-dark"></span>
-                    <div class="w-100 m-auto pt-3">
-                        <a href="https://www.facebook.com/inwaitoftomorrow/"><i class="fa fa-facebook" style="border: none; color: black; background-color: transparent"></i></a>
-                        <a href="https://www.instagram.com/inwaitoftomorrow/"><i class="fa fa-twitter" style="border: none; color: black; background-color: transparent"></i></a>
-                        <a href="https://twitter.com/InWaitofTomorr1"><i class="fa fa-instagram" style="border: none; color: black; background-color: transparent"></i></a>
-                        <a href="https://www.reddit.com/user/inwaitoftomorrow"><i class="fa fa-reddit" style="border: none; color: black; background-color: transparent"></i></a>
-                    </div>
-
                     <!-- Displays flashed messages on a page -->
                     {% with messages = get_flashed_messages() %}
                             {% if messages %}
-                                <div class="text-center m-auto p-5 font-weight-normal fixed-top" id="flashedmessages" style="max-width: 600px; background-color: #dddddd; z-index: 1031">
-                                    {% for message in messages %}
-                                        {{ message | safe }}
-                                    {% endfor %}
-                                <a class='border border-dark text-dark rounded-0 w-100 pt-1 pb-1 pl-5 pr-5' href='javascript:void(0)' onclick="closeflash()">OK</a>
+                                <!--Display flashed messages popup-->
+                                <div class="card m-auto rounded-0 border border-dark" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 600px; z-index: 10000; display: block;" id="flashPopupMessage">
+                                    <div class="card-header">
+                                        <strong class="mr-auto text-left">In Wait of Tomorrow</strong>
+                                        <button type="button" class="ml-2 mb-1 close" aria-label="Close">
+                                            <span aria-hidden="true"><a href="javascript:void(0)" onclick="closeflash()">&times;</a></span>
+                                        </button>
+                                    </div>
+                                    <div class="card-body text-left" style="overflow-x: hidden; max-height: 75vh; scroll-behavior: smooth;">
+                                        <div style="max-width: 600px;" class="m-auto" id="flashMessageHTML">
+                                            {% for message in messages %}
+                                                {{ message | safe }}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
                                 </div>
                             {% endif %}
                     {% endwith %}
                 </div>
 
                 <!--Main title-->
-                <h1 class="row w-100 ml-3 mr-3 mt-3 h1 display-4 font-weight-normal" style="max-width: 80vw" id="postTitle" itemprop="name">{% for post in post %}{{ post.Title }}{% endfor %}</h1>
+                <h1 class="row w-100 ml-3 mr-3 mt-3 h1 display-4 font-weight-normal" style="max-width: 90vw" id="postTitle" itemprop="name">{% for post in post %}{{ post.Title }}{% endfor %}</h1>
                 <!--Author and share buttons-->
-                <div class="pt-2 pb-2" style="max-width: 80vw">
+                <div class="pt-2 pb-2" style="max-width: 90vw">
                     <div class="col-12 font-weight-normal h6 mb-0" itemtype="datePublished, author">{% block time_and_date %}{% endblock %}{% if number_of_comments > 0 %} | <i class="fas fa-comment" style="border: none"></i>{{ number_of_comments }} {% else %}{% endif %}<strong class="font-weight-normal text-muted" id="Views"></strong><span style="float: right"><a class="text-dark" href="https://api.whatsapp.com/send?text={% for post in post %}{{ post.url_ | safe }}{% endfor %}"><i style="border: none" class="fab fa-whatsapp"></i></a> <a class="text-dark" href="http://www.facebook.com/sharer.php?u={% for post in post %}{{ post.url_ | safe }}{% endfor %}"><i class="fab fa-facebook-square" style="border: none"></i></a> <a class="text-dark" href="https://twitter.com/intent/tweet?url={% for post in post %}{{ post.url_ | safe }}{% endfor %}&text={% for post in post %}{{ post.Title | safe }}{% endfor %}"><i class="fab fa-twitter-square" style="border: none"></i></a> <a class="text-dark" href="https://www.linkedin.com/sharing/share-offsite/?url={% for post in post %}{{ post.url_ | safe }}{% endfor %}"><i style="border: none" class="fab fa-linkedin-in"></i></a></span>
                     </div>
                 </div>
-                <div class="dropdown-divider text-center mb-0 pb-4" style="max-width: 70vw"></div>
+                <div class="dropdown-divider text-center mb-0 pb-4" style="max-width: 90vw"></div>
             </div>
 
             <!--Main body-->
-            <div class="container-fluid row m-auto" style="max-width: 80vw">
+            <div class="container-fluid row m-auto" style="max-width: 90vw">
 
                 <!--Main image and article, left hand side column-->
                 <div class="container-fluid col-8 mb-2">
@@ -124,23 +135,14 @@
                             <div class="form-group font-weight-normal">
                               {{ render_field(form.comment, class="form-control form-control-user rounded-0", placeholder="Comment", id='userComment', rows="3") }}
                             </div>
-                            <div class="form-group">
-                                 {{ form.rating.label }}
-                            </div>
-                            <div class="form-group form-check-inline">
-                                {% for subfield in form.rating %}
-                                    {{ subfield(class_="form-check-input") }}
-                                    {{ subfield.label(class_="form-check-label pr-5") }}
-                                {% endfor %}
-                            </div>
                             {{ form.Submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
                         </form>
                         <!--Comments display-->
-                        {% if comments|length %}
+                        <!-- {% if comments|length %}
                             {% for comment in comments %}
                                 <div class="card w-100 mb-2 rounded-0">
-                                    <div class="card-header text-right">
-                                        {% for number in range(comment.stars) %}<i class="fas fa-star" style="border: none"></i>{% endfor %}
+                                    <div class="card-header">
+                                        <p class="text-muted text-right">{{ comment.date }}</p>
                                     </div>
                                     <div class="card-body">
                                         <table>
@@ -150,21 +152,19 @@
                                             </tr>
                                         </table>
                                     </div>
-                                    <div class="card-footer">
-                                        <p class="text-muted text-right">{{ comment.date }}</p>
-                                    </div>
                                 </div>
                             {% endfor %}
-                        {% else %}
+                        {% else %} -->
 
-                        {% endif %}
+                        <!-- {% endif %} -->
+                        <div id="articleComments"></div>
 
                     </div>
                     <!--Bottom of page sign up form-->
-                    <div class="row m-auto w-100" style="max-width: 800px">
+                    <div class="row m-auto w-100 pb-5" style="max-width: 800px">
                         <div class="card col-12">
                             <div class="card-body">
-                                <h5 class="font-weight-normal card-title">Enjoy what you're reading? Sign up for email alerts!</h5>
+                                <h5 class="font-weight-normal card-title">Sign up to recieve our newsletters</h5>
                                 <form class="user row w-100 m-auto text-left" action="javascript:newsletterSignup()" novalidate>
                                     {{ newsletter_form.hidden_tag() }}
                                     {% from "_formhelpers.html" import render_field %}
@@ -201,33 +201,6 @@
                             </div>
                         </div>
                     </div>
-                    <!--Shop now button-->
-                    <h3 class="font-weight-normal text-left ml-0 pt-4">SHOP NOW</h3>
-                    {% if latest_product|length %}
-                        <div class="m-auto" style="max-width: 600px">
-                            {% for product in latest_product %}
-                                <link rel="stylesheet" href="../../static/css/hovering.css">
-                                <div class="card mb-3 rounded-0" style="width: 100%">
-                                    <div class="hovereffect">
-                                        <picture>
-                                            <source style="max-width: 600px; height: auto" class="card-img-top img-fluid" srcset="{{ product_image }}" type="image/jpeg">
-                                            <img class="card-img-top img-fluid" src="{{ product_image }}" alt="{{ product.item_name }}" style="max-width: 600px; height: auto">
-                                        </picture>
-                                        <div class="overlay" id="img_overlay">
-                                            <p class="text-white text-left ml-1" style="font-size: small">{{ product.meta_description }}<br><a class="text-center bg-transparent border-white btn rounded-0 text-white w-50" style="font-size: x-small" href="{{ url_for('shop.shop_item', id = product.item_id) }}">BUY NOW</a></p>
-                                        </div>
-                                    </div>
-                                    <div class="card-body">
-                                      <h6 class="card-subtitle mb-2 text-muted font-weight-normal ml-0">£{{ product.price }}</h6>
-                                      <a class="mb-2 ml-0" href="{{ url_for('shop.shop_item', id = product.item_id) }}"><p class="card-text mb-2 ml-0" itemprop="name">{{ product.item_name }}</p></a>
-                                      <p class="card-subtitle mb-2 text-muted font-weight-normal ml-0">FREE UK SHIPPING</p>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                    {% endif %}
-
                     <!--Recent articles-->
                     <h3 class="font-weight-normal text-left ml-0 pt-4">Recent posts {% if article_category|length %}in {{ article_category }}{% endif %}</h3>
                     {% if latest_articles|length %}
@@ -265,13 +238,6 @@
 {% block custom_scripts %}
 
     <script>
-      var typed = new Typed('#typed', {
-        stringsElement: '#typed-strings',
-        typeSpeed: 15,
-        loop: false
-      });
-    </script>
-    <script>
 
         function change_words(){
             if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
@@ -301,6 +267,33 @@
                 });
             }
             document.getElementById('userInterests').style.display = displayType;
+        }
+
+        function fixed_top(){
+
+            var h = window.innerHeight;
+            var h2 = h/2;
+            if (document.body.scrollTop > h2 || document.documentElement.scrollTop > h2) {
+                try {
+                    document.getElementById("homepagefixedtop").classList.add("fixed-top", "bg-white", "pt-4");
+                    document.getElementById("homepagefixedtop").classList.remove("bg-transparent");
+                    document.getElementById('homepagefixedtop').style.minHeight = "8vh";
+                    document.getElementById('homepagefixedtop').style.display = "block";
+                }
+                catch(err){
+                    console.log(err)
+                }
+            }
+            else
+                if (document.body.scrollTop < h2 || document.documentElement.scrollTop < h2) {
+                    try {
+                        document.getElementById("homepagefixedtop").classList.remove("fixed-top", "bg-white");
+                        document.getElementById("homepagefixedtop").classList.add("bg-white");
+                    }
+                    catch(err){
+                        console.log(err)
+                    }
+                }
         }
     </script>
 {% endblock %}

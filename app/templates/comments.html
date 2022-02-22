@@ -1,0 +1,25 @@
+{% if comments|length %}
+    {% for comment in comments %}
+        <div class="card w-100 mb-2 rounded-0" id="commentCard{{ comment['ID']}}">
+            <div class="card-header">
+                <p class="text-muted text-right">{{ comment["Date"] }}</p>
+            </div>
+            <div class="card-body">
+                <table>
+                    <tr class="col-12">
+                        <td class="text-primary font-weight-bold" style="max-width: 30%">{{ comment["Name"] }}</td>
+                        <td class="font-weight-normal pl-3">{{ comment["Comment"] }}</td>
+                    </tr>
+                    {% if forApproval == True %}
+                        <tr>
+                            <td><button class="btn btn-success rounded-0 text-white" onclick="respondComment('Approve', {{ comment['ID'] }})">Approve</button></td>
+                            <td><button class="btn btn-danger rounded-0 text-white" onclick="respondComment('Reject', {{ comment['ID'] }})">Reject</button></td>
+                        </tr>
+                    {% else %}
+                    {% endif %}
+                </table>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+{% endif %}

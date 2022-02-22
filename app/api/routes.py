@@ -8,6 +8,8 @@ from app.blogs.routes import newsletter_signup
 from app.main.forms import EmailToMeForm
 from app.models import Blogs, main_stock_list
 from flask_mail import Mail, Message
+import requests
+from app.AuthenticationModule import apiAuth
 
 abbreviations = [{"abbrev": "tech", "full": "technology"}, {"abbrev": "ai", "full": "artificial intelligence"}]
 
@@ -27,31 +29,37 @@ def get_most_popular():
     for dict in sorted_dict:
         matching_post = [post for post in posts if post.Post_ID in dict['page']]
         if len(matching_post) > 0: most_popular.append(matching_post[0])
-        # for post in posts:
-        #     if post.Post_ID in dict['page']:
-        #         if len(most_popular) < 5:
-        #             most_popular.append(post)
-        #         else:
-        #             break
 
     return jsonify(status=render_template('most_popular.html', posts=[x for x in most_popular[0:5]], title="Most popular"))
 
+@bp_api.route('/respond-comments/', methods=['POST', 'GET'])
+def approve_comments():
+    jsonBody = request.get_json()
+    print(jsonBody)
+    res = requests.get("https://lowdhampharmacy.pythonanywhere.com/respond-comment", json=jsonBody, auth=apiAuth)
+    return jsonify(status="Complete")
 
 # Get the most similar articles to the one currently open and also gets the number of views for current article
 @bp_api.route('/similar/<post_id>', methods=['POST', 'GET'])
 def get_similar_blogs(post_id):
-
+    import datetime
+    jsonBody = {"postId": post_id}
+    res = requests.get("https://lowdhampharmacy.pythonanywhere.com/view-comment", json=jsonBody, auth=apiAuth)
+    requestResults = res.json()
+    formattedComments = []
+    for comment in requestResults["status"]:
+        print(comment)
+        formattedComment = {}
+        formattedComment["ID"] = comment[0]
+        formattedComment["Name"] = comment[1]
+        formattedComment["Comment"] = comment[2]
+        formattedComment["Date"] = datetime.datetime.strptime(comment[3], '%a, %d %b %Y %H:%M:%S %Z').strftime('%d/%m/%y') if comment[3] else ""
+        formattedComments.append(formattedComment)
+    commentsHtml = render_template('comments.html', comments=formattedComments, forApproval=False)
     post = Blogs.query.filter_by(Post_ID=post_id).all()[0]
 
     category_list = []
     category_list = post.category.split(', ') if ',' in post.category else [post.category]
-    # for match_post in post:
-    #     category = match_post.category
-
-    #     if ',' in category:
-    #         category_list = category.split(', ')
-    #     else:
-    #         category_list = [category]
 
     print(category_list)
     posts = Blogs.query.order_by(desc(Blogs.article_id)).all()
@@ -59,16 +67,7 @@ def get_similar_blogs(post_id):
 
     for post in posts:
         post_categories = post.category.split(', ') if ',' in post.category else [post.category]
-        # if ',' in post.category:
-        #     post_categories = post.category.split(', ')
-        # else:
-        #     post_categories = [post.category]
-        # similarity_index = 0
         similarity_index = len([category for category in post_categories if category in category_list])
-        # for category in post_categories:
-        #     if category in category_list:
-        #         similarity_index += 1
-
         if similarity_index > 0:
             similar_post = {}
             similar_post['index'] = similarity_index
@@ -76,26 +75,15 @@ def get_similar_blogs(post_id):
             similar_posts.append(similar_post)
 
     sorted_dict = sorted(similar_posts, key=lambda k: k['index'], reverse=True)
-    #result = []
     result = [dict['post'] for dict in sorted_dict if dict['post'].Post_ID!=post_id]
-    # for dict in sorted_dict:
-    #     if (len(result) < 3) and (dict['post'].Post_ID != post_id):
-    #         result.append(dict['post'])
-
     analytics = initialize_analyticsreporting()
     response = get_report_pageviews(analytics)
     analytics_reports = print_response(response)
     sorted_dict = sorted(analytics_reports, key=lambda k: k['views'], reverse=True)
-    #views = 0
     views = next((dict['views'] for dict in sorted_dict if post_id in dict['page']),0)
-    # for dict in sorted_dict:
-    #     if post_id in dict['page']:
-    #         views = dict['views']
-    #         break
     print(views)
-
     return jsonify(status=render_template('most_similar.html', posts=[result[0], result[1], result[2]], 
-                                            title="More like this"), views=views)
+                                            title="More like this"), views=views, commentsHtml=commentsHtml)
 
 
 @bp_api.route('/prepare-reading/<search_terms>', methods=['GET', 'POST'])
@@ -103,28 +91,15 @@ def prepare_reading(search_terms):
     terms = search_terms.lower()
     search_list = terms.split(',')
     print(search_list)
-
     matching_posts = []
     posts = Blogs.query.order_by(desc(Blogs.article_id)).all()
-
     for post in posts:
         similar_post = {}
         similarity_index = 0
         categories = post.category.lower()
         keywords = post.keywords.lower()
-
         post_categories = categories.split(', ') if ',' in categories else [categories]
         post_keywords = keywords.split(', ') if ',' in keywords else [keywords]
-        # if ',' in categories:
-        #     post_categories = categories.split(', ')
-        # else:
-        #     post_categories = [categories]
-
-        # if ',' in keywords:
-        #     post_keywords = keywords.split(', ')
-        # else:
-        #     post_keywords = [keywords]
-
         for term in search_list:
 
             if "-" in term:
@@ -157,11 +132,6 @@ def prepare_reading(search_terms):
     results = [dict_['post'] for dict_ in sorted_dict]
     posts_ids = [dict_['post'].Post_ID for dict_ in sorted_dict]
 
-    # while len(results) <= 10:
-    #     for dict_ in sorted_dict:
-    #         results.append(dict_['post'])
-    #         posts_ids.append(dict_['post'].Post_ID)
-    #     break
     form = EmailToMeForm(request.form)
     template = render_template('prepared_reading.html', posts=results, form=form)
     return jsonify(status=template, type=posts_ids)

@@ -79,7 +79,7 @@
     }
 
     function closeflash(){
-        document.getElementById('flashedmessages').style.visibility = "hidden";
+        document.getElementById('flashPopupMessage').style.display = "none";
     }
 
     function searchRedirect(){
@@ -93,11 +93,14 @@
         if (!email){
             alert("Email required")
         } else {
-            return fetch("/blogs/signup/" + email, {
+            return fetch("/blogs/signup/", {
                 method: 'post',
                 headers: {
                     'content-type': 'application/json'
-                }
+                },
+                body: JSON.stringify({
+                    "email": email
+                })
             }).then(function (res) {
                 return res.json();
             }).then(function (data) {
@@ -111,11 +114,14 @@
         if (!email){
             alert("Email required")
         } else {
-            return fetch("/blogs/signup/" + email, {
+            return fetch("/blogs/signup/", {
                 method: 'post',
                 headers: {
                   'content-type': 'application/json'
-                }
+                },
+                body: JSON.stringify({
+                    "email": email
+                })
               }).then(function(res) {
                 return res.json();
               }).then(function(data) {
@@ -140,11 +146,17 @@
         if (!userName || !userComment || !selectedValue ) {
             alert("Missing fields required")
         } else {
-            return fetch("/blogs/comment/" + userName + "/" + selectedValue + "/" + userComment + "/" + postName, {
+            return fetch("/blogs/add-comment", {
                 method: 'post',
                 headers: {
-                    'content-type': 'application/json'
-                }
+                    'content-type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: userName,
+                    comment: userComment,
+                    postName: postName
+                })
             }).then(function (res) {
                 return res.json();
             }).then(function (data) {
@@ -159,6 +171,7 @@
         const postID = pathArray[1];
         div = document.getElementById('mostSimilarArticles');
         viewsDiv = document.getElementById('Views');
+        commentsDiv = document.getElementById('articleComments');
         return fetch("/api/similar/" + postID, {
             method: 'post',
             headers: {
@@ -169,6 +182,7 @@
           }).then(function(data) {
             div.innerHTML = data.status;
             if (data.views !== 0) { viewsDiv.innerHTML = "<i class='fas fa-eye pl-1' style='border: none'></i> " + data.views; }
+            commentsDiv.innerHTML = data.commentsHtml
           });
     }
 

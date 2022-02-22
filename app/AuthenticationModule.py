@@ -1,8 +1,11 @@
 from functools import wraps
+import imp
 from flask import flash, url_for, redirect, session, request
 from flask_login import current_user, logout_user
 from app.models import Profile, Categories
+from requests.auth import HTTPBasicAuth
 
+apiAuth = HTTPBasicAuth('IWOT', "onpw6m6sn8ze6716")
 
 # Checks if user is listed as admin in the database
 def is_admin(func):

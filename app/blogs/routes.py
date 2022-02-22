@@ -1,7 +1,7 @@
 import json
 from datetime import timedelta, datetime
 from urllib.parse import urlparse, urljoin
-
+from smtplib import SMTPAuthenticationError
 from flask import render_template, Blueprint, request, flash, redirect, url_for, Flask, make_response, abort, \
     render_template_string, jsonify
 from flask_login import login_required, current_user, logout_user, login_user
@@ -13,10 +13,11 @@ from sqlalchemy.exc import IntegrityError, OperationalError
 from flask_sqlalchemy import SQLAlchemy
 from os.path import abspath, join, dirname
 from flask_sitemap import Sitemap, sitemap_page_needed
-
+import requests
+from requests.auth import HTTPBasicAuth
 import app
 from app import db
-from app.AuthenticationModule import is_admin, otp_required, url_blogs, url_https
+from app.AuthenticationModule import is_admin, otp_required, url_blogs, url_https, apiAuth
 from app.HelloAnalytics import initialize_analyticsreporting, print_response, get_report_most_popular
 from app.LoadingModule import load_templates
 from app.blogs.forms import CommentForm, SubmitNewsletter, Newsletter
@@ -125,13 +126,17 @@ def form_send(form, Post_ID):
     flash('Thanks for the reply!')
 
 
-@bp_blogs.route('/signup/<email>', methods=['POST', 'GET'])
-def newsletter_signup(email):
-    with app.mail.connect() as conn:
-        msg = Message('{} - newsletter sign up'.format(email), sender=ADMINS[0], recipients=ADMINS)
-        msg.body = '{} has signed up for email newsletter'.format(email)
-        conn.send(msg)
-
+@bp_blogs.route('/signup/', methods=['POST', 'GET'])
+def newsletter_signup():
+    jsonBody = request.get_json()
+    requests.post("https://lowdhampharmacy.pythonanywhere.com/sign-up", json=jsonBody, auth=apiAuth)
+    try:
+        with app.mail.connect() as conn:
+            msg = Message('Newsletter sign up', sender=ADMINS[0], recipients=ADMINS)
+            msg.body = 'You have a new newsletter sign up'
+            conn.send(msg)
+    except SMTPAuthenticationError:
+        print("Failed to send email")
     return jsonify(status="Thanks for signing up!")
 
 
@@ -141,15 +146,31 @@ def blog_comment(name, rating, comment, post_title):
         time_date = datetime.now()
         msg = Message('{} - comment'.format(name), sender=ADMINS[0], recipients=ADMINS)
         msg.body = '{}'.format(comment)
-        msg.html = '<b>{}</b> says {} about {} at this time {}:{}:{} on this date {}-{}-{}. An overall rating of {}'.format(
+        msg.html = '<b>{}</b> says {} about {} at this time {}:{}:{} on this date {}-{}-{}'.format(
             name, comment, post_title, time_date.strftime("%H"), time_date.strftime("%M"),
             time_date.strftime("%S"), time_date.strftime("%Y"), time_date.strftime("%m"),
-            time_date.strftime("%d"),
-            rating)
+            time_date.strftime("%d"))
         conn.send(msg)
 
     return jsonify(status="Thanks for the comment")
 
+@bp_blogs.route('/add-comment', methods=['POST', 'GET'])
+def add_new_blog_comment():
+    jsonBody = request.get_json()
+    post = Blogs.query.filter_by(Title=jsonBody["postName"]).first()
+    jsonBody["postName"] = post.Post_ID
+    res = requests.post('https://lowdhampharmacy.pythonanywhere.com/add-comment', json=jsonBody, auth=apiAuth)
+    print("response from server: {}".format(res.text))
+    dictFromServer = res.json()
+    if dictFromServer:
+        try:
+            with app.mail.connect() as conn:
+                msg = Message('New comments', sender=ADMINS[0], recipients=ADMINS)
+                msg.body = 'You have some unread comments to respond to'
+                conn.send(msg)
+        except SMTPAuthenticationError:
+            print("Email failed to send")
+    return jsonify(status="Thanks for the comment")
 
 @bp_blogs.route('/<Post_ID>', methods=['POST', 'GET'])
 @url_https
@@ -161,9 +182,7 @@ def post(Post_ID):
     post = Blogs.query.filter_by(Post_ID=Post_ID).all()
     if not post:
         return redirect(abort(404))
-
     categories, navigation_page, allow_third_party_cookies, footer = load_templates()
-    
     latest_product = shop_items.query.limit(1).all()
     product_image = latest_product[0].meta_image.replace("http://inwaitoftomorrow.appspot.com", "..")
     p_author = post[0].author

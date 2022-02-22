@@ -64,6 +64,7 @@
     /></noscript>
     <!-- End Facebook Pixel Code -->
 </head>
+<body>
     {% with messages = get_flashed_messages() %}
             {% if messages %}
                 <div class="text-center m-auto p-5 font-weight-normal" style="max-width: 600px">
@@ -92,6 +93,9 @@
     <a class="col-12 btn btn-dark text-white rounded-0 mb-2" href="{{ url_for('main.show_analytics') }}">Analytics</a>
     <a class="col-12 btn btn-dark text-white rounded-0" href="{{ url_for('main.logout') }}">Logout</a>
 </div>
+<div class="row m-auto text-center pt-5" style="max-width: 600px;">
+    {{ commentsHtml|safe }}
+</div>
 <script src="../static/js/EasePack.min.js"></script>
 <script src="../static/js/TweenLite.min.js"></script>
 <script src="../static/js/demo.js"></script>
@@ -106,5 +110,23 @@
       document.getElementById("myNav").style.width = "0%";
       document.getElementById("cards").style.visibility = "visible"
     }
+
+    function respondComment(Response, commentId){
+        return fetch("/api/respond-comments/", {
+            method: 'post',
+            headers: {
+              'content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                'commentId': commentId,
+                'response': Response
+            })
+          }).then(function(res) {
+            return res.json();
+          }).then(function(data) {
+            var commentSection = document.getElementById("commentCard" + commentId).style.display = "none";
+          });
+    }
 </script>
+</body>
 </html>
