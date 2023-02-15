@@ -17,7 +17,7 @@ from flask_sitemap import Sitemap, sitemap_page_needed
 from werkzeug.security import generate_password_hash, safe_str_cmp
 
 import app
-from app import db
+from app import db, mail_sender
 from app.AuthenticationModule import otp_required, otp_verified, is_admin, url_https, url_homepage, local_only, apiAuth
 
 from app.HelloAnalytics import initialize_analyticsreporting, print_response, get_report, get_report_most_popular
@@ -120,6 +120,9 @@ def privacy_policies():
 @url_homepage
 def index():
     if current_user.is_authenticated:
+        if 'otp' not in session or ('otp' in session and session['otp'] != "pass"):
+            logout_user()
+            return redirect(url_for('main.index'))
         profile = Profile.query.filter(Profile.username==current_user.username).all()
         jsonBody = {"postId": ""}
         res = requests.get("https://lowdhampharmacy.pythonanywhere.com/get-all-comments", json=jsonBody, auth=apiAuth)
@@ -272,7 +275,7 @@ def write_for_us():
 
         with app.mail.connect() as conn:
 
-            msg = Message('Contact - Write For Us', sender=ADMINS[0], recipients=ADMINS)
+            msg = Message('Contact - Write For Us', sender=mail_sender, recipients=ADMINS)
             msg.html = """
                 <p>Name: {}</p>
                 <p>Email: {}</p>
@@ -366,7 +369,7 @@ def generate_otp():
         key = b'RZdUEoXajGZjbdwDxJun1w'
         session['auth_code'] = u'{0}|{1}'.format(auth_code, hmac.new(key, auth_code.encode('utf-8'), sha512).hexdigest())
         email = profile[0].email.split()
-        msg = Message(sender=ADMINS[0], recipients=email)
+        msg = Message(sender=mail_sender, recipients=email)
         msg.subject = "OTP"
         msg.body = '{}'.format(auth_code)
         app.mail.send(msg)

@@ -10,6 +10,7 @@ from app.models import Blogs, main_stock_list
 from flask_mail import Mail, Message
 import requests
 from app.AuthenticationModule import apiAuth
+from app import mail_sender
 
 abbreviations = [{"abbrev": "tech", "full": "technology"}, {"abbrev": "ai", "full": "artificial intelligence"}]
 
@@ -159,7 +160,7 @@ def send_articles():
         if blog.Post_ID in article_ids:
             posts.append(blog)
 
-    msg = Message(sender=ADMINS[0], recipients=email_address.split())
+    msg = Message(sender=mail_sender, recipients=email_address.split())
     msg.html = render_template('prepared_reading_to_email.html', posts=posts)
     msg.subject = "Here's what we found for you"
     app.mail.send(msg)

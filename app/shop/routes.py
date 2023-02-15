@@ -21,7 +21,7 @@ from flask_sitemap import Sitemap, sitemap_page_needed
 
 
 import app
-from app import db
+from app import db, mail_sender
 from app.main.forms import SignupForm, LoginForm, PostForm, BlogEditor, CreateArticle, SearchForm
 from app.main.routes import bp_main, cookies_accept, third_party_cookies
 
@@ -347,7 +347,7 @@ def enquiry():
     allow_third_party_cookies = third_party_cookies()
     if request.method == 'POST' and form.validate():
         with app.mail.connect() as conn:
-            msg = Message('{} - comment'.format(form.name.data), sender=ADMINS[0], recipients=ADMINS)
+            msg = Message('{} - comment'.format(form.name.data), sender=mail_sender, recipients=ADMINS)
             msg.body = '{}'.format(form.message.data)
             user_email = form.email.data
             if user_email == "":
@@ -389,7 +389,7 @@ def item_review(id):
     allow_third_party_cookies = third_party_cookies()
     if request.method == 'POST' and form.validate():
         with app.mail.connect() as conn:
-            msg = Message('{} - comment'.format(form.name.data), sender=ADMINS[0], recipients=ADMINS)
+            msg = Message('{} - comment'.format(form.name.data), sender=mail_sender, recipients=ADMINS)
             msg.body = '{}'.format(form.comment.data)
             msg.html = '<b>{}</b> says {}. Stars: {}. Item: {}'.format(
                 form.name.data, form.comment.data, form.stars.data, id)
@@ -402,7 +402,7 @@ def item_review(id):
             if (len(form.name.data) > 0 and len(form.comment.data) > 0) or (
                     len(form.name.data) > 0):
                 with app.mail.connect() as conn:
-                    msg = Message('{} - comment'.format(form.name.data), sender=ADMINS[0], recipients=ADMINS)
+                    msg = Message('{} - comment'.format(form.name.data), sender=mail_sender, recipients=ADMINS)
                     msg.body = '{}'.format(form.comment.data)
                     msg.html = '<b>{}</b> says {}. Stars: {}. Item; {}'.format(
                         form.name.data, form.comment.data, form.stars.data, id)

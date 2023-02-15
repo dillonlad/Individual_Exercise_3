@@ -72,16 +72,8 @@
 <body class="w-100" style="font-family: 'Cabin', sans-serif;">
 
     <!--Flashed messages-->
-    {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <div class="text-center m-auto p-5 font-weight-normal fixed-top" id="flashedmessages" style="max-width: 600px; background-color: #dddddd; z-index: 1031">
-                    {% for message in messages %}
-                        {{ message | safe }}
-                    {% endfor %}
-                <a class='border border-dark text-dark rounded-0 w-100 pt-1 pb-1 pl-5 pr-5' href='javascript:void(0)' onclick="closeflash()">OK</a>
-                </div>
-            {% endif %}
-    {% endwith %}
+    {% from "flashedPopupMessages.html" import flashed_message_popup %}
+    {{ flashed_message_popup() }}
     {{ navigation_page | safe }}
 
     <!--Main container-->
@@ -141,10 +133,6 @@
         function closeNav() {
           document.getElementById("myNav").style.width = "0%";
           document.getElementById("cards").style.visibility = "visible"
-        }
-
-        function closeflash(){
-            document.getElementById('flashedmessages').style.visibility = "hidden";
         }
 
     </script>

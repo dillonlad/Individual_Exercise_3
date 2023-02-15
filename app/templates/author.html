@@ -73,16 +73,8 @@
 <body style="background-color: #dddddd; font-family: 'Cabin', sans-serif;" itemscope itemtype="https://schema.org/WebPage">
 
     <!-- Flashed messages -->
-    {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <div class="text-center m-auto p-5 font-weight-normal fixed-top" id="flashedmessages" style="max-width: 600px; background-color: #dddddd; z-index: 1031">
-                    {% for message in messages %}
-                        {{ message | safe }}
-                    {% endfor %}
-                <a class='border border-dark text-dark rounded-0 w-100 pt-1 pb-1 pl-5 pr-5' href='javascript:void(0)' onclick="closeflash()">OK</a>
-                </div>
-            {% endif %}
-    {% endwith %}
+    {% from "flashedPopupMessages.html" import flashed_message_popup %}
+    {{ flashed_message_popup() }}
 
     <link rel="stylesheet" href="../../static/css/newnav.css">
     {{ navigation_page| safe }}
@@ -116,9 +108,9 @@
                 </div>
                 <div class="row w-100 m-auto text-center pb-5" style="max-width: 600px">
             		<h2 class="font-weight-normal mt-2 text-center w-100 m-auto">{{ person.author_name }}</h2>
-            		<p class="font-weight-normal text-center w-100 m-auto">Roles: {{ person.roles }}</p>
-            		<p class="font-weight-normal text-center w-100 m-auto">{{ person.description }} Check out my articles below!</p>
-                    <span class="w-100 m-auto text-center"><a class="text-dark" href="https://twitter.com/{{ person.twitter }}"><i class="fab fa-twitter-square" style="border: none"></i></a> <a class="text-dark" href="https://www.linkedin.com/in/{{ person.linkedin }}/"><i style="border: none" class="fab fa-linkedin-in"></i></a></span>
+            		<p class="font-weight-normal text-center w-100 m-auto">{{ person.roles }}</p>
+            		<p class="font-weight-normal text-center w-100 m-auto">{{ person.description }}</p>
+                    <span class="w-100 m-auto text-center">{% if person.twitter %}<a class="text-dark" href="https://twitter.com/{{ person.twitter }}"><i class="fab fa-twitter-square" style="border: none"></i></a>{% else %}{% endif %} {% if person.linkedin %}<a class="text-dark" href="https://www.linkedin.com/in/{{ person.linkedin }}/"><i style="border: none" class="fab fa-linkedin-in"></i></a>{% else %}{% endif %}</span>
         	    </div>
             </div>
             <br>
@@ -182,9 +174,9 @@
                 </div>
                 <div class="row w-100 m-auto text-center pb-5" style="max-width: 600px">
             		<h2 class="font-weight-normal mt-2 text-center w-100 m-auto">{{ person.author_name }}</h2>
-            		<p class="font-weight-normal text-center w-100 m-auto">Roles: {{ person.roles }}</p>
-            		<p class="font-weight-normal text-center w-100 m-auto">{{ person.description }} Check out my articles below!</p>
-                    <span class="w-100 m-auto text-center"><a class="text-dark" href="https://twitter.com/{{ person.twitter }}"><i class="fab fa-twitter-square" style="border: none"></i></a> <a class="text-dark" href="https://www.linkedin.com/in/{{ person.linkedin }}/"><i style="border: none" class="fab fa-linkedin-in"></i></a></span>
+            		<p class="font-weight-normal text-center w-100 m-auto">{{ person.roles }}</p>
+            		<p class="font-weight-normal text-center w-100 m-auto">{{ person.description }}</p>
+                    <span class="w-100 m-auto text-center">{% if person.twitter %}<a class="text-dark" href="https://twitter.com/{{ person.twitter }}"><i class="fab fa-twitter-square" style="border: none"></i></a>{% else %}{% endif %} {% if person.linkedin %}<a class="text-dark" href="https://www.linkedin.com/in/{{ person.linkedin }}/"><i style="border: none" class="fab fa-linkedin-in"></i></a>{% else %}{% endif %}</span>
         	    </div>
             </div>
         </div>
@@ -238,7 +230,7 @@
     }
 
     function closeflash(){
-        document.getElementById('flashedmessages').style.visibility = "hidden";
+        document.getElementById('flashPopupMessage').style.visibility = "hidden";
     }
 
 </script>

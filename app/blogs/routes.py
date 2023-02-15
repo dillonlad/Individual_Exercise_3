@@ -16,7 +16,7 @@ from flask_sitemap import Sitemap, sitemap_page_needed
 import requests
 from requests.auth import HTTPBasicAuth
 import app
-from app import db
+from app import db, mail_sender
 from app.AuthenticationModule import is_admin, otp_required, url_blogs, url_https, apiAuth
 from app.HelloAnalytics import initialize_analyticsreporting, print_response, get_report_most_popular
 from app.LoadingModule import load_templates
@@ -114,7 +114,7 @@ def form_send(form, Post_ID):
 
     with app.mail.connect() as conn:
         time_date = datetime.now()
-        msg = Message('{} - comment'.format(name), sender=ADMINS[0], recipients=ADMINS)
+        msg = Message('{} - comment'.format(name), sender=mail_sender, recipients=ADMINS)
         msg.body = '{}'.format(comment)
         msg.html = '<b>{}</b> says {} about {} at this time {}:{}:{} on this date {}-{}-{}. An overall rating of {}'.format(
             name, comment, post_title, time_date.strftime("%H"), time_date.strftime("%M"),
@@ -129,10 +129,12 @@ def form_send(form, Post_ID):
 @bp_blogs.route('/signup/', methods=['POST', 'GET'])
 def newsletter_signup():
     jsonBody = request.get_json()
+    if not jsonBody:
+        return jsonify(status="Invalid JSON request")
     requests.post("https://lowdhampharmacy.pythonanywhere.com/sign-up", json=jsonBody, auth=apiAuth)
     try:
         with app.mail.connect() as conn:
-            msg = Message('Newsletter sign up', sender=ADMINS[0], recipients=ADMINS)
+            msg = Message('Newsletter sign up', sender=mail_sender, recipients=ADMINS)
             msg.body = 'You have a new newsletter sign up'
             conn.send(msg)
     except SMTPAuthenticationError:
@@ -144,7 +146,7 @@ def newsletter_signup():
 def blog_comment(name, rating, comment, post_title):
     with app.mail.connect() as conn:
         time_date = datetime.now()
-        msg = Message('{} - comment'.format(name), sender=ADMINS[0], recipients=ADMINS)
+        msg = Message('{} - comment'.format(name), sender=mail_sender, recipients=ADMINS)
         msg.body = '{}'.format(comment)
         msg.html = '<b>{}</b> says {} about {} at this time {}:{}:{} on this date {}-{}-{}'.format(
             name, comment, post_title, time_date.strftime("%H"), time_date.strftime("%M"),
@@ -165,7 +167,7 @@ def add_new_blog_comment():
     if dictFromServer:
         try:
             with app.mail.connect() as conn:
-                msg = Message('New comments', sender=ADMINS[0], recipients=ADMINS)
+                msg = Message('New comments', sender=mail_sender, recipients=ADMINS)
                 msg.body = 'You have some unread comments to respond to'
                 conn.send(msg)
         except SMTPAuthenticationError:
@@ -225,7 +227,7 @@ def send_newsletter():
         closing_message = render_template_string(form.specific_message_two.data)
         for fella in mailing_list.query.order_by(desc(mailing_list.recipient_id)).all():
             recp = fella.email.split()
-            msg = Message(sender=ADMINS[0], recipients=recp)
+            msg = Message(sender=mail_sender, recipients=recp)
             msg.subject = "Latest | In Wait of Tomorrow"
             msg.html = render_template("email.html", latest_post=latest_post, fella=fella,
                                        second_latest_post=second_latest_post, third_latest_post=third_latest_post,
@@ -241,7 +243,7 @@ def send_newsletter():
                 closing_message = render_template_string(form.specific_message_two.data)
                 for fella in mailing_list.query.order_by(desc(mailing_list.recipient_id)).all():
                     recp = fella.email.split()
-                    msg = Message(sender=ADMINS[0], recipients=recp)
+                    msg = Message(sender=mail_sender, recipients=recp)
                     msg.subject = "Latest | In Wait of Tomorrow"
                     msg.html = render_template("email.html", latest_post=latest_post, fella=fella,
                                                second_latest_post=second_latest_post,
@@ -275,7 +277,7 @@ def test_send_newsletter():
         closing_message = render_template_string(form.specific_message_two.data)
         for fella in NEWSLETTER_TEST:
             recp = fella['email'].split()
-            msg = Message(sender=ADMINS[0], recipients=recp)
+            msg = Message(sender=mail_sender, recipients=recp)
             msg.subject = "Latest | In Wait of Tomorrow"
             msg.html = render_template("email.html", latest_post=latest_post, fella=fella,
                                        second_latest_post=second_latest_post, third_latest_post=third_latest_post,
@@ -291,7 +293,7 @@ def test_send_newsletter():
                 closing_message = render_template_string(form.specific_message_two.data)
                 for fella in NEWSLETTER_TEST:
                     recp = fella["email"].split()
-                    msg = Message(sender=ADMINS[0], recipients=recp)
+                    msg = Message(sender=mail_sender, recipients=recp)
                     msg.subject = "Latest | In Wait of Tomorrow"
                     msg.html = render_template("email.html", latest_post=latest_post, fella=fella,
                                                second_latest_post=second_latest_post,

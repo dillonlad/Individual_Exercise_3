@@ -6,7 +6,7 @@ from app.models import Categories
 
 def cookies_accept():
     if 'cookies_accept' not in session:
-        flash(render_template_string("<p>By using our website, you agree to our use of cookies. <a href='{{ url_for('main.privacy_policies') }}'>Click here to find out more and turn off cookies.</a></p>"))
+        flash(render_template_string("<p class='m-auto'>By using our website, you agree to our use of cookies. <a href='{{ url_for('main.privacy_policies') }}'>Click here to find out more and turn off cookies.</a></p>"))
         session['cookies_accept'] = "True"
 
 

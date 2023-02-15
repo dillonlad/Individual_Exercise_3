@@ -4,6 +4,7 @@ from flask import flash, url_for, redirect, session, request
 from flask_login import current_user, logout_user
 from app.models import Profile, Categories
 from requests.auth import HTTPBasicAuth
+import json
 
 apiAuth = HTTPBasicAuth('IWOT', "onpw6m6sn8ze6716")
 
@@ -93,3 +94,12 @@ def url_blogs(Post_ID):
 
     if "_" in Post_ID:
         return redirect(url_for('blogs.post', Post_ID=Post_ID.replace("_", "-")), 301)
+
+def complete_api_request(apiResponse):
+    jsonResponse = apiResponse.json()
+    status = jsonResponse["status"]
+    if not isinstance(status, str):
+        return True
+    if status not in ["Invalid Request", "Unauthenticated"]:
+        return True
+    return False

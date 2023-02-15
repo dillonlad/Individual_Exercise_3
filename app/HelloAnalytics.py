@@ -1,11 +1,12 @@
 """Hello Analytics Reporting API V4."""
 from operator import itemgetter
-
+import os
 from googleapiclient.discovery import build
 from oauth2client.service_account import ServiceAccountCredentials
 
 
 SCOPES = ['https://www.googleapis.com/auth/analytics.readonly']
+
 KEY_FILE_LOCATION = 'app/inwaitoftomorrow-1f1619d16199.json'
 VIEW_ID = '216595109'
 

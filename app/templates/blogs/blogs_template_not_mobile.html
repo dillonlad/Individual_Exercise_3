@@ -78,26 +78,8 @@
                 <!--Top social media links-->
                 <div class="text-center text-dark p-2" {% if request.MOBILE %}style="margin-top: 50px" {% else %}style="margin-top:5%"{% endif %}>
                     <!-- Displays flashed messages on a page -->
-                    {% with messages = get_flashed_messages() %}
-                            {% if messages %}
-                                <!--Display flashed messages popup-->
-                                <div class="card m-auto rounded-0 border border-dark" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 600px; z-index: 10000; display: block;" id="flashPopupMessage">
-                                    <div class="card-header">
-                                        <strong class="mr-auto text-left">In Wait of Tomorrow</strong>
-                                        <button type="button" class="ml-2 mb-1 close" aria-label="Close">
-                                            <span aria-hidden="true"><a href="javascript:void(0)" onclick="closeflash()">&times;</a></span>
-                                        </button>
-                                    </div>
-                                    <div class="card-body text-left" style="overflow-x: hidden; max-height: 75vh; scroll-behavior: smooth;">
-                                        <div style="max-width: 600px;" class="m-auto" id="flashMessageHTML">
-                                            {% for message in messages %}
-                                                {{ message | safe }}
-                                            {% endfor %}
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endif %}
-                    {% endwith %}
+                    {% from "flashedPopupMessages.html" import flashed_message_popup %}
+                    {{ flashed_message_popup() }}
                 </div>
 
                 <!--Main title-->
@@ -137,26 +119,6 @@
                             </div>
                             {{ form.Submit(class_="btn btn-dark btn-user btn-block rounded-0") }}
                         </form>
-                        <!--Comments display-->
-                        <!-- {% if comments|length %}
-                            {% for comment in comments %}
-                                <div class="card w-100 mb-2 rounded-0">
-                                    <div class="card-header">
-                                        <p class="text-muted text-right">{{ comment.date }}</p>
-                                    </div>
-                                    <div class="card-body">
-                                        <table>
-                                            <tr class="col-12">
-                                                <td class="text-primary font-weight-bold" style="max-width: 30%">{{ comment.name }}</td>
-                                                <td class="font-weight-normal pl-3">{{ comment.comment }}</td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        {% else %} -->
-
-                        <!-- {% endif %} -->
                         <div id="articleComments"></div>
 
                     </div>

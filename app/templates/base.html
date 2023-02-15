@@ -71,17 +71,8 @@
 
 <body itemscope itemtype="https://schema.org/WebPage" class="w-100" onscroll="fixed_top()" onload="mostPopular()" style="font-family: 'Cabin', sans-serif;{% if request.MOBILE %} background-color: white{% else %} background-color: #dddddd{% endif %}">
 
-    <!--Flashed messages -->
-    {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <div class="text-center m-auto p-5 font-weight-normal fixed-top" id="flashedmessages" style="max-width: 600px; background-color: #dddddd; z-index: 1031; {% if request.MOBILE %}{% else %}top: 60px;{% endif %}">
-                    {% for message in messages %}
-                        {{ message | safe }}
-                    {% endfor %}
-                <a class='border border-dark text-dark rounded-0 w-100 pt-1 pb-1 pl-5 pr-5' href='javascript:void(0)' onclick="closeflash()">OK</a>
-                </div>
-            {% endif %}
-    {% endwith %}
+    {% from "flashedPopupMessages.html" import flashed_message_popup %}
+    {{ flashed_message_popup() }}
 
     <!--Navigation -->
     {{ navigation_page | safe }}
@@ -272,10 +263,6 @@
         var form = document.getElementById("search-form");
         document.getElementById("form-search").value = "How technology can shape the corporate world of the future";
         form.submit();
-    }
-
-    function closeflash(){
-        document.getElementById('flashedmessages').style.visibility = "hidden";
     }
 
     function mostPopular(){

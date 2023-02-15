@@ -17,7 +17,8 @@ db = SQLAlchemy()
 blogging_engine = BloggingEngine()
 mobility = Mobility()
 mail = Mail()
-
+mail_sender = "inwaitoftomorrow@outlook.com"
+mail_id = "In Wait Of Tomorrow"
 
 
 def page_not_found_500():
@@ -85,11 +86,11 @@ def create_app():
     app.config["FILEUPLOAD_PREFIX"] = "/fileupload"
     app.config["FILEUPLOAD_ALLOWED_EXTENSIONS"] = ["png", "jpg", "jpeg", "gif"]
 
-    app.config["MAIL_SERVER"] = 'smtp.gmail.com'
-    app.config["MAIL_PORT"] = 465
-    app.config["MAIL_USE_TLS"] = False
-    app.config["MAIL_USE_SSL"] = True
-    app.config["MAIL_USERNAME"] = 'inwaitoftomorrow@gmail.com'
+    app.config["MAIL_SERVER"] = 'smtp.office365.com'
+    app.config["MAIL_PORT"] = 587
+    app.config["MAIL_USE_TLS"] = True
+    app.config["MAIL_USE_SSL"] = False
+    app.config["MAIL_USERNAME"] = 'inwaitoftomorrow@outlook.com'
     app.config["MAIL_PASSWORD"] = 'Kaylan14'
     app.config["MAIL_DEBUG"] = True
     app.config["MAIL_SUPPRESS_SEND"] = False

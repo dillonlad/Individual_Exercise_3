@@ -1,0 +1,25 @@
+{% macro flashed_message_popup() %}
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <!--Display flashed messages popup-->
+            <div class="card m-auto rounded-0 border border-dark text-left {% if request.MOBILE %}w-75{% else %}{% endif %}" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 600px; z-index: 10000; display: block;" id="flashPopupMessage">
+                <div class="card-header">
+                    <strong class="mr-auto text-left">In Wait of Tomorrow</strong>
+                    <button type="button" class="ml-2 mb-1 close" aria-label="Close">
+                        <span aria-hidden="true"><a href="javascript:void(0)" onclick="document.getElementById('flashPopupMessage').style.visibility = 'hidden';">&times;</a></span>
+                    </button>
+                </div>
+                <div class="card-body text-left" style="overflow-x: hidden; max-height: 75vh; scroll-behavior: smooth;">
+                    <div style="max-width: 600px;" class="m-auto" id="flashMessageHTML">
+                        {% for message in messages %}
+                            {{ message | safe }}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="card-footer m-auto p-1">
+                    <button class="btn btn-dark" onclick="document.getElementById('flashPopupMessage').style.visibility = 'hidden';">Close</button>
+                </div>
+            </div>
+        {% endif %}
+    {% endwith %}
+{% endmacro %}

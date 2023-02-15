@@ -12,8 +12,11 @@
 # below:
 .git
 .gitignore
-
 # Python pycache:
 __pycache__/
+venv/
+/.idea/
+/.vscode/
+/app/__pycache__/
 # Ignored by the build system
 /setup.cfg

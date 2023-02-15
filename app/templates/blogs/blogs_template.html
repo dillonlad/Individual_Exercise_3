@@ -182,7 +182,7 @@
           }).then(function(data) {
             div.innerHTML = data.status;
             if (data.views !== 0) { viewsDiv.innerHTML = "<i class='fas fa-eye pl-1' style='border: none'></i> " + data.views; }
-            commentsDiv.innerHTML = data.commentsHtml
+            if (data.commentsHtml) { commentsDiv.innerHTML = data.commentsHtml }
           });
     }
 
