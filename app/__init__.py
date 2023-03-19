@@ -9,12 +9,9 @@ from flask_mobility import Mobility
 
 from flask_sqlalchemy import SQLAlchemy
 from flask_sitemap import Sitemap
-from flask_blogging import BloggingEngine
-
 
 login_manager = LoginManager()
 db = SQLAlchemy()
-blogging_engine = BloggingEngine()
 mobility = Mobility()
 mail = Mail()
 mail_sender = "inwaitoftomorrow@outlook.com"
@@ -31,7 +28,7 @@ def page_not_found_404():
 
 def create_app():
     app = Flask(__name__)
-    app.config['SECRET_KEY'] = '73WquRv_HFBhIVTmd4ARHQ'
+    app.config['SECRET_KEY'] = os.environ.get("FLASK_SECRET_KEY")
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     CWD = dirname(abspath(__file__))
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + join(CWD, 'new_tomorrow')
@@ -91,7 +88,7 @@ def create_app():
     app.config["MAIL_USE_TLS"] = True
     app.config["MAIL_USE_SSL"] = False
     app.config["MAIL_USERNAME"] = 'inwaitoftomorrow@outlook.com'
-    app.config["MAIL_PASSWORD"] = 'Kaylan14'
+    app.config["MAIL_PASSWORD"] = os.environ.get("MAIL_PASSWORD")
     app.config["MAIL_DEBUG"] = True
     app.config["MAIL_SUPPRESS_SEND"] = False
 
@@ -101,12 +98,7 @@ def create_app():
 
     return app
 
-
-try:
-    GA_TRACKING_ID = os.environ['GA_TRACKING_ID']
-except KeyError:
-    GA_TRACKING_ID = 'UA-159574205-1'
-
+GA_TRACKING_ID = os.environ.get("GA_TRACKING_ID")
 
 def track_event(category, action, label=None, value=0):
     data = {

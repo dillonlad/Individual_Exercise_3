@@ -3,10 +3,11 @@ import imp
 from flask import flash, url_for, redirect, session, request
 from flask_login import current_user, logout_user
 from app.models import Profile, Categories
+import os
 from requests.auth import HTTPBasicAuth
 import json
 
-apiAuth = HTTPBasicAuth('IWOT', "onpw6m6sn8ze6716")
+apiAuth = HTTPBasicAuth('IWOT', os.environ.get("LP_API_KEY"))
 
 # Checks if user is listed as admin in the database
 def is_admin(func):

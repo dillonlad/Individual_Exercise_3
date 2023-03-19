@@ -2,7 +2,7 @@
 {% block list_of_articles %}
     <div class="row m-auto" style="max-width: 800px">
         <div class="col-12">
-                <form class="user" method="POST" action="{{ url_for('main.authenticate_user') }}" novalidate>
+                <form class="user" method="POST" action="{{ url_for('main.validate_authenticator', key=key, email=email) }}" novalidate>
                     {% from "_formhelpers.html" import render_field %}
                     {{ form.hidden_tag() }}
                     {{ form.csrf_token}}

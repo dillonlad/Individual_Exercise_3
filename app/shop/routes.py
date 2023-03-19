@@ -22,7 +22,7 @@ from flask_sitemap import Sitemap, sitemap_page_needed
 
 import app
 from app import db, mail_sender
-from app.main.forms import SignupForm, LoginForm, PostForm, BlogEditor, CreateArticle, SearchForm
+from app.main.forms import SignupForm, LoginForm, BlogEditor, CreateArticle, SearchForm
 from app.main.routes import bp_main, cookies_accept, third_party_cookies
 
 from app.models import Posts_two, Blogs, Profile, Categories, Series, Authors, Comments_dg_tmp, \

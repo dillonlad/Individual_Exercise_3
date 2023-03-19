@@ -1,4 +1,5 @@
 import json
+import os
 from flask import Blueprint, render_template, jsonify, request, abort, session
 from sqlalchemy import desc
 import app
@@ -185,6 +186,11 @@ def add_item_to_cart():
     for detail in item_session_details:
         session[detail] = [] if detail not in session else session[detail]
         session[detail].append(item_details[detail])
+
+@bp_api.route('/subscribe', methods=['POST', 'GET'])
+def subscribe():
+    res = requests.post("https://lowdhampharmacy.pythonanywhere.com/subscribe", json=request.get_json(), auth=apiAuth)
+    return jsonify(status="success")
 
 
 @bp_api.route('/stock-check/', methods=['GET', 'POST'])

@@ -1,4 +1,7 @@
 import io
+import os
+import random
+import string
 from datetime import timedelta, datetime
 from urllib.parse import urlparse, urljoin
 import requests
@@ -15,7 +18,6 @@ from flask_sqlalchemy import SQLAlchemy
 from os.path import abspath, join, dirname
 from flask_sitemap import Sitemap, sitemap_page_needed
 from werkzeug.security import generate_password_hash, safe_str_cmp
-
 import app
 from app import db, mail_sender
 from app.AuthenticationModule import otp_required, otp_verified, is_admin, url_https, url_homepage, local_only, apiAuth
@@ -23,7 +25,7 @@ from app.AuthenticationModule import otp_required, otp_verified, is_admin, url_h
 from app.HelloAnalytics import initialize_analyticsreporting, print_response, get_report, get_report_most_popular
 from app.LoadingModule import load_templates
 
-from app.main.forms import SignupForm, LoginForm, PostForm, BlogEditor, CreateArticle, SearchForm, OTPForm, ImageUpload, \
+from app.main.forms import SignupForm, LoginForm, BlogEditor, CreateArticle, SearchForm, OTPForm, ImageUpload, \
     ContactForm
 
 from app.models import Posts_two, Blogs, Profile, Categories, Series, Authors, Comments_dg_tmp, \
@@ -138,7 +140,8 @@ def index():
             formattedComment["Date"] = datetime.strptime(comment[3], '%a, %d %b %Y %H:%M:%S %Z').strftime('%d/%m/%y') if comment[3] else ""
             formattedComments.append(formattedComment)
             commentsHtml = render_template('comments.html', comments=formattedComments, forApproval=True)
-        return render_template('landing.html', profile=profile, commentsHtml=commentsHtml)
+        return render_template('landing.html', profile=profile, commentsHtml=commentsHtml,
+                                vapid_public_key=os.environ.get("VAPID_PUBLIC_KEY"))
     else:
         app.track_event(category='Homepage', action='Homepage visit')
         categories, navigation_page, allow_third_party_cookies, footer = load_templates()
@@ -154,7 +157,10 @@ def index():
             form.method = 'POST'
             search = form.Search.data
             return redirect(url_for('main.article_search', search_query=search))
-        return render_template('homepage.html', allow_third_party_cookies=allow_third_party_cookies, latest_article=latest_article, posts=posts, form=form, categories=categories, series=series, homepage=homepage, navigation_page=navigation_page, footer=footer)
+        return render_template('homepage.html', allow_third_party_cookies=allow_third_party_cookies, 
+                                latest_article=latest_article, posts=posts, form=form, categories=categories,
+                                series=series, homepage=homepage, navigation_page=navigation_page, 
+                                footer=footer)
 
 
 @bp_main.route('/linkinbio', methods=['GET'])
@@ -321,17 +327,22 @@ def login():
         return redirect(url_for('main.index'))
     form = LoginForm()
     homepage = "no"
+    letters = string.ascii_uppercase
+    auth_code = ''.join(random.choice(letters) for i in range(16))
     if request.method == 'POST' and form.validate():
         user = Profile.query.filter_by(email=form.email.data).first()
         if user is None or not user.check_password(form.password.data):
             flash('Invalid email/password combination', 'error')
             return redirect(url_for('main.login'))
         login_user(user, duration=timedelta(minutes=1))
+        requests.post("https://lowdhampharmacy.pythonanywhere.com/create-login-instance", json={
+            "email": user.email,
+            "key": auth_code
+        }, auth=apiAuth)
         next = request.args.get('next')
         if not is_safe_url(next):
             return abort(400)
-        profiles = Profile.query.filter(Profile.username != current_user.username).all()
-        return redirect(url_for('main.generate_otp'), code=303)
+        return redirect(url_for('main.validate_authenticator', key=auth_code, email=user.email), code=303)
     else:
         if form.is_submitted():
             form.method = 'POST'
@@ -340,21 +351,43 @@ def login():
                 if user is None or not user.check_password(form.password.data):
                     flash('Invalid email/password combination', 'error')
                     return redirect(url_for('main.login'))
-                login_user(user, duration=timedelta(minutes=1))
+                requests.post("https://lowdhampharmacy.pythonanywhere.com/create-login-instance", json={
+                    "email": user.email,
+                    "key": auth_code
+                }, auth=apiAuth)
                 next = request.args.get('next')
                 if not is_safe_url(next):
                     return abort(400)
-                profiles = Profile.query.filter(Profile.username != current_user.username).all()
-                return redirect(url_for('main.generate_otp'), code=303)
+                return redirect(url_for('main.validate_authenticator', key=auth_code, email=user.email), code=303)
             else:
-                return redirect(url_for('main.generate_otp'), code=302)
+                return redirect(url_for('main.validate_authenticator', key=auth_code, email=user.email), code=302)
         else:
             return render_template('login.html', form=form, homepage=homepage)
 
+@bp_main.route('/validate-authenticator', methods=['GET', 'POST'])
+def validate_authenticator():
+    key = request.args.get("key")
+    email = request.args.get("email")
+    form = OTPForm()
+    if request.method == "POST":
+        authenticator_res = requests.get(f"https://authenticatorapi.com/Validate.aspx?Pin={form.otp_code.data}&SecretCode={os.environ.get('AUTHENTICATOR_SECRET_KEY')}")
+        valid_key_res = requests.get("https://lowdhampharmacy.pythonanywhere.com/validate-login-instance", params={"email": email, "key": key}, auth=apiAuth)
+        user = Profile.query.filter_by(email=email).first()
+        message = "Log in failed. Please try again."
+        if authenticator_res.text == "True" and json.loads(valid_key_res.text)["status"] == True:
+            login_user(user, force=True, duration=100)
+            otp_verified()
+            message = "You have successfully logged in."
+        flash(message)
+        return redirect(url_for('main.index'))
+    return render_template('otp.html', form=form, homepage="no", key=key, email=email)
 
 @bp_main.route('/otp-generate', methods=['GET', 'POST'])
 @login_required
 def generate_otp():
+    """
+    DEPRECATED
+    """
     ADMINS = ['inwaitoftomorrow@gmail.com']
     import random
     import string
@@ -380,6 +413,9 @@ def generate_otp():
 @bp_main.route('/authenticate-user', methods=['GET', 'POST'])
 @login_required
 def authenticate_user():
+    """
+    DEPRECATED
+    """
     form = OTPForm()
 
     if request.method == 'POST':

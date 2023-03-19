@@ -46,23 +46,8 @@
     <meta name="author" content="inwaitoftomorrow">
     <meta name="robots" content="index, follow">
     <title>{% block title %}{{ title }}{% endblock %}</title>
-<!-- Facebook Pixel Code -->
-    <script>
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window, document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '363987458380932');
-    fbq('track', 'PageView');
-    </script>
-    <noscript><img height="1" width="1" style="display:none"
-    src="https://www.facebook.com/tr?id=363987458380932&ev=PageView&noscript=1"
-    /></noscript>
-    <!-- End Facebook Pixel Code -->
+    <script src="../static/js/service_worker.js"></script>
+    <script src="../static/js/register_service_worker.js"></script>
 </head>
 <body>
     {% with messages = get_flashed_messages() %}
@@ -91,6 +76,7 @@
     <a class="col-12 btn btn-dark text-white rounded-0 mb-2" href="{{ url_for('blogs.test_send_newsletter') }}">Send test newsletter</a>
     <a class="col-12 btn btn-dark text-white rounded-0 mb-2" href="{{ url_for('blogs.send_newsletter') }}">Send newsletter</a>
     <a class="col-12 btn btn-dark text-white rounded-0 mb-2" href="{{ url_for('main.show_analytics') }}">Analytics</a>
+    <a class="col-12 btn btn-dark text-white rounded-0 mb-2" href="javascript:void(0)" onclick="subscribeUserMain()">Enable Notifications</a>
     <a class="col-12 btn btn-dark text-white rounded-0" href="{{ url_for('main.logout') }}">Logout</a>
 </div>
 <div class="row m-auto text-center pt-5" style="max-width: 600px;">
@@ -126,6 +112,10 @@
           }).then(function(data) {
             var commentSection = document.getElementById("commentCard" + commentId).style.display = "none";
           });
+    }
+
+    function subscribeUserMain(){
+      return registerServiceWorker("{{ vapid_public_key }}", "/api/subscribe");
     }
 </script>
 </body>

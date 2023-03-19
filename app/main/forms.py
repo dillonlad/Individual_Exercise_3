@@ -1,16 +1,8 @@
 from flask_wtf import FlaskForm
-from flask_wysiwyg.wysiwyg import WysiwygField
 from wtforms import SubmitField, StringField, PasswordField, RadioField, BooleanField, TextAreaField, SelectField
 from wtforms.validators import DataRequired, EqualTo, Email, Length, ValidationError
 
 from app.models import Profile, Authors
-
-
-
-class PostForm(FlaskForm):
-    article_title = StringField(u'title', validators=[DataRequired(), Length(1, 64)])
-    body = WysiwygField(u"txteditor", validators=[DataRequired()])
-    submit = SubmitField(u'submit')
 
 
 class BlogEditor(FlaskForm):

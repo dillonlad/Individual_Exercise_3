@@ -1,5 +1,7 @@
 import json
+import os
 from datetime import timedelta, datetime
+from pywebpush import webpush, WebPushException
 from urllib.parse import urlparse, urljoin
 from smtplib import SMTPAuthenticationError
 from flask import render_template, Blueprint, request, flash, redirect, url_for, Flask, make_response, abort, \
@@ -33,6 +35,31 @@ bp_blogs = Blueprint('blogs', __name__, url_prefix='/blogs')
 ADMINS = ['inwaitoftomorrow@gmail.com']
 NEWSLETTER_TEST = [OrderedDict({"recipient_id": 6, "name": "Dillon", "email": "dlad82434@gmail.com"}),
                    OrderedDict({"recipient_id": 16, "name": "Dillon", "email": "dillonlad@live.co.uk"})]
+
+
+def trigger_push_notification(title, body):
+    res = requests.get("https://lowdhampharmacy.pythonanywhere.com/get-subscribers", auth=apiAuth)
+    print(res.text)
+    request_results = json.loads(res.text)["status"]
+    subscription_jsons = [result[1] for result in request_results]
+    for subscription_json in subscription_jsons:
+        try:
+            response = webpush(
+                subscription_info=json.loads(subscription_json),
+                data=json.dumps({"title": title, "body": body}),
+                vapid_private_key=os.environ.get("VAPID_PRIVATE_KEY"),
+                vapid_claims={"sub": "mailto:dlad82434@gmail.com"}
+            )
+        except WebPushException as ex:
+            print(ex)
+            if ex.response and ex.response.json():
+                extra = ex.response.json()
+                print("Remote service replied with a {}:{}, {}",
+                    extra.code,
+                    extra.errno,
+                    extra.message
+                    )
+    return jsonify(status="success")
 
 
 def structured_data(item_on_page, reviews):
@@ -165,6 +192,7 @@ def add_new_blog_comment():
     print("response from server: {}".format(res.text))
     dictFromServer = res.json()
     if dictFromServer:
+        trigger_push_notification("New comments", "You have some unread comments to respond to")
         try:
             with app.mail.connect() as conn:
                 msg = Message('New comments', sender=mail_sender, recipients=ADMINS)
