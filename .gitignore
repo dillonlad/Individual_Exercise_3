@@ -12,6 +12,9 @@ __pycache__/
 app.yaml
 .app.yaml.*
 /app/inwaitoftomorrow-203312885102.json.*
+/app/inwaitoftomorrow-1f1619d16199.json
+/app/server-ca.pem
+config.py
 
 # Distribution / packaging
 .Python

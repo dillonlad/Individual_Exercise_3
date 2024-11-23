@@ -38,27 +38,27 @@ NEWSLETTER_TEST = [OrderedDict({"recipient_id": 6, "name": "Dillon", "email": "d
 
 
 def trigger_push_notification(title, body):
-    res = requests.get("https://lowdhampharmacy.pythonanywhere.com/get-subscribers", auth=apiAuth)
-    print(res.text)
-    request_results = json.loads(res.text)["status"]
-    subscription_jsons = [result[1] for result in request_results]
-    for subscription_json in subscription_jsons:
-        try:
-            response = webpush(
-                subscription_info=json.loads(subscription_json),
-                data=json.dumps({"title": title, "body": body}),
-                vapid_private_key=os.environ.get("VAPID_PRIVATE_KEY"),
-                vapid_claims={"sub": "mailto:dlad82434@gmail.com"}
-            )
-        except WebPushException as ex:
-            print(ex)
-            if ex.response and ex.response.json():
-                extra = ex.response.json()
-                print("Remote service replied with a {}:{}, {}",
-                    extra.code,
-                    extra.errno,
-                    extra.message
-                    )
+    # res = requests.get("https://lowdhampharmacy.pythonanywhere.com/get-subscribers", auth=apiAuth)
+    # print(res.text)
+    # request_results = json.loads(res.text)["status"]
+    # subscription_jsons = [result[1] for result in request_results]
+    # for subscription_json in subscription_jsons:
+    #     try:
+    #         response = webpush(
+    #             subscription_info=json.loads(subscription_json),
+    #             data=json.dumps({"title": title, "body": body}),
+    #             vapid_private_key=os.environ.get("VAPID_PRIVATE_KEY"),
+    #             vapid_claims={"sub": "mailto:dlad82434@gmail.com"}
+    #         )
+    #     except WebPushException as ex:
+    #         print(ex)
+    #         if ex.response and ex.response.json():
+    #             extra = ex.response.json()
+    #             print("Remote service replied with a {}:{}, {}",
+    #                 extra.code,
+    #                 extra.errno,
+    #                 extra.message
+    #                 )
     return jsonify(status="success")
 
 
@@ -155,17 +155,17 @@ def form_send(form, Post_ID):
 
 @bp_blogs.route('/signup/', methods=['POST', 'GET'])
 def newsletter_signup():
-    jsonBody = request.get_json()
-    if not jsonBody:
-        return jsonify(status="Invalid JSON request")
-    requests.post("https://lowdhampharmacy.pythonanywhere.com/sign-up", json=jsonBody, auth=apiAuth)
-    try:
-        with app.mail.connect() as conn:
-            msg = Message('Newsletter sign up', sender=mail_sender, recipients=ADMINS)
-            msg.body = 'You have a new newsletter sign up'
-            conn.send(msg)
-    except SMTPAuthenticationError:
-        print("Failed to send email")
+    # jsonBody = request.get_json()
+    # if not jsonBody:
+    #     return jsonify(status="Invalid JSON request")
+    # requests.post("https://lowdhampharmacy.pythonanywhere.com/sign-up", json=jsonBody, auth=apiAuth)
+    # try:
+    #     with app.mail.connect() as conn:
+    #         msg = Message('Newsletter sign up', sender=mail_sender, recipients=ADMINS)
+    #         msg.body = 'You have a new newsletter sign up'
+    #         conn.send(msg)
+    # except SMTPAuthenticationError:
+    #     print("Failed to send email")
     return jsonify(status="Thanks for signing up!")
 
 
@@ -185,21 +185,21 @@ def blog_comment(name, rating, comment, post_title):
 
 @bp_blogs.route('/add-comment', methods=['POST', 'GET'])
 def add_new_blog_comment():
-    jsonBody = request.get_json()
-    post = Blogs.query.filter_by(Title=jsonBody["postName"]).first()
-    jsonBody["postName"] = post.Post_ID
-    res = requests.post('https://lowdhampharmacy.pythonanywhere.com/add-comment', json=jsonBody, auth=apiAuth)
-    print("response from server: {}".format(res.text))
-    dictFromServer = res.json()
-    if dictFromServer:
-        trigger_push_notification("New comments", "You have some unread comments to respond to")
-        try:
-            with app.mail.connect() as conn:
-                msg = Message('New comments', sender=mail_sender, recipients=ADMINS)
-                msg.body = 'You have some unread comments to respond to'
-                conn.send(msg)
-        except SMTPAuthenticationError:
-            print("Email failed to send")
+    # jsonBody = request.get_json()
+    # post = Blogs.query.filter_by(Title=jsonBody["postName"]).first()
+    # jsonBody["postName"] = post.Post_ID
+    # res = requests.post('https://lowdhampharmacy.pythonanywhere.com/add-comment', json=jsonBody, auth=apiAuth)
+    # print("response from server: {}".format(res.text))
+    # dictFromServer = res.json()
+    # if dictFromServer:
+    #     trigger_push_notification("New comments", "You have some unread comments to respond to")
+    #     try:
+    #         with app.mail.connect() as conn:
+    #             msg = Message('New comments', sender=mail_sender, recipients=ADMINS)
+    #             msg.body = 'You have some unread comments to respond to'
+    #             conn.send(msg)
+    #     except SMTPAuthenticationError:
+    #         print("Email failed to send")
     return jsonify(status="Thanks for the comment")
 
 @bp_blogs.route('/<Post_ID>', methods=['POST', 'GET'])

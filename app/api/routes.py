@@ -22,23 +22,20 @@ bp_api = Blueprint('api', __name__, url_prefix='/api')
 # Query Google Analytics API to get the most popular articles in the last 14 days
 @bp_api.route('/most-popular', methods=['POST', 'GET'])
 def get_most_popular():
-    analytics = initialize_analyticsreporting()
-    response = get_report_most_popular(analytics)
-    analytics_reports = print_response(response)
-    sorted_dict = sorted(analytics_reports, key=lambda k: k['views'], reverse=True)
-    most_popular = []
+    #analytics = initialize_analyticsreporting()
+    #response = get_report_most_popular(analytics)
+    #analytics_reports = print_response(response)
+    #sorted_dict = sorted(analytics_reports, key=lambda k: k['views'], reverse=True)
+    #most_popular = []
     posts = Blogs.query.order_by(desc(Blogs.article_id)).all()
-    for dict in sorted_dict:
-        matching_post = [post for post in posts if post.Post_ID in dict['page']]
-        if len(matching_post) > 0: most_popular.append(matching_post[0])
 
-    return jsonify(status=render_template('most_popular.html', posts=[x for x in most_popular[0:5]], title="Most popular"))
+    return jsonify(status=render_template('most_popular.html', posts=posts[0:5], title="Most popular"))
 
 @bp_api.route('/respond-comments/', methods=['POST', 'GET'])
 def approve_comments():
     jsonBody = request.get_json()
     print(jsonBody)
-    res = requests.get("https://lowdhampharmacy.pythonanywhere.com/respond-comment", json=jsonBody, auth=apiAuth)
+    #res = requests.get("https://lowdhampharmacy.pythonanywhere.com/respond-comment", json=jsonBody, auth=apiAuth)
     return jsonify(status="Complete")
 
 # Get the most similar articles to the one currently open and also gets the number of views for current article
@@ -46,10 +43,14 @@ def approve_comments():
 def get_similar_blogs(post_id):
     import datetime
     jsonBody = {"postId": post_id}
-    res = requests.get("https://lowdhampharmacy.pythonanywhere.com/view-comment", json=jsonBody, auth=apiAuth)
-    requestResults = res.json()
+    #res = requests.get("https://69uet54rv1.execute-api.eu-west-2.amazonaws.com/dev/view-comment", json=jsonBody, auth=apiAuth)
+    #print(res.text)
+    #requestResults = res.json()
     formattedComments = []
-    for comment in requestResults["status"]:
+    #print(requestResults)  
+    _comments = []
+
+    for comment in _comments:
         print(comment)
         formattedComment = {}
         formattedComment["ID"] = comment[0]
@@ -78,14 +79,14 @@ def get_similar_blogs(post_id):
 
     sorted_dict = sorted(similar_posts, key=lambda k: k['index'], reverse=True)
     result = [dict['post'] for dict in sorted_dict if dict['post'].Post_ID!=post_id]
-    analytics = initialize_analyticsreporting()
-    response = get_report_pageviews(analytics)
-    analytics_reports = print_response(response)
-    sorted_dict = sorted(analytics_reports, key=lambda k: k['views'], reverse=True)
-    views = next((dict['views'] for dict in sorted_dict if post_id in dict['page']),0)
-    print(views)
+    #analytics = initialize_analyticsreporting()
+    #response = get_report_pageviews(analytics)
+    #analytics_reports = print_response(response)
+    #sorted_dict = sorted(analytics_reports, key=lambda k: k['views'], reverse=True)
+    #views = next((dict['views'] for dict in sorted_dict if post_id in dict['page']),0)
+    #print(views)
     return jsonify(status=render_template('most_similar.html', posts=[result[0], result[1], result[2]], 
-                                            title="More like this"), views=views, commentsHtml=commentsHtml)
+                                            title="More like this"), views=100, commentsHtml=commentsHtml)
 
 
 @bp_api.route('/prepare-reading/<search_terms>', methods=['GET', 'POST'])
@@ -189,7 +190,7 @@ def add_item_to_cart():
 
 @bp_api.route('/subscribe', methods=['POST', 'GET'])
 def subscribe():
-    res = requests.post("https://lowdhampharmacy.pythonanywhere.com/subscribe", json=request.get_json(), auth=apiAuth)
+    #res = requests.post("https://lowdhampharmacy.pythonanywhere.com/subscribe", json=request.get_json(), auth=apiAuth)
     return jsonify(status="success")
 
 
